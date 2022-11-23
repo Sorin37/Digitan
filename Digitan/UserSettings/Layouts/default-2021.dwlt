@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1536
     height: 780.8
   m_ShowMode: 4
-  m_Title: Scene
+  m_Title: Hierarchy
   m_RootView: {fileID: 6}
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
@@ -48,7 +48,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 200}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 79
+  controlID: 96
 --- !u!114 &3
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -223,7 +223,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 80
+  controlID: 86
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -248,7 +248,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 100}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 81
+  controlID: 87
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -317,22 +317,22 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Resources
+    - Assets/AvailablePlaces
     m_Globs: []
     m_OriginalText: 
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Resources
+  - Assets/AvailablePlaces
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\gliza\Desktop\Unity\Catan\Digitan
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 745a0000
-    m_LastClickedID: 23156
-    m_ExpandedIDs: 00000000f259000000ca9a3bffffff7f
+    m_SelectedIDs: 145e0000
+    m_LastClickedID: 24084
+    m_ExpandedIDs: 00000000305a000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -360,7 +360,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000f2590000
+    m_ExpandedIDs: 00000000305a0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -488,9 +488,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: ac590000
-      m_LastClickedID: 22956
-      m_ExpandedIDs: 38fbffffac590000
+      m_SelectedIDs: 
+      m_LastClickedID: 0
+      m_ExpandedIDs: 3c90ffff38fbffffac590000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -547,7 +547,7 @@ MonoBehaviour:
       floating: 0
       collapsed: 0
       displayed: 1
-      snapOffset: {x: -100, y: -25.600006}
+      snapOffset: {x: -101, y: -26}
       snapOffsetDelta: {x: 0, y: 0}
       snapCorner: 3
       id: Tool Settings
@@ -772,9 +772,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -0.3054636, y: -0.2883625, z: -2.0582228}
+    m_Target: {x: 6.70937, y: 19.46252, z: -5.988945}
     speed: 2
-    m_Value: {x: -0.3054636, y: -0.2883625, z: -2.0582228}
+    m_Value: {x: 6.70937, y: 19.46252, z: -5.988945}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -821,13 +821,13 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: 0.6743708, y: 0.019876849, z: -0.018269977, w: 0.73797077}
+    m_Target: {x: 0.7258643, y: -0.010319517, z: 0.010887876, w: 0.6876876}
     speed: 2
-    m_Value: {x: 0.6732275, y: 0.019903183, z: -0.01823917, w: 0.7389424}
+    m_Value: {x: 0.72585773, y: -0.010319424, z: 0.010887777, w: 0.6876813}
   m_Size:
-    m_Target: 10.92025
+    m_Target: 0.061882455
     speed: 2
-    m_Value: 10.45
+    m_Value: 0.061882455
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -964,10 +964,10 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 7.2000003
-    y: 546.4
-    width: 1159.8
-    height: 229.80002
+    x: 0
+    y: 548.8
+    width: 1171
+    height: 234.59998
   m_ViewDataDictionary: {fileID: 0}
   m_OverlayCanvas:
     m_LastAppliedPresetName: Default

@@ -17,6 +17,11 @@ public class GameGrid : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (brick == null || desert == null || grain == null || ore == null || wool == null)
+        {
+            Debug.LogError("Error: One of the prefabs is not assigned");
+            return;
+        }
         CreateGrid();
     }
 
@@ -29,12 +34,6 @@ public class GameGrid : MonoBehaviour
         gameGrid[3] = new GameObject[4];
         gameGrid[4] = new GameObject[3];
 
-        if (brick == null || desert == null || grain == null || ore == null || wool == null)
-        {
-            Debug.LogError("Error: One of the prefabs is not assigned");
-            return;
-        }
-
         List<GameObject> hexPool = new List<GameObject> {
             brick, brick, brick,
             desert,
@@ -43,7 +42,6 @@ public class GameGrid : MonoBehaviour
             ore, ore, ore,
             wool, wool, wool, wool
         };
-
 
         //Make the grid
         for (int x = 0; x <= gameGrid.Length / 2; x++)
