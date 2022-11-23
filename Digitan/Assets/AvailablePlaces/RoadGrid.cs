@@ -10,6 +10,7 @@ public class RoadGrid : MonoBehaviour
     private float HexSize = 5f;
     [SerializeField] private GameObject circlePrefab;
     private GameObject[][] roadGrid;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -19,7 +20,7 @@ public class RoadGrid : MonoBehaviour
             return;
         }
 
-        roadGrid= new GameObject[11][];
+        roadGrid = new GameObject[11][];
         roadGrid[0] = new GameObject[6];
         roadGrid[1] = new GameObject[4];
         roadGrid[2] = new GameObject[8];
@@ -52,13 +53,13 @@ public class RoadGrid : MonoBehaviour
                 {
                     roadGrid[x][y] = Instantiate(
                         circlePrefab,
-                        new Vector3(y * HexSize / 2 + HexSize / 4 * (x - 11), 0.5f, -x * HexSize * 0.375f + HexSize / 3),
+                        new Vector3(y * HexSize / 2 + HexSize / 4 * (x - roadGrid.Length), 0.5f, -x * HexSize * 0.375f + HexSize / 3),
                         Quaternion.Euler(90, 0, 0)
                     );
-
-                    roadGrid[x][y].transform.parent = transform;
-                    roadGrid[x][y].gameObject.name = "RoadAvailableSpace(" + x.ToString() + ", " + y.ToString() + ")";
                 }
+
+                roadGrid[x][y].transform.parent = transform;
+                roadGrid[x][y].gameObject.name = "RoadAvailableSpace(" + x.ToString() + ", " + y.ToString() + ")";
             }
         }
 
@@ -95,6 +96,6 @@ public class RoadGrid : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }
