@@ -152,7 +152,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 075b4d8fffa4ab147903574a7508fee7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hexTilePrefab: {fileID: 3035950592106437149, guid: 39cdf6b0b9042e8429512278880ad4d9, type: 3}
+  brick: {fileID: 5386727111485487864, guid: 9229c27d06f948045a528db0223423b7, type: 3}
+  desert: {fileID: 3618712867022294391, guid: f939a3d6acb0bb0448704d48b3e550ff, type: 3}
+  grain: {fileID: 4808985514553845171, guid: d3402d48b2f47e44294640af6689d4d8, type: 3}
+  lumber: {fileID: 4308480600910889643, guid: d132f3892796b8b45a8ac3df0696a8de, type: 3}
+  ore: {fileID: 5565399449823681868, guid: f693a283a09dddd4cbf03556b22dd2af, type: 3}
+  wool: {fileID: 4497687964167596392, guid: 4377aad3562ca4341beb68c3a1028202, type: 3}
 --- !u!4 &168630405
 Transform:
   m_ObjectHideFlags: 0
