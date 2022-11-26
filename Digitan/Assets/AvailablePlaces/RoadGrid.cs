@@ -44,10 +44,7 @@ public class RoadGrid : MonoBehaviour
                         circlePrefab,
                         new Vector3(y * HexSize / 2 - HexSize / 4 * (x + 1), 0.5f, -x * HexSize * 0.375f + HexSize / 3),
                         Quaternion.Euler(90, 0, 0)
-                        );
-
-                    roadGrid[x][y].transform.parent = transform;
-                    roadGrid[x][y].gameObject.name = "RoadAvailableSpace(" + x.ToString() + ", " + y.ToString() + ")";
+                    );
                 }
                 else
                 {
@@ -59,7 +56,7 @@ public class RoadGrid : MonoBehaviour
                 }
 
                 roadGrid[x][y].transform.parent = transform;
-                roadGrid[x][y].gameObject.name = "RoadAvailableSpace(" + x.ToString() + ", " + y.ToString() + ")";
+                roadGrid[x][y].gameObject.name = "RoadSpace(" + x.ToString() + ", " + y.ToString() + ")";
             }
         }
 
@@ -76,7 +73,7 @@ public class RoadGrid : MonoBehaviour
                         );
 
                     roadGrid[x][y].transform.parent = transform;
-                    roadGrid[x][y].gameObject.name = "RoadAvailableSpace(" + x.ToString() + ", " + y.ToString() + ")";
+                    roadGrid[x][y].gameObject.name = "RoadSpace(" + x.ToString() + ", " + y.ToString() + ")";
                 }
                 else
                 {
@@ -87,7 +84,7 @@ public class RoadGrid : MonoBehaviour
                     );
 
                     roadGrid[x][y].transform.parent = transform;
-                    roadGrid[x][y].gameObject.name = "RoadAvailableSpace(" + x.ToString() + ", " + y.ToString() + ")";
+                    roadGrid[x][y].gameObject.name = "RoadSpace(" + x.ToString() + ", " + y.ToString() + ")";
                 }
             }
         }
