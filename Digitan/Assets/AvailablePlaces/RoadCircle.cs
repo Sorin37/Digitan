@@ -8,6 +8,7 @@ public class RoadCircle : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Debug.Log("pareri");
         _renderer = GetComponent<Renderer>();
     }
 
@@ -19,6 +20,7 @@ public class RoadCircle : MonoBehaviour
 
     public void OnMouseDown()
     {
+        Debug.Log("xd");
         _renderer.material.color = Color.white;
     }
 }
