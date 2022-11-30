@@ -356,6 +356,7 @@
 "Assets/AvailablePlaces/RoadCircle.cs"
 "Assets/AvailablePlaces/RoadGrid.cs"
 "Assets/AvailablePlaces/SettlementGrid.cs"
+"Assets/CameraController.cs"
 "Assets/Resources/GameGrid.cs"
 -langversion:9.0
 
