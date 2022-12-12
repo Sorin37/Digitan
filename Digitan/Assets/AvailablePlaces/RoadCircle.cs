@@ -27,9 +27,10 @@ public class RoadCircle : MonoBehaviour
         //_renderer.material.color = Color.white;
         if (!isCube)
         {
-            GameObject pareri = Instantiate(road, transform.position, Quaternion.Euler(90, 0, 0));
-            pareri.GetComponent<RoadCircle>().isCube = true;
+            GameObject roadObject = Instantiate(road, transform.position, Quaternion.Euler(90, 0, 0));
+            roadObject.GetComponent<RoadCircle>().isCube = true;
             Destroy(this);
+            Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("Road Circle"));
         }
     }
 }

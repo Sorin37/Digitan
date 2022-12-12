@@ -359,6 +359,7 @@
 "Assets/ButtonManager.cs"
 "Assets/CameraController.cs"
 "Assets/Resources/GameGrid.cs"
+"Assets/SettlementCircle.cs"
 "Assets/TextMesh Pro/Examples & Extras/Scripts/Benchmark01.cs"
 "Assets/TextMesh Pro/Examples & Extras/Scripts/Benchmark01_UGUI.cs"
 "Assets/TextMesh Pro/Examples & Extras/Scripts/Benchmark02.cs"

@@ -13,7 +13,12 @@ public class ButtonManager : MonoBehaviour
     {
         settlementButton.onClick.AddListener(() =>
         {
-            Debug.Log("xd");
+            Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Settlement Circle"));
+        });
+
+        roadButton.onClick.AddListener(() =>
+        {
+            Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Road Circle"));
         });
     }
 
