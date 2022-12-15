@@ -7,6 +7,7 @@ public class SettlementCircle : MonoBehaviour
 {
     [SerializeField] private GameObject settlement;
     public bool isOccupied = false;
+    public bool isTooClose = false;
 
     // Start is called before the first frame update
     void Start()
@@ -33,19 +34,36 @@ public class SettlementCircle : MonoBehaviour
                     grid[i][j].layer = LayerMask.NameToLayer("Unvisible Circle");
                 }
             }
-        }
 
-        if (!isOccupied)
-        {
-            var Colliders = Physics.OverlapSphere(
+            var colliders = Physics.OverlapSphere(
                 transform.position,
                 1,
                (int)Mathf.Pow(2, LayerMask.NameToLayer("Unvisible Circle"))
             );
 
-            for (int i = 0; i < Colliders.Length; i++)
+            for (int i = 0; i < colliders.Length; i++)
             {
-                Colliders[i].gameObject.layer = LayerMask.NameToLayer("Road Circle");
+                colliders[i].gameObject.layer = LayerMask.NameToLayer("Road Circle");
+            }
+        }
+
+        if (!isOccupied)
+        {
+            var colliders = Physics.OverlapSphere(
+                transform.position,
+                2.5f,
+               (int)(Mathf.Pow(2, LayerMask.NameToLayer("Unvisible Circle")) +
+               Mathf.Pow(2, LayerMask.NameToLayer("Settlement Circle")))
+            );
+
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                if (colliders[i].gameObject.GetComponent<SettlementCircle>() != null)
+                {
+                    print(colliders[i].gameObject.name);
+                    colliders[i].gameObject.GetComponent<SettlementCircle>().isTooClose = true;
+                    colliders[i].gameObject.layer = LayerMask.NameToLayer("Unvisible Circle");
+                }
             }
 
             GameObject settlementObject = Instantiate(settlement, transform.position, Quaternion.Euler(90, 0, 0));
@@ -55,7 +73,6 @@ public class SettlementCircle : MonoBehaviour
             Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("Settlement Circle"));
 
             transform.parent.gameObject.GetComponent<SettlementGrid>().isFirstSettlement = false;
-
         }
     }
 }

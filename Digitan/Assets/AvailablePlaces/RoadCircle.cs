@@ -28,14 +28,24 @@ public class RoadCircle : MonoBehaviour
         //_renderer.material.color = Color.white;
         if (!isOccupied)
         {
-            var Colliders = Physics.OverlapSphere(
+            var colliders = Physics.OverlapSphere(
                 transform.position,
-                1,
+                2,
                (int)Mathf.Pow(2, LayerMask.NameToLayer("Unvisible Circle"))
             );
 
-            for (int i = 0; i < Colliders.Length; i++) {
-                Colliders[i].gameObject.layer = LayerMask.NameToLayer("Settlement Circle");
+            for (int i = 0; i < colliders.Length; i++) {
+                if (colliders[i].gameObject.GetComponent<SettlementCircle>() != null)
+                {
+                    if (!colliders[i].gameObject.GetComponent<SettlementCircle>().isTooClose)
+                    {
+                        colliders[i].gameObject.layer = LayerMask.NameToLayer("Settlement Circle");
+                    }
+                }
+                else
+                {
+                    colliders[i].gameObject.layer = LayerMask.NameToLayer("Road Circle");
+                }
             }
 
             GameObject roadObject = Instantiate(road, transform.position, Quaternion.Euler(90, 0, 0));
