@@ -6,11 +6,13 @@ public class SettlementGrid : MonoBehaviour
 {
     private float HexSize = 5f;
     [SerializeField] private GameObject circlePrefab;
-    private GameObject[][] settlementGrid;
+    public GameObject[][] settlementGrid;
+    public bool isFirstSettlement;
 
     // Start is called before the first frame update
     void Start()
     {
+        isFirstSettlement = true;
 
         if (circlePrefab == null)
         {

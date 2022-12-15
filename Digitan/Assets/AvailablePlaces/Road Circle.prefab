@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4754029598498293830}
   - component: {fileID: 9061078194357570755}
-  - component: {fileID: 4388962359367166176}
   - component: {fileID: -1106514318702829370}
-  m_Layer: 6
+  - component: {fileID: -4101960994820899120}
+  m_Layer: 8
   m_Name: Road Circle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -86,22 +86,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!58 &4388962359367166176
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 875372633914407755}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.5
 --- !u!114 &-1106514318702829370
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -115,4 +99,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   road: {fileID: 913813621336222188, guid: 2672f6b0d8d282240a695197e4244a94, type: 3}
-  isCube: 0
+  isOccupied: 0
+--- !u!65 &-4101960994820899120
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 875372633914407755}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}

@@ -866,7 +866,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 55
+    m_Bits: 183
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -1212,6 +1212,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   circlePrefab: {fileID: 875372633914407755, guid: 3ef7d903b20915f4b8909f1b9b57ccff, type: 3}
+  isFirstSettlement: 0
 --- !u!4 &2074054471
 Transform:
   m_ObjectHideFlags: 0
