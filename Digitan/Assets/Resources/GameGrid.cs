@@ -55,7 +55,7 @@ public class GameGrid : MonoBehaviour
                 gameGrid[x][y] = Instantiate(
                     hex,
                     new Vector3(y * HexSize - x * HexSize / 2, 0, -x * HexSize * 3 / 4),
-                    Quaternion.Euler(90, 0, 0)
+                    Quaternion.Euler(-90, 180, 0)
                     );
 
                 gameGrid[x][y].transform.parent = transform;
@@ -74,7 +74,7 @@ public class GameGrid : MonoBehaviour
                 gameGrid[x][y] = Instantiate(
                     hex,
                     new Vector3(y * HexSize + x * HexSize / 2 - HexSize * 2, 0, -x * HexSize * 3 / 4),
-                    Quaternion.Euler(90, 0, 0)
+                    Quaternion.Euler(-90, 180, 0)
                 );
 
                 gameGrid[x][y].transform.parent = transform;
