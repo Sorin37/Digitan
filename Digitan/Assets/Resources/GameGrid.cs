@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GameGrid : MonoBehaviour
 {
-    private float HexSize = 5f;
+    public float hexSize = 5f;
 
     [SerializeField] private GameObject brick;
     [SerializeField] private GameObject desert;
@@ -12,17 +12,19 @@ public class GameGrid : MonoBehaviour
     [SerializeField] private GameObject lumber;
     [SerializeField] private GameObject ore;
     [SerializeField] private GameObject wool;
-    private GameObject[][] gameGrid;
+    [SerializeField] private GameObject numbersGrid;
+    public GameObject[][] gameGrid;
 
     // Start is called before the first frame update
     void Start()
     {
-        if (brick == null || desert == null || grain == null || ore == null || wool == null)
+        if (brick == null || desert == null || grain == null || ore == null || wool == null || numbersGrid == null)
         {
             Debug.LogError("Error: One of the prefabs is not assigned");
             return;
         }
         CreateGrid();
+        numbersGrid.GetComponent<NumbersGrid>().CreateGrid();
     }
 
     private void CreateGrid()
@@ -54,12 +56,12 @@ public class GameGrid : MonoBehaviour
 
                 gameGrid[x][y] = Instantiate(
                     hex,
-                    new Vector3(y * HexSize - x * HexSize / 2, 0, -x * HexSize * 3 / 4),
+                    new Vector3(y * hexSize - x * hexSize / 2, 0, -x * hexSize * 3 / 4),
                     Quaternion.Euler(-90, 180, 0)
                     );
 
                 gameGrid[x][y].transform.parent = transform;
-                gameGrid[x][y].gameObject.name = "HexTile(" + x.ToString() + ", " + y.ToString() + ")";
+                gameGrid[x][y].gameObject.name = hex.name;
             }
         }
 
@@ -73,12 +75,12 @@ public class GameGrid : MonoBehaviour
 
                 gameGrid[x][y] = Instantiate(
                     hex,
-                    new Vector3(y * HexSize + x * HexSize / 2 - HexSize * 2, 0, -x * HexSize * 3 / 4),
+                    new Vector3(y * hexSize + x * hexSize / 2 - hexSize * 2, 0, -x * hexSize * 3 / 4),
                     Quaternion.Euler(-90, 180, 0)
                 );
 
                 gameGrid[x][y].transform.parent = transform;
-                gameGrid[x][y].gameObject.name = "HexTile(" + x.ToString() + ", " + y.ToString() + ")";
+                gameGrid[x][y].gameObject.name = hex.name;
             }
         }
     }

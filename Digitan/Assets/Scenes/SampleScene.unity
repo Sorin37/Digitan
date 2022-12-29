@@ -265,12 +265,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 075b4d8fffa4ab147903574a7508fee7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hexSize: 5
   brick: {fileID: 4889140523976179943, guid: 3ee3de895a474ba4e8ccdf67f7631e96, type: 3}
   desert: {fileID: 1052257839068147587, guid: 6227fb8412830b9469244e0dd2f36e2d, type: 3}
   grain: {fileID: 3284880990581125864, guid: d3402d48b2f47e44294640af6689d4d8, type: 3}
   lumber: {fileID: 7644000654555001471, guid: 8fc77c99ae4a6f84e90c45045f33b2ce, type: 3}
   ore: {fileID: 2686665425113699854, guid: f693a283a09dddd4cbf03556b22dd2af, type: 3}
   wool: {fileID: 7551404698331157744, guid: 4377aad3562ca4341beb68c3a1028202, type: 3}
+  numbersGrid: {fileID: 1254946610}
 --- !u!4 &168630405
 Transform:
   m_ObjectHideFlags: 0
@@ -893,6 +895,61 @@ Transform:
   m_Father: {fileID: 364041275}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!1 &1254946610
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1254946612}
+  - component: {fileID: 1254946611}
+  m_Layer: 0
+  m_Name: NumbersGrid
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1254946611
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1254946610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ed88dcace00b674fa6a19332e5fd664, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  number2: {fileID: 4266710223142421269, guid: 877f2002701402b46a0b911172b21fa3, type: 3}
+  number3: {fileID: 7106896451773140349, guid: bfad24659e9cfbb498cc9270056c0b8a, type: 3}
+  number4: {fileID: 8544278477239499702, guid: a948355a3aa7d6045a41a9db31d62de4, type: 3}
+  number5: {fileID: 3362163788974163851, guid: 2abbaaa5aff6b554bb9c6492a64f9ef0, type: 3}
+  number6: {fileID: 4647531813766091251, guid: ceb2d51f16c1d5d4395d91aa2d6dbaa7, type: 3}
+  number8: {fileID: 7722985655113923436, guid: 7a29c527e2af3fb419820fbc9af4443c, type: 3}
+  number9: {fileID: 5481198541177028894, guid: 9548ac6c3f1fdda4ca9da3b85647bc51, type: 3}
+  number10: {fileID: 723881611686363969, guid: 5d9d9f0e174b1fe46b4b560903076215, type: 3}
+  number11: {fileID: 5991857208210989749, guid: 35cc2fa7213732646aa93e17469abad1, type: 3}
+  number12: {fileID: 9065892839303530086, guid: b40ba812b17eaed44ba0bfe2698c73de, type: 3}
+  resourceGrid: {fileID: 168630403}
+--- !u!4 &1254946612
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1254946610}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.0713086, y: -0.60766363, z: 0.6592507}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1506647371
 GameObject:
   m_ObjectHideFlags: 0
