@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -14,6 +15,8 @@ public class GameGrid : MonoBehaviour
     [SerializeField] private GameObject wool;
     [SerializeField] private GameObject numbersGrid;
     public GameObject[][] gameGrid;
+    public Dictionary<String, List<String>> resourcesDict;
+
 
     // Start is called before the first frame update
     void Start()
@@ -23,6 +26,8 @@ public class GameGrid : MonoBehaviour
             Debug.LogError("Error: One of the prefabs is not assigned");
             return;
         }
+
+        resourcesDict = new Dictionary<String, List<String>>();
         CreateGrid();
         numbersGrid.GetComponent<NumbersGrid>().CreateGrid();
     }
@@ -50,7 +55,7 @@ public class GameGrid : MonoBehaviour
         {
             for (int y = 0; y < gameGrid[x].Length; y++)
             {
-                int randomIndex = Random.Range(0, hexPool.Count);
+                int randomIndex = UnityEngine.Random.Range(0, hexPool.Count);
                 GameObject hex = hexPool[randomIndex];
                 hexPool.RemoveAt(randomIndex);
 
@@ -69,7 +74,7 @@ public class GameGrid : MonoBehaviour
         {
             for (int y = 0; y < gameGrid[x].Length; y++)
             {
-                int randomIndex = Random.Range(0, hexPool.Count);
+                int randomIndex = UnityEngine.Random.Range(0, hexPool.Count);
                 GameObject hex = hexPool[randomIndex];
                 hexPool.RemoveAt(randomIndex);
 

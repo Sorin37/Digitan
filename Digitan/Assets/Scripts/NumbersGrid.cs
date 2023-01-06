@@ -130,6 +130,7 @@ public class NumbersGrid : MonoBehaviour
 
                 numbersGrid[x][y].transform.parent = transform;
                 numbersGrid[x][y].gameObject.name = number.name;
+                numbersGrid[x][y].gameObject.GetComponent<Number>().resource = resourceGrid.GetComponent<GameGrid>().gameGrid[x][y].gameObject.name;
             }
         }
 
@@ -176,14 +177,13 @@ public class NumbersGrid : MonoBehaviour
 
                 numbersGrid[x][y].transform.parent = transform;
                 numbersGrid[x][y].gameObject.name = number.name;
+                numbersGrid[x][y].gameObject.GetComponent<Number>().resource = resourceGrid.GetComponent<GameGrid>().gameGrid[x][y].gameObject.name;
             }
         }
     }
 
     void findAvailableSpace(int x, int y, Vector3 position, GameObject number)
     {
-        print("It happened");
-
         List<(int, int)> availableSpaces= new List<(int, int)> ();
 
         for(int i=0; i < numbersGrid.Length; i++)
@@ -213,6 +213,7 @@ public class NumbersGrid : MonoBehaviour
         );
         numbersGrid[x][y].transform.parent = transform;
         numbersGrid[x][y].gameObject.name = numbersGrid[spaceI][spaceJ].gameObject.name;
+        numbersGrid[x][y].gameObject.GetComponent<Number>().resource = numbersGrid[spaceI][spaceJ].gameObject.GetComponent<Number>().resource;
 
         //instantiate the new number
         Destroy(numbersGrid[spaceI][spaceJ]);
@@ -223,5 +224,6 @@ public class NumbersGrid : MonoBehaviour
                 );
         numbersGrid[spaceI][spaceJ].transform.parent = transform;
         numbersGrid[spaceI][spaceJ].gameObject.name = number.name;
+        numbersGrid[spaceI][spaceJ].gameObject.GetComponent<Number>().resource = resourceGrid.GetComponent<GameGrid>().gameGrid[spaceJ][spaceJ].gameObject.name;
     }
 }
