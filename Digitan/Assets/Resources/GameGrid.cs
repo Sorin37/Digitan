@@ -16,6 +16,7 @@ public class GameGrid : MonoBehaviour
     [SerializeField] private GameObject numbersGrid;
     public GameObject[][] gameGrid;
     public Dictionary<String, List<String>> resourcesDict;
+    public Dictionary<String, int> playerHand;
 
 
     // Start is called before the first frame update
@@ -28,6 +29,7 @@ public class GameGrid : MonoBehaviour
         }
 
         resourcesDict = new Dictionary<String, List<String>>();
+        initializePlayerHand();
         CreateGrid();
         numbersGrid.GetComponent<NumbersGrid>().CreateGrid();
     }
@@ -94,5 +96,15 @@ public class GameGrid : MonoBehaviour
     void Update()
     {
 
+    }
+
+    void initializePlayerHand()
+    {
+        playerHand = new Dictionary<string, int>();
+        playerHand["Brick Resource"] = 0;
+        playerHand["Grain Resource"] = 0;
+        playerHand["Lumber Resource"] = 0;
+        playerHand["Ore Resource"] = 0;
+        playerHand["Wool Resource"] = 0;
     }
 }

@@ -31,9 +31,14 @@ public class ButtonManager : MonoBehaviour
             int dice2 = Random.Range(1, 7);
 
             var resourcesDict = gameGrid.GetComponent<GameGrid>().resourcesDict;
+            var playerHand = gameGrid.GetComponent<GameGrid>().playerHand;
 
             if (resourcesDict.ContainsKey((dice1 + dice2).ToString())) {
                 print((dice1 + dice2).ToString() + "You got: " + String.Join(",", resourcesDict[(dice1 + dice2).ToString()].ToArray()));
+                foreach(String resource in resourcesDict[(dice1 + dice2).ToString()])
+                {
+                    playerHand[resource]++;
+                }
             }
             else {
                 print((dice1 + dice2).ToString() + "You got nothing lamo!");
