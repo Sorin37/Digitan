@@ -17,12 +17,25 @@ public class ButtonManager : MonoBehaviour
 
         settlementButton.onClick.AddListener(() =>
         {
-            Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Settlement Circle"));
+            if (hasSettlementResources())
+            {
+                Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Settlement Circle"));
+            }
+            else
+            {
+                print("You don't have enough resources for a settlement!");
+            }
         });
 
         roadButton.onClick.AddListener(() =>
         {
+            if (hasRoadResources()) { 
             Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Road Circle"));
+            }
+            else
+            {
+                print("You don't have enough resources for a road!");
+            }
         });
 
         diceButton.onClick.AddListener(() =>
@@ -34,14 +47,14 @@ public class ButtonManager : MonoBehaviour
             var playerHand = gameGrid.GetComponent<GameGrid>().playerHand;
 
             if (resourcesDict.ContainsKey((dice1 + dice2).ToString())) {
-                print((dice1 + dice2).ToString() + "You got: " + String.Join(",", resourcesDict[(dice1 + dice2).ToString()].ToArray()));
+                print((dice1 + dice2).ToString() + " You got: " + String.Join(",", resourcesDict[(dice1 + dice2).ToString()].ToArray()));
                 foreach(String resource in resourcesDict[(dice1 + dice2).ToString()])
                 {
                     playerHand[resource]++;
                 }
             }
             else {
-                print((dice1 + dice2).ToString() + "You got nothing lamo!");
+                print((dice1 + dice2).ToString() + " You got nothing!");
             }
         });
     }
@@ -56,5 +69,35 @@ public class ButtonManager : MonoBehaviour
     void Update()
     {
         
+    }
+
+    bool hasSettlementResources()
+    {
+        var playerHand = gameGrid.GetComponent<GameGrid>().playerHand;
+        if (playerHand["Brick Resource"] > 0 &&
+            playerHand["Grain Resource"] > 0 &&
+            playerHand["Lumber Resource"] > 0 &&
+            playerHand["Wool Resource"] > 0)
+        {
+            playerHand["Brick Resource"]--;
+            playerHand["Grain Resource"]--;
+            playerHand["Lumber Resource"]--;
+            playerHand["Wool Resource"]--;
+            return true;
+        }
+        return false;
+    }
+
+    bool hasRoadResources()
+    {
+        var playerHand = gameGrid.GetComponent<GameGrid>().playerHand;
+        if (playerHand["Brick Resource"] > 0 &&
+            playerHand["Lumber Resource"] > 0)
+        {
+            playerHand["Brick Resource"]--;
+            playerHand["Lumber Resource"]--;
+            return true;
+        }
+        return false;
     }
 }

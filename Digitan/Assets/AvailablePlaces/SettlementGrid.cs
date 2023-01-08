@@ -7,19 +7,30 @@ public class SettlementGrid : MonoBehaviour
     private float HexSize = 5f;
     [SerializeField] private GameObject circlePrefab;
     public GameObject[][] settlementGrid;
-    public bool isFirstSettlement;
+    public bool is1stSettlementNext;
+    public bool is2ndSettlementNext;
 
     // Start is called before the first frame update
     void Start()
     {
-        isFirstSettlement = true;
-
         if (circlePrefab == null)
         {
             Debug.LogError("Error: No prefab assigned");
             return;
         }
 
+        createGrid();
+        placeFirstSettlement();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
+
+    void createGrid()
+    {
         settlementGrid = new GameObject[12][];
         settlementGrid[0] = new GameObject[3];
         settlementGrid[1] = new GameObject[4];
@@ -68,9 +79,11 @@ public class SettlementGrid : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    void placeFirstSettlement()
     {
+        Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Settlement Circle"));
 
+        is1stSettlementNext = true;
+        is2ndSettlementNext = false;
     }
 }
