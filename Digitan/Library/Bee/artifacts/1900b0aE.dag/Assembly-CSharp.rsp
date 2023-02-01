@@ -358,6 +358,7 @@
 "Assets/AvailablePlaces/SettlementGrid.cs"
 "Assets/ButtonManager.cs"
 "Assets/CameraController.cs"
+"Assets/MenuManager.cs"
 "Assets/Numbers/Number.cs"
 "Assets/Resources/GameGrid.cs"
 "Assets/Scripts/NumbersGrid.cs"
