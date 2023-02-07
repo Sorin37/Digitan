@@ -50,7 +50,7 @@ public class RoadCircle : MonoBehaviour
 
             GameObject roadObject = Instantiate(road, transform.position, Quaternion.Euler(90, 0, 0));
             roadObject.GetComponent<RoadCircle>().isOccupied = true;
-            Destroy(this);
+            Destroy(this.gameObject);
 
             //make the road circles invisible
             Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("Road Circle"));

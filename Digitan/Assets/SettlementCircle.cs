@@ -47,7 +47,10 @@ public class SettlementCircle : MonoBehaviour
                 {
                     for (int j = 0; j < grid[i].Length; j++)
                     {
-                        grid[i][j].layer = LayerMask.NameToLayer("Unvisible Circle");
+                        if (grid[i][j] != null)
+                        {
+                            grid[i][j].layer = LayerMask.NameToLayer("Unvisible Circle");
+                        }
                     }
                 }
             }
@@ -83,8 +86,10 @@ public class SettlementCircle : MonoBehaviour
             }
 
             GameObject settlementObject = Instantiate(settlement, transform.position, Quaternion.Euler(90, 0, 0));
+
+            //todo: change to settlement circle
             settlementObject.GetComponent<RoadCircle>().isOccupied = true;
-            Destroy(this);
+            Destroy(this.gameObject);
 
             Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("Settlement Circle"));
 
