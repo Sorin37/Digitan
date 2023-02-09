@@ -1,0 +1,43 @@
+{
+  "name": "com.unity.services.lobby",
+  "displayName": "Lobby",
+  "version": "1.0.3",
+  "unity": "2020.3",
+  "_upm": {
+    "gameService": {
+      "genericDashboardUrl": "https://dashboard.unity3d.com/lobby",
+      "projectDashboardUrl": "https://dashboard.unity3d.com/organizations/{0}/projects/{1}/environments/default/lobby/overview",
+      "projectDashboardUrlType": "OrganizationKeyAndProjectGuid",
+      "useCasesUrl": "https://docs.unity.com/lobby/Content/unity-lobby-service-overview.htm"
+    }
+  },
+  "description": "Enable players to find, create, and join lobbies with Lobby. Add Lobby to your multiplayer game to empower players to create the gaming experiences they want. Features include Quick Join, Public Lobby, and Private Match to allow flexibility in how players want to game with each other.",
+  "dependencies": {
+    "com.unity.services.core": "1.4.0",
+    "com.unity.modules.unitywebrequest": "1.0.0",
+    "com.unity.modules.unitywebrequestassetbundle": "1.0.0",
+    "com.unity.modules.unitywebrequestaudio": "1.0.0",
+    "com.unity.modules.unitywebrequesttexture": "1.0.0",
+    "com.unity.modules.unitywebrequestwww": "1.0.0",
+    "com.unity.nuget.newtonsoft-json": "3.0.2",
+    "com.unity.services.authentication": "2.0.0"
+  },
+  "samples": [
+    {
+      "displayName": "Lobby Hello World",
+      "description": "A sample showcasing the features of the Lobby SDK.",
+      "path": "Samples~/HelloWorld"
+    }
+  ],
+  "relatedPackages": {
+    "com.unity.services.lobby.tests": "1.0.3"
+  },
+  "upmCi": {
+    "footprint": "ae639a4e1fd232affd1c7e7277cd912994a0275a"
+  },
+  "repository": {
+    "url": "https://github.cds.internal.unity3d.com/unity/com.unity.services.rooms.git",
+    "type": "git",
+    "revision": "477c46432b558786fc1c7837e9ed9d4b2ad7de7f"
+  }
+}

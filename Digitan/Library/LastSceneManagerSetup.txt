@@ -1,13 +1,21 @@
 sceneSetups:
 - path: Assets/Scenes/MainMenu.unity
-  isLoaded: 0
+  isLoaded: 1
   isActive: 0
   isSubScene: 0
-- path: Assets/Scenes/SampleScene.unity
+- path: Assets/Scenes/Host.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0
-- path: Assets/Scenes/ClientDetails.unity
+- path: Assets/Scenes/Lobby.unity
   isLoaded: 0
+  isActive: 0
+  isSubScene: 0
+- path: Assets/Scenes/Game.unity
+  isLoaded: 0
+  isActive: 0
+  isSubScene: 0
+- path: Assets/Scenes/Client.unity
+  isLoaded: 1
   isActive: 0
   isSubScene: 0

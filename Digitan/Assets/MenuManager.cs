@@ -14,7 +14,17 @@ public class MenuManager : MonoBehaviour
     {
         playButton.onClick.AddListener(() =>
         {
-            SceneManager.LoadScene("SampleScene");
+            SceneManager.LoadScene("Game");
+        });
+
+        hostButton.onClick.AddListener(() =>
+        {
+            SceneManager.LoadScene("Host");
+        });
+
+        connectButton.onClick.AddListener(() =>
+        {
+            SceneManager.LoadScene("Client");
         });
     }
     // Start is called before the first frame update

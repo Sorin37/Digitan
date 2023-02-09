@@ -320,6 +320,8 @@
 "Assets/ButtonManager.cs"
 "Assets/CameraController.cs"
 "Assets/ClientDetails.cs"
+"Assets/HostDetails.cs"
+"Assets/LobbyManager.cs"
 "Assets/MenuManager.cs"
 "Assets/Numbers/Number.cs"
 "Assets/Resources/GameGrid.cs"
