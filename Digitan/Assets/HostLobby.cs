@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TMPro;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
@@ -40,7 +41,7 @@ public class HostLobby : MonoBehaviour
         hostButton.interactable= true;
     }
 
-    public async void CreateLobby(string lobbyName)
+    public async Task CreateLobby(string lobbyName)
     {
         lobby = await LobbyService.Instance.CreateLobbyAsync(lobbyName, 4);
     }

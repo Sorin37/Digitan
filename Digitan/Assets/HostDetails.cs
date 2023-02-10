@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using TMPro;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
@@ -18,9 +19,29 @@ public class HostDetails : MonoBehaviour
     {
         hostButton.interactable = false;
 
-        hostButton.onClick.AddListener(() =>
+        hostButton.onClick.AddListener(async () =>
         {
-            hostLobby.GetComponent<HostLobby>().CreateLobby(nameInput.text);
+            QueryResponse queryResponse = await Lobbies.Instance.QueryLobbiesAsync(
+                new QueryLobbiesOptions
+                {
+                    Filters = new List<QueryFilter>
+                    {
+                        new QueryFilter(
+                            QueryFilter.FieldOptions.Name,
+                            nameInput.text,
+                            QueryFilter.OpOptions.EQ
+                        )
+                    }
+                }
+            );
+            Debug.Log( queryResponse.Results.Count.ToString() );
+            //tell the mdfk that this name is already taken
+
+            //put to sleep because we use a free API
+            System.Threading.Thread.Sleep(1000);
+
+            await hostLobby.GetComponent<HostLobby>().CreateLobby(nameInput.text);
+
             SceneManager.LoadScene("Lobby");
         });
 
