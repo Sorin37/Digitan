@@ -366,6 +366,7 @@
 "Assets/LobbyManager.cs"
 "Assets/MenuManager.cs"
 "Assets/Numbers/Number.cs"
+"Assets/PopupManager.cs"
 "Assets/Resources/GameGrid.cs"
 "Assets/Scripts/NumbersGrid.cs"
 "Assets/SettlementCircle.cs"

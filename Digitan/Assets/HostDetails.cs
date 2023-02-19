@@ -14,6 +14,8 @@ public class HostDetails : MonoBehaviour
     [SerializeField] private Button hostButton;
     [SerializeField] private TMP_InputField nameInput;
     [SerializeField] private GameObject hostLobby;
+    [SerializeField] private Canvas popupCanvas;
+    [SerializeField] private Canvas inputCanvas;
 
     private void Awake()
     {
@@ -34,8 +36,14 @@ public class HostDetails : MonoBehaviour
                     }
                 }
             );
-            Debug.Log( queryResponse.Results.Count.ToString() );
-            //tell the mdfk that this name is already taken
+
+            if(queryResponse.Results.Count > 0)
+            {
+                inputCanvas.gameObject.SetActive(false);
+                popupCanvas.gameObject.SetActive(true);
+                print("S-a gasit lamo1");
+                return;
+            }
 
             //put to sleep because we use a free API
             System.Threading.Thread.Sleep(1000);
