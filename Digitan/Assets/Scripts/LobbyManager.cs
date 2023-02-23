@@ -30,6 +30,7 @@ public class LobbyManager : MonoBehaviour
         foreach (Player player in queryResponse.Results[0].Players)
         {
             Debug.LogError(player.Id);
+            Debug.LogError("eroare intented");
         }
     }
 

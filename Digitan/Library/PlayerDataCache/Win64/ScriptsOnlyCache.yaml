@@ -11,6 +11,7 @@ ScriptsOnlyBuild:
     - MenuManager
     - Number
     - NumbersGrid
+    - PlayersList
     - PopupClientManager
     - PopupHostManager
     - RoadCircle
@@ -308,6 +309,8 @@ ScriptsOnlyBuild:
     - Class: 108
       Script: {instanceID: 0}
     - Class: 114
+      Script: {instanceID: 1546}
+    - Class: 114
       Script: {instanceID: 2700}
     - Class: 114
       Script: {instanceID: 2944}
@@ -321,6 +324,8 @@ ScriptsOnlyBuild:
       Script: {instanceID: 6312}
     - Class: 114
       Script: {instanceID: 6672}
+    - Class: 114
+      Script: {instanceID: 24782}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -328,6 +333,8 @@ ScriptsOnlyBuild:
     - Class: 157
       Script: {instanceID: 0}
     - Class: 196
+      Script: {instanceID: 0}
+    - Class: 213
       Script: {instanceID: 0}
     - Class: 222
       Script: {instanceID: 0}
@@ -1493,6 +1500,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.VisualScripting.Core.dll
     namespaceName: Unity.VisualScripting
     className: UnityOnSliderValueChangedMessageListener
+  - hash:
+      serializedVersion: 2
+      Hash: 076c1e6714bd19f455df787c0e23fa6e
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: PlayersList
   platform: 19
   scenePathNames:
   - Assets/Scenes/MainMenu.unity
