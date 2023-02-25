@@ -14,6 +14,9 @@ public class LobbyManager : MonoBehaviour
     [SerializeField] private GameObject ListPanel;
     [SerializeField] private GameObject PlayerDetails;
     private Lobby lobby;
+    private int currentNumberOfPlayers = 0;
+    private float updateTimer;
+
 
     // Start is called before the first frame update
     void Start()
@@ -33,6 +36,40 @@ public class LobbyManager : MonoBehaviour
 
         LobbyName.GetComponent<TextMeshProUGUI>().text = lobby.Name;
 
+        drawPlayers();
+        currentNumberOfPlayers = lobby.Players.Count;
+    }
+
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
+
+    private async void PollLobby()
+    {
+        if (lobby != null)
+        {
+            updateTimer -= Time.deltaTime;
+            if (updateTimer < 0f)
+            {
+                float updateTimerMax = 3;
+                updateTimer = updateTimerMax;
+
+                lobby = await LobbyService.Instance.GetLobbyAsync(lobby.Id);
+
+                if(lobby.Players.Count != currentNumberOfPlayers)
+                {
+                    drawPlayers();
+                    currentNumberOfPlayers = lobby.Players.Count;
+                }
+            }
+        }
+    }
+
+    private void drawPlayers()
+    {
         int i = 0;
         foreach (Player player in lobby.Players)
         {
@@ -48,12 +85,5 @@ public class LobbyManager : MonoBehaviour
 
             i++;
         }
-    }
-
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 }
