@@ -15,6 +15,7 @@ public class HostLobby : MonoBehaviour
 
     public Lobby lobby;
     private float heartbeatTimer;
+    private float pollTimer;
 
     private void Awake()
     {
@@ -51,6 +52,7 @@ public class HostLobby : MonoBehaviour
     void Update()
     {
         KeepLobbyAlive();
+        PollLobby();
     }
 
     private async void KeepLobbyAlive()
@@ -62,6 +64,21 @@ public class HostLobby : MonoBehaviour
             {
                 float heartbeatTimerMax = 15;
                 heartbeatTimer = heartbeatTimerMax;
+
+                await LobbyService.Instance.SendHeartbeatPingAsync(lobby.Id);
+            }
+        }
+    }
+
+    private async void PollLobby()
+    {
+        if (lobby != null)
+        {
+            pollTimer -= Time.deltaTime;
+            if (pollTimer < 0f)
+            {
+                float pollTimerMax = 1.1f;
+                pollTimer = pollTimerMax;
 
                 await LobbyService.Instance.SendHeartbeatPingAsync(lobby.Id);
             }
