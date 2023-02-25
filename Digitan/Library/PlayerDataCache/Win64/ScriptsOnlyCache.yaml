@@ -11,7 +11,6 @@ ScriptsOnlyBuild:
     - MenuManager
     - Number
     - NumbersGrid
-    - PlayersList
     - PopupClientManager
     - PopupHostManager
     - RoadCircle
@@ -324,8 +323,6 @@ ScriptsOnlyBuild:
       Script: {instanceID: 6312}
     - Class: 114
       Script: {instanceID: 6672}
-    - Class: 114
-      Script: {instanceID: 24782}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -752,7 +749,7 @@ ScriptsOnlyBuild:
     className: ScriptMachine
   - hash:
       serializedVersion: 2
-      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+      Hash: 5bbc05edb74069f56d5e5fb24e0de621
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: LobbyManager
@@ -1500,12 +1497,6 @@ ScriptsOnlyBuild:
     assemblyName: Unity.VisualScripting.Core.dll
     namespaceName: Unity.VisualScripting
     className: UnityOnSliderValueChangedMessageListener
-  - hash:
-      serializedVersion: 2
-      Hash: 076c1e6714bd19f455df787c0e23fa6e
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: PlayersList
   platform: 19
   scenePathNames:
   - Assets/Scenes/MainMenu.unity

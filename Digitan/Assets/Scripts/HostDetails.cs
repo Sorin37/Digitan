@@ -4,6 +4,7 @@ using System.Xml.Linq;
 using TMPro;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -12,7 +13,7 @@ using UnityEngine.Windows;
 public class HostDetails : MonoBehaviour
 {
     [SerializeField] private Button hostButton;
-    [SerializeField] private TMP_InputField nameInput;
+    [SerializeField] public TMP_InputField nameInput;
     [SerializeField] private GameObject hostLobby;
     [SerializeField] private Canvas popupCanvas;
     [SerializeField] private Canvas inputCanvas;

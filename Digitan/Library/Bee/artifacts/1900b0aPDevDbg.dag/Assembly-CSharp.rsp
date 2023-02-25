@@ -329,7 +329,6 @@
 "Assets/Scripts/LobbyManager.cs"
 "Assets/Scripts/MenuManager.cs"
 "Assets/Scripts/NumbersGrid.cs"
-"Assets/Scripts/PlayersList.cs"
 "Assets/Scripts/PopupClientManager.cs"
 "Assets/Scripts/PopupHostManager.cs"
 "Assets/Scripts/SettlementCircle.cs"

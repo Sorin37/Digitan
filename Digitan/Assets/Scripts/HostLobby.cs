@@ -13,11 +13,12 @@ public class HostLobby : MonoBehaviour
 {
     [SerializeField] private Button hostButton;
 
-    private Lobby lobby;
+    public Lobby lobby;
     private float heartbeatTimer;
 
     private void Awake()
     {
+        tag = "Lobby";
         DontDestroyOnLoad(this.gameObject);
     }
 
