@@ -32,7 +32,7 @@ public class LobbyDetails : MonoBehaviour
                 float pollTimerMax = 1.1f;
                 pollTimer = pollTimerMax;
 
-                await LobbyService.Instance.SendHeartbeatPingAsync(lobby.Id);
+                await LobbyService.Instance.GetLobbyAsync(lobby.Id);
             }
         }
     }
