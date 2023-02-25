@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -15,7 +16,7 @@ public class LobbyManager : MonoBehaviour
     [SerializeField] private GameObject PlayerDetails;
     private Lobby lobby;
     private int currentNumberOfPlayers = 0;
-    private float updateTimer;
+    private float updateTimer = 3;
 
 
     // Start is called before the first frame update
@@ -44,7 +45,7 @@ public class LobbyManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        PollLobby();
     }
 
     private async void PollLobby()
@@ -57,7 +58,14 @@ public class LobbyManager : MonoBehaviour
                 float updateTimerMax = 3;
                 updateTimer = updateTimerMax;
 
-                lobby = await LobbyService.Instance.GetLobbyAsync(lobby.Id);
+                try
+                {
+                    lobby = await LobbyService.Instance.GetLobbyAsync(lobby.Id);
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError(ex.Message);
+                }
 
                 if(lobby.Players.Count != currentNumberOfPlayers)
                 {
@@ -70,6 +78,10 @@ public class LobbyManager : MonoBehaviour
 
     private void drawPlayers()
     {
+        foreach (Transform child in ListPanel.transform) {
+            Destroy(child.gameObject);
+        }
+
         int i = 0;
         foreach (Player player in lobby.Players)
         {

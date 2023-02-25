@@ -52,7 +52,7 @@ public class HostLobby : MonoBehaviour
     void Update()
     {
         KeepLobbyAlive();
-        PollLobby();
+        //PollLobby();
     }
 
     private async void KeepLobbyAlive()
