@@ -15,6 +15,7 @@ public class ClientDetails : MonoBehaviour
     [SerializeField] private TMP_InputField nameInput;
     [SerializeField] private Canvas popupCanvas;
     [SerializeField] private Canvas inputCanvas;
+    [SerializeField] private GameObject Lobby;
 
     private async void Awake()
     {
@@ -45,7 +46,7 @@ public class ClientDetails : MonoBehaviour
                 return;
             }
 
-            await Lobbies.Instance.JoinLobbyByIdAsync(queryResponse.Results[0].Id);
+            Lobby.GetComponent<LobbyDetails>().lobby = await Lobbies.Instance.JoinLobbyByIdAsync(queryResponse.Results[0].Id);
 
             SceneManager.LoadScene("Lobby");
         });

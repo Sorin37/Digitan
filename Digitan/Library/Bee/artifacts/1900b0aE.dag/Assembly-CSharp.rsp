@@ -358,6 +358,7 @@
 "Assets/AvailablePlaces/RoadCircle.cs"
 "Assets/AvailablePlaces/RoadGrid.cs"
 "Assets/AvailablePlaces/SettlementGrid.cs"
+"Assets/LobbyDetails.cs"
 "Assets/Numbers/Number.cs"
 "Assets/Resources/GameGrid.cs"
 "Assets/Scripts/ButtonManager.cs"

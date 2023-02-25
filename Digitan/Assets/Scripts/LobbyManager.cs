@@ -19,8 +19,17 @@ public class LobbyManager : MonoBehaviour
     void Start()
     {
         //System.Threading.Thread.Sleep(1000);
+        var currentLobby = GameObject.FindGameObjectsWithTag("Lobby")[0];
 
-        lobby = GameObject.FindGameObjectsWithTag("Lobby")[0].GetComponent<HostLobby>().lobby;
+        if (currentLobby.GetComponent<HostLobby>())
+        {
+            lobby = GameObject.FindGameObjectsWithTag("Lobby")[0].GetComponent<HostLobby>().lobby;
+        }
+        else
+        {
+            lobby = GameObject.FindGameObjectsWithTag("Lobby")[0].GetComponent<LobbyDetails>().lobby;
+
+        }
 
         LobbyName.GetComponent<TextMeshProUGUI>().text = lobby.Name;
 
