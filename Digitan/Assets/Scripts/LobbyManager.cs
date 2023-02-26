@@ -85,7 +85,10 @@ public class LobbyManager : MonoBehaviour
         int i = 0;
         foreach (Player player in lobby.Players)
         {
-            PlayerDetails.transform.Find("PlayerName").gameObject.GetComponent<TextMeshProUGUI>().text = "xd";
+            print(player.Data["PlayerName"].Value);
+            PlayerDetails.transform.Find("PlayerName")
+                .gameObject.GetComponent<TextMeshProUGUI>()
+                .text = player.Data["PlayerName"].Value;
 
             GameObject playerDetails = Instantiate(
                 PlayerDetails,

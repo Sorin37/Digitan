@@ -13,7 +13,8 @@ using UnityEngine.Windows;
 public class HostDetails : MonoBehaviour
 {
     [SerializeField] private Button hostButton;
-    [SerializeField] public TMP_InputField nameInput;
+    [SerializeField] public TMP_InputField LobbyNameInput;
+    [SerializeField] public TMP_InputField NicknameInput;
     [SerializeField] private GameObject hostLobby;
     [SerializeField] private Canvas popupCanvas;
     [SerializeField] private Canvas inputCanvas;
@@ -31,7 +32,7 @@ public class HostDetails : MonoBehaviour
                     {
                         new QueryFilter(
                             QueryFilter.FieldOptions.Name,
-                            nameInput.text,
+                            LobbyNameInput.text,
                             QueryFilter.OpOptions.EQ
                         )
                     }
@@ -48,7 +49,7 @@ public class HostDetails : MonoBehaviour
             //put to sleep because we use a free API
             System.Threading.Thread.Sleep(1000);
 
-            await hostLobby.GetComponent<HostLobby>().CreateLobby(nameInput.text);
+            await hostLobby.GetComponent<HostLobby>().CreateLobby(LobbyNameInput.text, NicknameInput.text);
 
             SceneManager.LoadScene("Lobby");
         });

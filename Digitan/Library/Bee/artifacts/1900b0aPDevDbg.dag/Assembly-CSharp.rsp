@@ -326,6 +326,7 @@
 "Assets/Scripts/ClientDetails.cs"
 "Assets/Scripts/HostDetails.cs"
 "Assets/Scripts/HostLobby.cs"
+"Assets/Scripts/LobbyDetails.cs"
 "Assets/Scripts/LobbyManager.cs"
 "Assets/Scripts/MenuManager.cs"
 "Assets/Scripts/NumbersGrid.cs"

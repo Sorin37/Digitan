@@ -26,7 +26,7 @@ public class HostLobby : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-       
+
     }
 
     public async void InitializeUnityServices()
@@ -40,12 +40,20 @@ public class HostLobby : MonoBehaviour
 
         await AuthenticationService.Instance.SignInAnonymouslyAsync();
 
-        hostButton.interactable= true;
+        hostButton.interactable = true;
     }
 
-    public async Task CreateLobby(string lobbyName)
+    public async Task CreateLobby(string lobbyName, string nickname)
     {
-        lobby = await LobbyService.Instance.CreateLobbyAsync(lobbyName, 4);
+        CreateLobbyOptions options = new CreateLobbyOptions {
+            Player = new Player {
+                Data = new Dictionary<string, PlayerDataObject> {
+                    { "PlayerName", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Public, nickname) } 
+                }
+            }
+        };
+
+        lobby = await LobbyService.Instance.CreateLobbyAsync(lobbyName, 4, options);
     }
 
     // Update is called once per frame
@@ -57,10 +65,10 @@ public class HostLobby : MonoBehaviour
 
     private async void KeepLobbyAlive()
     {
-        if(lobby != null)
+        if (lobby != null)
         {
             heartbeatTimer -= Time.deltaTime;
-            if(heartbeatTimer < 0)
+            if (heartbeatTimer < 0)
             {
                 float heartbeatTimerMax = 15;
                 heartbeatTimer = heartbeatTimerMax;
