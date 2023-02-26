@@ -26,6 +26,7 @@ public class ClientDetails : MonoBehaviour
 
         connectButton.onClick.AddListener(async () =>
         {
+            print(LobbyNameInput.text);
             QueryResponse queryResponse = await Lobbies.Instance.QueryLobbiesAsync(
                 new QueryLobbiesOptions
                 {
