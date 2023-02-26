@@ -16,6 +16,6 @@ sceneSetups:
   isActive: 0
   isSubScene: 0
 - path: Assets/Scenes/Client.unity
-  isLoaded: 0
+  isLoaded: 1
   isActive: 0
   isSubScene: 0

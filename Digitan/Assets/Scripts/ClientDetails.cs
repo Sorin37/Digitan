@@ -12,7 +12,8 @@ using Unity.Services.Authentication;
 public class ClientDetails : MonoBehaviour
 {
     [SerializeField] private Button connectButton;
-    [SerializeField] private TMP_InputField nameInput;
+    [SerializeField] private TMP_InputField LobbyNameInput;
+    [SerializeField] private TMP_InputField NicknameInput;
     [SerializeField] private Canvas popupCanvas;
     [SerializeField] private Canvas inputCanvas;
     [SerializeField] private GameObject Lobby;
@@ -32,7 +33,7 @@ public class ClientDetails : MonoBehaviour
                     {
                         new QueryFilter(
                             QueryFilter.FieldOptions.Name,
-                            nameInput.text,
+                            LobbyNameInput.text,
                             QueryFilter.OpOptions.EQ
                         )
                     }
@@ -46,7 +47,18 @@ public class ClientDetails : MonoBehaviour
                 return;
             }
 
-            Lobby.GetComponent<LobbyDetails>().lobby = await Lobbies.Instance.JoinLobbyByIdAsync(queryResponse.Results[0].Id);
+            JoinLobbyByIdOptions options = new JoinLobbyByIdOptions
+            {
+                Player = new Player
+                {
+                    Data = new Dictionary<string, PlayerDataObject> {
+                    { 
+                        "PlayerName", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Public, NicknameInput.text) }
+                    }
+                }
+            };
+
+            Lobby.GetComponent<LobbyDetails>().lobby = await Lobbies.Instance.JoinLobbyByIdAsync(queryResponse.Results[0].Id, options);
 
             SceneManager.LoadScene("Lobby");
         });
@@ -55,7 +67,7 @@ public class ClientDetails : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
