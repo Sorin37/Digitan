@@ -119,7 +119,7 @@ public class SettlementCircle : MonoBehaviour
                 resourcesDict[collider.gameObject.name] = new List<String>() { collider.gameObject.GetComponent<Number>().resource };
             }
 
-            //first settlements stuff
+            //first two settlements stuff
             giveResourcesForTheFirstSettlements(collider.gameObject.GetComponent<Number>().resource);
 
         }
