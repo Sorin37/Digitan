@@ -42,7 +42,7 @@ public class RoadGrid : MonoBehaviour
                 {
                     roadGrid[x][y] = Instantiate(
                         circlePrefab,
-                        new Vector3(y * HexSize / 2 - HexSize / 4 * (x + 1), 0.5f, -x * HexSize * 0.375f + HexSize / 3),
+                        new Vector3(y * HexSize / 2 - HexSize / 4 * (x + 1), 0.1f, -x * HexSize * 0.375f + HexSize / 3),
                         Quaternion.Euler(90, 0, 0)
                     );
                 }

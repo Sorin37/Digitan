@@ -24,7 +24,7 @@ public class RoadCircle : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void OnMouseDown()
@@ -38,7 +38,8 @@ public class RoadCircle : MonoBehaviour
                (int)Mathf.Pow(2, LayerMask.NameToLayer("Unvisible Circle"))
             );
 
-            for (int i = 0; i < colliders.Length; i++) {
+            for (int i = 0; i < colliders.Length; i++)
+            {
                 if (colliders[i].gameObject.GetComponent<SettlementCircle>() != null)
                 {
                     if (!colliders[i].gameObject.GetComponent<SettlementCircle>().isTooClose)
@@ -52,9 +53,10 @@ public class RoadCircle : MonoBehaviour
                 }
             }
 
-            GameObject roadObject = Instantiate(Road, transform.position, Quaternion.Euler(-90, 0, 0));
+            GameObject roadObject = Instantiate(Road,
+                                                transform.position,
+                                                getRotationFromPos(getIndexesOfElem(gameObject)));
             roadObject.GetComponent<RoadCircle>().isOccupied = true;
-            getIndexesOfElem(roadObject);
 
             Destroy(this.gameObject);
 
@@ -76,15 +78,38 @@ public class RoadCircle : MonoBehaviour
             }
         }
 
-        if(row != null)
+        if (row != null)
         {
-            print((roadGrid.ToList().IndexOf(row), row.ToList().IndexOf(circle)));
-        }
-        else
-        {
-            print("pai e null pareri?");
+            return (roadGrid.ToList().IndexOf(row), row.ToList().IndexOf(circle));
         }
 
         return (-1, -1);
+    }
+
+    private Quaternion getRotationFromPos((int x, int y) pos)
+    {
+        int y=0;
+
+        if (pos.x % 2 == 0)
+        {
+            y = 60;
+
+            if(pos.y % 2 == 1)
+            {
+                y *= -1;
+            }
+        }
+
+        if (pos.x % 2 == 0 && pos.x > 5)
+        {
+            y = -60;
+
+            if (pos.y % 2 == 1)
+            {
+                y *= -1;
+            }
+        }
+
+        return Quaternion.Euler(-90, y, 0);
     }
 }
