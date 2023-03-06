@@ -3,11 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.Services.Lobbies;
+using Unity.Services.Relay;
 using Unity.Services.Lobbies.Models;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Unity.Services.Relay.Models;
+using Unity.Networking.Transport.Relay;
+using UnityEngine.SceneManagement;
+using Unity.Services.Authentication;
+using Unity.Services.Core;
 
 public class LobbyManager : MonoBehaviour
 {
@@ -17,8 +23,16 @@ public class LobbyManager : MonoBehaviour
     [SerializeField] private Button PlayButton;
     private Lobby lobby;
     private int currentNumberOfPlayers = 0;
-    private float updateTimer = 3;
+    private float updateTimer = 5;
 
+    private void Awake()
+    {
+        PlayButton.onClick.AddListener(() =>
+        {
+            CreateRelay();
+            SceneManager.LoadScene("Game");
+        });
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -41,7 +55,7 @@ public class LobbyManager : MonoBehaviour
         drawPlayers();
         currentNumberOfPlayers = lobby.Players.Count;
 
-        if(currentNumberOfPlayers > 1)
+        if (currentNumberOfPlayers > 1)
         {
             PlayButton.gameObject.SetActive(false);
         }
@@ -61,7 +75,7 @@ public class LobbyManager : MonoBehaviour
             updateTimer -= Time.deltaTime;
             if (updateTimer < 0f)
             {
-                float updateTimerMax = 3;
+                float updateTimerMax = 5;
                 updateTimer = updateTimerMax;
 
                 try
@@ -73,7 +87,7 @@ public class LobbyManager : MonoBehaviour
                     Debug.LogError(ex.Message);
                 }
 
-                if(lobby.Players.Count != currentNumberOfPlayers)
+                if (lobby.Players.Count != currentNumberOfPlayers)
                 {
                     drawPlayers();
                     currentNumberOfPlayers = lobby.Players.Count;
@@ -84,7 +98,8 @@ public class LobbyManager : MonoBehaviour
 
     private void drawPlayers()
     {
-        foreach (Transform child in ListPanel.transform) {
+        foreach (Transform child in ListPanel.transform)
+        {
             Destroy(child.gameObject);
         }
 
@@ -104,6 +119,20 @@ public class LobbyManager : MonoBehaviour
             playerDetails.transform.SetParent(ListPanel.transform, false);
 
             i++;
+        }
+    }
+
+    private async void CreateRelay()
+    {
+        try
+        {
+            Allocation allocation = await RelayService.Instance.CreateAllocationAsync(3);
+            string joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
+            Debug.LogError(joinCode);
+        }
+        catch (RelayServiceException ex)
+        {
+            Debug.LogError(ex.Message);
         }
     }
 }

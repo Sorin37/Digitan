@@ -6,8 +6,12 @@ using Unity.Services.Authentication;
 using Unity.Services.Core;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
+using Unity.Services.Relay.Models;
+using Unity.Services.Relay;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
+using UnityEditor;
 
 public class HostLobby : MonoBehaviour
 {
@@ -45,10 +49,15 @@ public class HostLobby : MonoBehaviour
 
     public async Task CreateLobby(string lobbyName, string nickname)
     {
-        CreateLobbyOptions options = new CreateLobbyOptions {
-            Player = new Player {
+        CreateLobbyOptions options = new CreateLobbyOptions
+        {
+            Data = new Dictionary<string, DataObject> {
+                    { "RelayCode", new DataObject(DataObject.VisibilityOptions.Public, "None") }
+            },
+            Player = new Player
+            {
                 Data = new Dictionary<string, PlayerDataObject> {
-                    { "PlayerName", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Public, nickname) } 
+                    { "PlayerName", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Public, nickname) },
                 }
             }
         };
