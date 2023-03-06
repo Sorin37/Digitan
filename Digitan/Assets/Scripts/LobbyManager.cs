@@ -7,13 +7,14 @@ using Unity.Services.Lobbies.Models;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 public class LobbyManager : MonoBehaviour
 {
     [SerializeField] private GameObject LobbyName;
     [SerializeField] private GameObject ListPanel;
     [SerializeField] private GameObject PlayerDetails;
+    [SerializeField] private Button PlayButton;
     private Lobby lobby;
     private int currentNumberOfPlayers = 0;
     private float updateTimer = 3;
@@ -39,6 +40,11 @@ public class LobbyManager : MonoBehaviour
 
         drawPlayers();
         currentNumberOfPlayers = lobby.Players.Count;
+
+        if(currentNumberOfPlayers > 1)
+        {
+            PlayButton.gameObject.SetActive(false);
+        }
     }
 
 
@@ -85,7 +91,6 @@ public class LobbyManager : MonoBehaviour
         int i = 0;
         foreach (Player player in lobby.Players)
         {
-            print(player.Data["PlayerName"].Value);
             PlayerDetails.transform.Find("PlayerName")
                 .gameObject.GetComponent<TextMeshProUGUI>()
                 .text = player.Data["PlayerName"].Value;
