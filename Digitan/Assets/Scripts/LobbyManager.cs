@@ -14,6 +14,7 @@ using Unity.Networking.Transport.Relay;
 using UnityEngine.SceneManagement;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
+using System.Threading.Tasks;
 
 public class LobbyManager : MonoBehaviour
 {
@@ -27,9 +28,10 @@ public class LobbyManager : MonoBehaviour
 
     private void Awake()
     {
-        PlayButton.onClick.AddListener(() =>
+        PlayButton.onClick.AddListener(async () =>
         {
-            CreateRelay();
+            string joinCode = await CreateRelay();
+            lobby.Data["RelayCode"] = new DataObject(DataObject.VisibilityOptions.Public, joinCode);
             SceneManager.LoadScene("Game");
         });
     }
@@ -122,15 +124,30 @@ public class LobbyManager : MonoBehaviour
         }
     }
 
-    private async void CreateRelay()
+    private async Task<string> CreateRelay()
     {
         try
         {
             Allocation allocation = await RelayService.Instance.CreateAllocationAsync(3);
             string joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
             Debug.LogError(joinCode);
+            return joinCode;
         }
         catch (RelayServiceException ex)
+        {
+            Debug.LogError(ex.Message);
+            throw;
+        }
+    }
+
+    private async void JoinRelay(string relayCode)
+    {
+        try
+        {
+            Debug.Log("Joining Relay with " + relayCode);
+            await RelayService.Instance.JoinAllocationAsync(relayCode);
+        }
+        catch(RelayServiceException ex)
         {
             Debug.LogError(ex.Message);
         }
