@@ -136,6 +136,8 @@ public class LobbyManager : MonoBehaviour
             string joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
             Debug.LogError(joinCode);
 
+            Debug.LogError(allocation.RelayServer.ToString());
+
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetHostRelayData(
                 allocation.RelayServer.IpV4,
                 (ushort)allocation.RelayServer.Port,
