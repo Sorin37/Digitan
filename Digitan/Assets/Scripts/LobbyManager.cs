@@ -15,6 +15,8 @@ using UnityEngine.SceneManagement;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
 using System.Threading.Tasks;
+using Unity.Netcode;
+using Unity.Netcode.Transports.UTP;
 
 public class LobbyManager : MonoBehaviour
 {
@@ -25,6 +27,7 @@ public class LobbyManager : MonoBehaviour
     private Lobby lobby;
     private int currentNumberOfPlayers = 0;
     private float updateTimer = 5;
+    private float checkStartTimer = 5;
 
     private void Awake()
     {
@@ -68,6 +71,7 @@ public class LobbyManager : MonoBehaviour
     void Update()
     {
         PollLobby();
+        CheckStartLobby();
     }
 
     private async void PollLobby()
@@ -131,6 +135,15 @@ public class LobbyManager : MonoBehaviour
             Allocation allocation = await RelayService.Instance.CreateAllocationAsync(3);
             string joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
             Debug.LogError(joinCode);
+
+            NetworkManager.Singleton.GetComponent<UnityTransport>().SetHostRelayData(
+                allocation.RelayServer.IpV4,
+                (ushort)allocation.RelayServer.Port,
+                allocation.AllocationIdBytes,
+                allocation.Key,
+                allocation.ConnectionData
+            );
+
             return joinCode;
         }
         catch (RelayServiceException ex)
@@ -147,9 +160,39 @@ public class LobbyManager : MonoBehaviour
             Debug.Log("Joining Relay with " + relayCode);
             await RelayService.Instance.JoinAllocationAsync(relayCode);
         }
-        catch(RelayServiceException ex)
+        catch (RelayServiceException ex)
         {
             Debug.LogError(ex.Message);
+        }
+    }
+
+    private async void CheckStartLobby()
+    {
+        if (lobby != null)
+            return;
+
+        checkStartTimer -= Time.deltaTime;
+
+        if (checkStartTimer < 0f)
+        {
+            float checkStartTimerMax = 5;
+            checkStartTimer = checkStartTimerMax;
+
+            try
+            {
+                lobby = await LobbyService.Instance.GetLobbyAsync(lobby.Id);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError(ex.Message);
+            }
+
+            if (lobby.Data["RelayCode"].Value != "None")
+            {
+                JoinRelay(lobby.Data["RelayCode"].Value);
+                Debug.LogError("ACu ar fi trebuit sa intru in joc");
+                //SceneManager.LoadScene("Game");
+            }
         }
     }
 }
