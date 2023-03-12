@@ -34,8 +34,7 @@ public class LobbyManager : MonoBehaviour
         PlayButton.onClick.AddListener(async () =>
         {
             string joinCode = await CreateRelay();
-            lobby.Data["RelayCode"] = new DataObject(DataObject.VisibilityOptions.Public, joinCode);
-            UpdateLobbyRelayCode(joinCode);
+            await UpdateLobbyRelayCode(joinCode);
             SceneManager.LoadScene("Game");
         });
     }
@@ -189,16 +188,16 @@ public class LobbyManager : MonoBehaviour
         }
     }
 
-    private void UpdateLobbyRelayCode(string relayCode)
+    private async Task UpdateLobbyRelayCode(string relayCode)
     {
         try
         {
-            Lobbies.Instance.UpdateLobbyAsync(lobby.Id, new UpdateLobbyOptions
+            lobby = await Lobbies.Instance.UpdateLobbyAsync(lobby.Id, new UpdateLobbyOptions
             {
                 Data = new Dictionary<string, DataObject>
                 {
                     {"RelayCode", new DataObject(DataObject.VisibilityOptions.Public, relayCode) },
-                }
+                }   
             });
         }
         catch (LobbyServiceException ex)
