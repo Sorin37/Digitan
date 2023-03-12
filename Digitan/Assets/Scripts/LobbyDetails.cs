@@ -32,6 +32,7 @@ public class LobbyDetails : MonoBehaviour
                 float pollTimerMax = 1.1f;
                 pollTimer = pollTimerMax;
 
+                Debug.LogError(lobby.Id);
                 lobby = await LobbyService.Instance.GetLobbyAsync(lobby.Id);
             }
         }

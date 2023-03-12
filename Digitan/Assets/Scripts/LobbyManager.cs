@@ -72,6 +72,7 @@ public class LobbyManager : MonoBehaviour
     {
         //PollLobby();
         CheckStartLobby();
+
     }
 
     private async void PollLobby()
@@ -178,6 +179,7 @@ public class LobbyManager : MonoBehaviour
             float checkStartTimerMax = 5;
             checkStartTimer = checkStartTimerMax;
 
+            Debug.LogError(lobby.Id);
             Debug.LogError(lobby.Data["RelayCode"].Value);
             if (lobby.Data["RelayCode"].Value != "None")
             {
