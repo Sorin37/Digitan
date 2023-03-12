@@ -69,7 +69,6 @@ public class HostLobby : MonoBehaviour
     void Update()
     {
         KeepLobbyAlive();
-        //PollLobby();
     }
 
     private async void KeepLobbyAlive()
@@ -83,21 +82,6 @@ public class HostLobby : MonoBehaviour
                 heartbeatTimer = heartbeatTimerMax;
 
                 await LobbyService.Instance.SendHeartbeatPingAsync(lobby.Id);
-            }
-        }
-    }
-
-    private async void PollLobby()
-    {
-        if (lobby != null)
-        {
-            pollTimer -= Time.deltaTime;
-            if (pollTimer < 0f)
-            {
-                float pollTimerMax = 1.1f;
-                pollTimer = pollTimerMax;
-
-                await LobbyService.Instance.GetLobbyAsync(lobby.Id);
             }
         }
     }

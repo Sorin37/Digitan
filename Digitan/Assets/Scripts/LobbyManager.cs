@@ -26,7 +26,7 @@ public class LobbyManager : MonoBehaviour
     [SerializeField] private Button PlayButton;
     private Lobby lobby;
     private int currentNumberOfPlayers = 0;
-    private float updateTimer = 5;
+    private float updateTimer = 15;
     private float checkStartTimer = 5;
 
     private void Awake()
@@ -35,6 +35,7 @@ public class LobbyManager : MonoBehaviour
         {
             string joinCode = await CreateRelay();
             lobby.Data["RelayCode"] = new DataObject(DataObject.VisibilityOptions.Public, joinCode);
+            UpdateLobbyRelayCode(joinCode);
             SceneManager.LoadScene("Game");
         });
     }
@@ -70,7 +71,7 @@ public class LobbyManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        PollLobby();
+        //PollLobby();
         CheckStartLobby();
     }
 
@@ -81,7 +82,7 @@ public class LobbyManager : MonoBehaviour
             updateTimer -= Time.deltaTime;
             if (updateTimer < 0f)
             {
-                float updateTimerMax = 5;
+                float updateTimerMax = 15;
                 updateTimer = updateTimerMax;
 
                 try
@@ -136,8 +137,6 @@ public class LobbyManager : MonoBehaviour
             string joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
             Debug.LogError(joinCode);
 
-            Debug.LogError(allocation.RelayServer.ToString());
-
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetHostRelayData(
                 allocation.RelayServer.IpV4,
                 (ushort)allocation.RelayServer.Port,
@@ -168,9 +167,9 @@ public class LobbyManager : MonoBehaviour
         }
     }
 
-    private async void CheckStartLobby()
+    private void CheckStartLobby()
     {
-        if (lobby != null)
+        if (lobby == null)
             return;
 
         checkStartTimer -= Time.deltaTime;
@@ -180,21 +179,31 @@ public class LobbyManager : MonoBehaviour
             float checkStartTimerMax = 5;
             checkStartTimer = checkStartTimerMax;
 
-            try
-            {
-                lobby = await LobbyService.Instance.GetLobbyAsync(lobby.Id);
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError(ex.Message);
-            }
-
+            Debug.LogError(lobby.Data["RelayCode"].Value);
             if (lobby.Data["RelayCode"].Value != "None")
             {
                 JoinRelay(lobby.Data["RelayCode"].Value);
                 Debug.LogError("ACu ar fi trebuit sa intru in joc");
                 //SceneManager.LoadScene("Game");
             }
+        }
+    }
+
+    private void UpdateLobbyRelayCode(string relayCode)
+    {
+        try
+        {
+            Lobbies.Instance.UpdateLobbyAsync(lobby.Id, new UpdateLobbyOptions
+            {
+                Data = new Dictionary<string, DataObject>
+                {
+                    {"RelayCode", new DataObject(DataObject.VisibilityOptions.Public, relayCode) },
+                }
+            });
+        }
+        catch (LobbyServiceException ex)
+        {
+            Debug.LogError(ex.Message);
         }
     }
 }
