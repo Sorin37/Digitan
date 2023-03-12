@@ -24,9 +24,9 @@ public class LobbyManager : MonoBehaviour
     [SerializeField] private GameObject ListPanel;
     [SerializeField] private GameObject PlayerDetails;
     [SerializeField] private Button PlayButton;
-    private Lobby lobby;
+    public Lobby lobby;
     private int currentNumberOfPlayers = 0;
-    private float updateTimer = 15;
+    private float updateTimer = 5;
     private float checkStartTimer = 5;
 
     private void Awake()
@@ -70,9 +70,8 @@ public class LobbyManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //PollLobby();
+        PollLobby();
         CheckStartLobby();
-
     }
 
     private async void PollLobby()
@@ -82,7 +81,7 @@ public class LobbyManager : MonoBehaviour
             updateTimer -= Time.deltaTime;
             if (updateTimer < 0f)
             {
-                float updateTimerMax = 15;
+                float updateTimerMax = 5;
                 updateTimer = updateTimerMax;
 
                 try
@@ -169,6 +168,7 @@ public class LobbyManager : MonoBehaviour
 
     private void CheckStartLobby()
     {
+
         if (lobby == null)
             return;
 
@@ -179,8 +179,6 @@ public class LobbyManager : MonoBehaviour
             float checkStartTimerMax = 5;
             checkStartTimer = checkStartTimerMax;
 
-            Debug.LogError(lobby.Id);
-            Debug.LogError(lobby.Data["RelayCode"].Value);
             if (lobby.Data["RelayCode"].Value != "None")
             {
                 JoinRelay(lobby.Data["RelayCode"].Value);
@@ -205,6 +203,34 @@ public class LobbyManager : MonoBehaviour
         catch (LobbyServiceException ex)
         {
             Debug.LogError(ex.Message);
+        }
+    }
+
+    private void UpdateLobbies(Lobby lobby)
+    {
+        var currentLobby = GameObject.FindGameObjectsWithTag("Lobby")[0];
+
+        if (currentLobby.GetComponent<HostLobby>())
+        {
+            GameObject.FindGameObjectsWithTag("Lobby")[0].GetComponent<HostLobby>().lobby = lobby;
+        }
+        else
+        {
+            GameObject.FindGameObjectsWithTag("Lobby")[0].GetComponent<LobbyDetails>().lobby = lobby;
+        }
+    }
+
+    private Lobby GetLobby()
+    {
+        var currentLobby = GameObject.FindGameObjectsWithTag("Lobby")[0];
+
+        if (currentLobby.GetComponent<HostLobby>())
+        {
+            return GameObject.FindGameObjectsWithTag("Lobby")[0].GetComponent<HostLobby>().lobby;
+        }
+        else
+        {
+            return GameObject.FindGameObjectsWithTag("Lobby")[0].GetComponent<LobbyDetails>().lobby;
         }
     }
 }

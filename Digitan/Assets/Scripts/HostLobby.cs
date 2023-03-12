@@ -73,16 +73,17 @@ public class HostLobby : MonoBehaviour
 
     private async void KeepLobbyAlive()
     {
-        if (lobby != null)
-        {
-            heartbeatTimer -= Time.deltaTime;
-            if (heartbeatTimer < 0)
-            {
-                float heartbeatTimerMax = 15;
-                heartbeatTimer = heartbeatTimerMax;
+        if (lobby == null)
+            return;
 
-                await LobbyService.Instance.SendHeartbeatPingAsync(lobby.Id);
-            }
+        heartbeatTimer -= Time.deltaTime;
+        if (heartbeatTimer < 0)
+        {
+            float heartbeatTimerMax = 15;
+            heartbeatTimer = heartbeatTimerMax;
+
+            await LobbyService.Instance.SendHeartbeatPingAsync(lobby.Id);
         }
     }
+
 }
