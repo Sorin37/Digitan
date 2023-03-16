@@ -32,7 +32,6 @@ public class LobbyDetails : MonoBehaviour
                 float pollTimerMax = 1.1f;
                 pollTimer = pollTimerMax;
 
-                Debug.LogError(lobby.Data["RelayCode"].Value);
                 lobby = await LobbyService.Instance.GetLobbyAsync(lobby.Id);
             }
         }

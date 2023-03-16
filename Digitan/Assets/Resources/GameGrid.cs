@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.Services.Lobbies.Models;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -22,6 +23,7 @@ public class GameGrid : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        deleteLobby();
         if (brick == null || desert == null || grain == null || ore == null || wool == null || numbersGrid == null)
         {
             Debug.LogError("Error: One of the prefabs is not assigned");
@@ -106,5 +108,12 @@ public class GameGrid : MonoBehaviour
         playerHand["Lumber Resource"] = 0;
         playerHand["Ore Resource"] = 0;
         playerHand["Wool Resource"] = 0;
+    }
+
+    void deleteLobby()
+    {
+        var currentLobby = GameObject.FindGameObjectsWithTag("Lobby")[0];
+
+        Destroy(currentLobby);
     }
 }

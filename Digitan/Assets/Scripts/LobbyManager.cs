@@ -182,8 +182,7 @@ public class LobbyManager : MonoBehaviour
             if (lobby.Data["RelayCode"].Value != "None")
             {
                 JoinRelay(lobby.Data["RelayCode"].Value);
-                Debug.LogError("ACu ar fi trebuit sa intru in joc");
-                //SceneManager.LoadScene("Game");
+                SceneManager.LoadScene("Game");
             }
         }
     }
