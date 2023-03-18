@@ -35,6 +35,7 @@ public class LobbyManager : MonoBehaviour
         {
             string joinCode = await CreateRelay();
             await UpdateLobbyRelayCode(joinCode);
+            NetworkManager.Singleton.StartHost();
             SceneManager.LoadScene("Game");
         });
     }

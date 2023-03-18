@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
+using Unity.Netcode;
 using Unity.Services.Lobbies.Models;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class GameGrid : MonoBehaviour
+public class GameGrid : NetworkBehaviour
 {
     public float hexSize = 5f;
 
@@ -24,6 +25,8 @@ public class GameGrid : MonoBehaviour
     void Start()
     {
         deleteLobby();
+        gameObject.GetComponent<NetworkObject>().Spawn();
+        TestClientRpc();
         if (brick == null || desert == null || grain == null || ore == null || wool == null || numbersGrid == null)
         {
             Debug.LogError("Error: One of the prefabs is not assigned");
@@ -69,6 +72,8 @@ public class GameGrid : MonoBehaviour
                     Quaternion.Euler(-90, 180, 0)
                     );
 
+                gameGrid[x][y].GetComponent<NetworkObject>().Spawn(true);
+
                 gameGrid[x][y].transform.parent = transform;
                 gameGrid[x][y].gameObject.name = hex.name;
             }
@@ -87,6 +92,8 @@ public class GameGrid : MonoBehaviour
                     new Vector3(y * hexSize + x * hexSize / 2 - hexSize * 2, 0, -x * hexSize * 3 / 4),
                     Quaternion.Euler(-90, 180, 0)
                 );
+
+                gameGrid[x][y].GetComponent<NetworkObject>().Spawn(true);
 
                 gameGrid[x][y].transform.parent = transform;
                 gameGrid[x][y].gameObject.name = hex.name;
@@ -115,5 +122,11 @@ public class GameGrid : MonoBehaviour
         var currentLobby = GameObject.FindGameObjectsWithTag("Lobby")[0];
 
         Destroy(currentLobby);
+    }
+
+    [ClientRpc]
+    private void TestClientRpc()
+    {
+        Debug.LogError("Client Rpc Test");
     }
 }
