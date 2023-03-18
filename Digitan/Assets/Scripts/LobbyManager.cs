@@ -158,7 +158,12 @@ public class LobbyManager : MonoBehaviour
         try
         {
             Debug.Log("Joining Relay with " + relayCode);
-            await RelayService.Instance.JoinAllocationAsync(relayCode);
+            var joinAllocation = await RelayService.Instance.JoinAllocationAsync(relayCode);
+            var relayServerData = new RelayServerData(joinAllocation, "dtls");
+
+            NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
+
+            NetworkManager.Singleton.StartClient();
         }
         catch (RelayServiceException ex)
         {
