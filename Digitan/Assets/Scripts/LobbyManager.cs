@@ -173,7 +173,7 @@ public class LobbyManager : MonoBehaviour
         }
     }
 
-    private void CheckStartLobby()
+    private async void CheckStartLobby()
     {
 
         if (lobby == null)
