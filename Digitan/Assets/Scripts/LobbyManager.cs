@@ -154,7 +154,7 @@ public class LobbyManager : MonoBehaviour
         }
     }
 
-    private async void JoinRelay(string relayCode)
+    private async Task JoinRelay(string relayCode)
     {
         try
         {
@@ -165,6 +165,7 @@ public class LobbyManager : MonoBehaviour
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
 
             NetworkManager.Singleton.StartClient();
+
         }
         catch (RelayServiceException ex)
         {
@@ -187,7 +188,8 @@ public class LobbyManager : MonoBehaviour
 
             if (lobby.Data["RelayCode"].Value != "None")
             {
-                JoinRelay(lobby.Data["RelayCode"].Value);
+                await JoinRelay(lobby.Data["RelayCode"].Value);
+                print("am setat");
                 SceneManager.LoadScene("Game");
             }
         }
