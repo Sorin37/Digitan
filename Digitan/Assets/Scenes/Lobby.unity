@@ -783,6 +783,7 @@ MonoBehaviour:
   ListPanel: {fileID: 1607050257}
   PlayerDetails: {fileID: 7527175852860821717, guid: 64668674f6d718e4da63ef63673d1e3d, type: 3}
   PlayButton: {fileID: 642973438}
+  StartGame: {fileID: 2028049630797863978, guid: a49d58c4aaef2b24ea0691f752756e43, type: 3}
 --- !u!1 &1364239653
 GameObject:
   m_ObjectHideFlags: 0
