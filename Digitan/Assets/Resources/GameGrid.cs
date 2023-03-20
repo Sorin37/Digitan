@@ -15,7 +15,7 @@ public class GameGrid : NetworkBehaviour
     [SerializeField] private GameObject lumber;
     [SerializeField] private GameObject ore;
     [SerializeField] private GameObject wool;
-    [SerializeField] private GameObject numbersGrid;
+    private GameObject numbersGrid;
     public GameObject[][] gameGrid;
     public Dictionary<String, List<String>> resourcesDict;
     public Dictionary<String, int> playerHand;
@@ -23,8 +23,9 @@ public class GameGrid : NetworkBehaviour
 
     // Start is called before the first frame update
     void Start()
-    {
+    {   
         deleteLobby();
+        numbersGrid = GameObject.Find("NumbersGrid");
         gameObject.GetComponent<NetworkObject>().Spawn();
         TestClientRpc();
         if (brick == null || desert == null || grain == null || ore == null || wool == null || numbersGrid == null)
