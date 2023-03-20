@@ -8,11 +8,7 @@ public class StartGame : NetworkBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (NetworkManager.Singleton.IsHost)
-        {
-            print("xd?");
-            FirstStepTowardsSuccessClientRpc();
-        }
+
     }
 
 
@@ -20,7 +16,10 @@ public class StartGame : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if (Input.GetKeyUp(KeyCode.W))
+        {
+            FirstStepTowardsSuccessClientRpc();
+        }
     }
 
     [ClientRpc]
