@@ -8,7 +8,7 @@ public class StartGame : NetworkBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        DontDestroyOnLoad(gameObject);
     }
 
 

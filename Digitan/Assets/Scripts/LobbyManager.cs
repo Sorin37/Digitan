@@ -35,7 +35,6 @@ public class LobbyManager : MonoBehaviour
         {
             string joinCode = await CreateRelay();
             await UpdateLobbyRelayCode(joinCode);
-            NetworkManager.Singleton.StartHost();
             SceneManager.LoadScene("Game");
         });
     }
@@ -137,13 +136,12 @@ public class LobbyManager : MonoBehaviour
             string joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
             Debug.LogError(joinCode);
 
-            NetworkManager.Singleton.GetComponent<UnityTransport>().SetHostRelayData(
-                allocation.RelayServer.IpV4,
-                (ushort)allocation.RelayServer.Port,
-                allocation.AllocationIdBytes,
-                allocation.Key,
-                allocation.ConnectionData
-            );
+            RelayServerData relayServerData = new RelayServerData(allocation, "dtls");
+
+            NetworkManager.Singleton.GetComponent<UnityTransport>().
+                SetRelayServerData(relayServerData);
+
+            NetworkManager.Singleton.StartHost();
 
             return joinCode;
         }
