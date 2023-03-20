@@ -8,14 +8,24 @@ public class StartGame : NetworkBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        print(NetworkManager.Singleton.IsHost);
-        print(NetworkManager.Singleton.IsServer);
-        print(NetworkManager.Singleton.IsClient);
+        if (NetworkManager.Singleton.IsHost)
+        {
+            print("xd?");
+            FirstStepTowardsSuccessClientRpc();
+        }
     }
+
+
 
     // Update is called once per frame
     void Update()
     {
-        
+
+    }
+
+    [ClientRpc]
+    private void FirstStepTowardsSuccessClientRpc()
+    {
+        print("SUCCES LUME");
     }
 }
