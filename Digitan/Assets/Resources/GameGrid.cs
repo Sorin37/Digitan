@@ -35,11 +35,10 @@ public class GameGrid : NetworkBehaviour
         resourcesDict = new Dictionary<String, List<String>>();
         print("I be spawning");
         //initializePlayerHand();
-        //CreateGrid();
         //numbersGrid.GetComponent<NumbersGrid>().CreateGrid();
     }
 
-    private void CreateGrid()
+    public void CreateGrid()
     {
         gameGrid = new GameObject[5][];
         gameGrid[0] = new GameObject[3];
