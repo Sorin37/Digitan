@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1536
     height: 780.8
   m_ShowMode: 4
-  m_Title: Hierarchy
+  m_Title: Inspector
   m_RootView: {fileID: 4}
   m_MinSize: {x: 875, y: 421}
   m_MaxSize: {x: 10000, y: 10000}
@@ -74,7 +74,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 100}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 49
+  controlID: 100
 --- !u!114 &4
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -170,7 +170,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 200}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 47
+  controlID: 17
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -195,7 +195,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 48
+  controlID: 99
 --- !u!114 &9
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -215,8 +215,8 @@ MonoBehaviour:
     y: 0
     width: 846.4
     height: 480.8
-  m_MinSize: {x: 200, y: 200}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 202, y: 221}
+  m_MaxSize: {x: 4002, y: 4021}
   m_ActualView: {fileID: 15}
   m_Panes:
   - {fileID: 13}
@@ -317,22 +317,22 @@ MonoBehaviour:
     m_SkipHidden: 1
     m_SearchArea: 1
     m_Folders:
-    - Assets/Resources/Wool
+    - Assets
     m_Globs: []
     m_OriginalText: 
   m_ViewMode: 1
   m_StartGridSize: 66
   m_LastFolders:
-  - Assets/Resources/Wool
+  - Assets
   m_LastFoldersGridSize: 66
   m_LastProjectPath: C:\Users\User\Desktop\Catan\Digitan\Digitan
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 79}
-    m_SelectedIDs: 8a6e0000
-    m_LastClickedID: 28298
-    m_ExpandedIDs: 00000000aa6600003a6e000000ca9a3bffffff7f
+    m_SelectedIDs: b6670000
+    m_LastClickedID: 26550
+    m_ExpandedIDs: 00000000b667000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -360,7 +360,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: a40a0000
     m_LastClickedID: 2724
-    m_ExpandedIDs: 00000000aa660000
+    m_ExpandedIDs: 00000000b6670000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -385,8 +385,8 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: 38660000
-    m_LastClickedInstanceID: 26168
+    m_SelectedInstanceIDs: 
+    m_LastClickedInstanceID: 0
     m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: 625b00003c5c00005e620000527e0000587e0000025f00005e5f0000605f0000
     m_RenameOverlay:
@@ -412,7 +412,7 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
     m_NewAssetIndexInList: -1
-    m_ScrollPosition: {x: 0, y: 0}
+    m_ScrollPosition: {x: 0, y: 29}
     m_GridSize: 66
   m_SkipHiddenPackages: 1
   m_DirectoriesAreaWidth: 171
@@ -785,9 +785,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 0abc0000
-      m_LastClickedID: 48138
-      m_ExpandedIDs: 82dffeff62e8feff2855ffff246fffff267effff36adffff2efbffff30fbffff34fbfffff4ffffffde660000
+      m_SelectedIDs: ac010000
+      m_LastClickedID: 0
+      m_ExpandedIDs: 34fbffff36fbfffff4ffffffd6660000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -883,18 +883,18 @@ MonoBehaviour:
       y: 21
       width: 844.4
       height: 438.8
-    m_Scale: {x: 1.1897594, y: 1.1897594}
-    m_Translation: {x: 422.2, y: 219.4}
+    m_Scale: {x: 1.2232474, y: 1.2232474}
+    m_Translation: {x: 422.20004, y: 219.4}
     m_MarginLeft: 0
     m_MarginRight: 0
     m_MarginTop: 0
     m_MarginBottom: 0
     m_LastShownAreaInsideMargins:
       serializedVersion: 2
-      x: -354.8617
-      y: -184.40703
-      width: 709.7234
-      height: 368.81406
+      x: -345.14688
+      y: -179.35864
+      width: 690.29376
+      height: 358.7173
     m_MinimalGUI: 1
   m_defaultScale: 1
   m_LastWindowPixelSize: {x: 1055.5, y: 574.75}

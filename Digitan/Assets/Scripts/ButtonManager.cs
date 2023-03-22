@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,17 +13,29 @@ public class ButtonManager : MonoBehaviour
     [SerializeField] private Button roadButton;
     [SerializeField] private Button diceButton;
     public GameObject gameGrid;
+    public GameObject player;
+    private bool noLoadingScreenImplementedYet = true;
 
     private void Awake()
     {
+        var players = GameObject.FindGameObjectsWithTag("Player");
+        print(players.Length + "playeri");
+        player = players[0];
         initSettlementButton();
         initRoadButton();
         initDiceButton();
     }
 
-    private void initRoadButton() {
+    private void initRoadButton()
+    {
         roadButton.onClick.AddListener(() =>
         {
+            if (noLoadingScreenImplementedYet)
+            {
+                player.GetComponent<StartGame>().FirstStepTowardsSuccessClientRpc();
+                noLoadingScreenImplementedYet = false;
+                return;
+            }
             if (hasRoadResources())
             {
                 Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Road Circle"));
@@ -33,7 +46,8 @@ public class ButtonManager : MonoBehaviour
             }
         });
     }
-    private void initSettlementButton() {
+    private void initSettlementButton()
+    {
         settlementButton.onClick.AddListener(() =>
         {
             if (hasSettlementResources())
@@ -107,7 +121,8 @@ public class ButtonManager : MonoBehaviour
     {
         var playerHand = gameGrid.GetComponent<GameGrid>().playerHand;
 
-        foreach(var card in playerHand) {
+        foreach (var card in playerHand)
+        {
             gameObject.transform.Find(card.Key.Substring(0, card.Key.IndexOf(" ")) + "Label").GetComponent<TextMeshProUGUI>().SetText("x " + card.Value.ToString());
         }
     }

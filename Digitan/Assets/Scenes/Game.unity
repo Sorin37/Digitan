@@ -2189,6 +2189,7 @@ MonoBehaviour:
   roadButton: {fileID: 467420254}
   diceButton: {fileID: 2010353389}
   gameGrid: {fileID: 0}
+  player: {fileID: 0}
 --- !u!1 &2010353387
 GameObject:
   m_ObjectHideFlags: 0

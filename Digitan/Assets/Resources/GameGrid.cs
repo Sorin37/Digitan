@@ -28,7 +28,7 @@ public class GameGrid : NetworkBehaviour
         numbersGrid = GameObject.Find("NumbersGrid");
         gameObject.GetComponent<NetworkObject>().Spawn();
         TestClientRpc();
-        if (brick == null || desert == null || grain == null || ore == null || wool == null || numbersGrid == null)
+        if (brick == null || desert == null || grain == null || ore == null || wool == null)
         {
             Debug.LogError("Error: One of the prefabs is not assigned");
             return;
@@ -37,7 +37,7 @@ public class GameGrid : NetworkBehaviour
         resourcesDict = new Dictionary<String, List<String>>();
         initializePlayerHand();
         CreateGrid();
-        numbersGrid.GetComponent<NumbersGrid>().CreateGrid();
+        //numbersGrid.GetComponent<NumbersGrid>().CreateGrid();
     }
 
     private void CreateGrid()

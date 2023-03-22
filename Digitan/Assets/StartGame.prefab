@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3345211850170974214}
   m_Layer: 0
   m_Name: StartGame
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -61,3 +61,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 794ae230a77f7b4408afd530f626d169, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameGrid: {fileID: 7912111142282129415, guid: 0f6d5643a8b3c4648a206e97d42a40ba, type: 3}
