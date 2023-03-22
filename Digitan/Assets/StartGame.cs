@@ -32,6 +32,7 @@ public class StartGame : NetworkBehaviour
             return;
         print("SUCCES LUME");
         Transform _gameGrid = Instantiate(gameGrid);
+        _gameGrid.GetComponent<NetworkObject>().Spawn();
 
     }
 }
