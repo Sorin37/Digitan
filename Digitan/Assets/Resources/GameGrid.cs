@@ -9,13 +9,13 @@ public class GameGrid : NetworkBehaviour
 {
     public float hexSize = 5f;
 
-    [SerializeField] private GameObject brick;
-    [SerializeField] private GameObject desert;
-    [SerializeField] private GameObject grain;
-    [SerializeField] private GameObject lumber;
-    [SerializeField] private GameObject ore;
-    [SerializeField] private GameObject wool;
-    private GameObject numbersGrid;
+    [SerializeField] public GameObject brick;
+    [SerializeField] public GameObject desert;
+    [SerializeField] public GameObject grain;
+    [SerializeField] public GameObject lumber;
+    [SerializeField] public GameObject ore;
+    [SerializeField] public GameObject wool;
+    public GameObject numbersGrid;
     public GameObject[][] gameGrid;
     public Dictionary<String, List<String>> resourcesDict;
     public Dictionary<String, int> playerHand;
