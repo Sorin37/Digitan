@@ -28,6 +28,8 @@ public class StartGame : NetworkBehaviour
     [ServerRpc]
     public void FirstStepTowardsSuccessServerRpc()
     {
+        if(!IsOwner) 
+            return;
         print("SUCCES LUME");
         Transform _gameGrid = Instantiate(gameGrid);
 
