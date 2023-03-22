@@ -30,7 +30,7 @@ public class StartGame : NetworkBehaviour
     {
         Transform _gameGrid = Instantiate(gameGrid);
         _gameGrid.GetComponent<NetworkObject>().Spawn();
-        _gameGrid.GetComponent<GameGrid>().CreateGrid();
+        //_gameGrid.GetComponent<GameGrid>().CreateGrid();
     }
 
 }
