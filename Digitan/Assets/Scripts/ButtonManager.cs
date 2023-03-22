@@ -36,14 +36,15 @@ public class ButtonManager : MonoBehaviour
                 noLoadingScreenImplementedYet = false;
                 return;
             }
-            if (hasRoadResources())
-            {
-                Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Road Circle"));
-            }
-            else
-            {
-                print("You don't have enough resources for a road!");
-            }
+            player.GetComponent<StartGame>().SecondServerRpc();
+            //if (hasRoadResources())
+            //{
+            //    Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Road Circle"));
+            //}
+            //else
+            //{
+            //    print("You don't have enough resources for a road!");
+            //}
         });
     }
     private void initSettlementButton()

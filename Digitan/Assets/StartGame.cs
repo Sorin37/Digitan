@@ -6,6 +6,7 @@ using UnityEngine;
 public class StartGame : NetworkBehaviour
 {
     [SerializeField] private GameObject gameGrid;
+    private GameObject xd;
 
     // Start is called before the first frame update
     void Start()
@@ -28,9 +29,14 @@ public class StartGame : NetworkBehaviour
     [ServerRpc]
     public void FirstStepTowardsSuccessServerRpc()
     {
-        GameObject _gameGrid = Instantiate(gameGrid);
-        _gameGrid.GetComponent<NetworkObject>().Spawn();
-        //_gameGrid.GetComponent<GameGrid>().CreateGrid();
+        xd = Instantiate(gameGrid);
+        xd.GetComponent<NetworkObject>().Spawn();
+    }
+
+    [ServerRpc]
+    public void SecondServerRpc()
+    {
+        xd.GetComponent<GameGrid>().CreateGrid();
     }
 
 }
