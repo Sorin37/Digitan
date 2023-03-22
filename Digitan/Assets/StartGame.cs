@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class StartGame : NetworkBehaviour
 {
-    [SerializeField] private GameObject gameGrid;
+    [SerializeField] private Transform gameGrid;
 
     // Start is called before the first frame update
     void Start()
@@ -21,14 +21,15 @@ public class StartGame : NetworkBehaviour
         if(!IsOwner) return;
         if (Input.GetKeyUp(KeyCode.W))
         {
-            FirstStepTowardsSuccessClientRpc();
+            FirstStepTowardsSuccessServerRpc();
         }
     }
 
-    [ClientRpc]
-    public void FirstStepTowardsSuccessClientRpc()
+    [ServerRpc]
+    public void FirstStepTowardsSuccessServerRpc()
     {
         print("SUCCES LUME");
-        Instantiate(gameGrid);
+        Transform _gameGrid = Instantiate(gameGrid);
+
     }
 }

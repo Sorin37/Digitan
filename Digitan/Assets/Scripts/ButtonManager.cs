@@ -32,7 +32,7 @@ public class ButtonManager : MonoBehaviour
         {
             if (noLoadingScreenImplementedYet)
             {
-                player.GetComponent<StartGame>().FirstStepTowardsSuccessClientRpc();
+                player.GetComponent<StartGame>().FirstStepTowardsSuccessServerRpc();
                 noLoadingScreenImplementedYet = false;
                 return;
             }
