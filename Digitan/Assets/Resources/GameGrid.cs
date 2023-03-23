@@ -40,50 +40,49 @@ public class GameGrid : NetworkBehaviour
 
     public void CreateGrid()
     {
-        var brickGO = Instantiate(
-                    brick,
-                    transform.position,
+        gameGrid = new GameObject[5][];
+        gameGrid[0] = new GameObject[3];
+        gameGrid[1] = new GameObject[4];
+        gameGrid[2] = new GameObject[5];
+        gameGrid[3] = new GameObject[4];
+        gameGrid[4] = new GameObject[3];
+
+        List<GameObject> hexPool = new List<GameObject> {
+            brick, brick, brick,
+            desert,
+            grain, grain, grain, grain,
+            lumber, lumber, lumber, lumber,
+            ore, ore, ore,
+            wool, wool, wool, wool
+        };
+
+        TryGetComponent(out NetworkObject gameGridNO);
+
+        //Make the grid
+        for (int x = 0; x <= gameGrid.Length / 2; x++)
+        {
+            for (int y = 0; y < gameGrid[x].Length; y++)
+            {
+                int randomIndex = UnityEngine.Random.Range(0, hexPool.Count);
+                GameObject hex = hexPool[randomIndex];
+                hexPool.RemoveAt(randomIndex);
+
+                gameGrid[x][y] = Instantiate(
+                    hex,
+                    new Vector3(y * hexSize - x * hexSize / 2, 0, -x * hexSize * 3 / 4),
                     Quaternion.Euler(-90, 180, 0)
                     );
-        brickGO.GetComponent<NetworkObject>().Spawn();
-        brickGO.transform.parent = transform;
-        //gameGrid = new GameObject[5][];
-        //gameGrid[0] = new GameObject[3];
-        //gameGrid[1] = new GameObject[4];
-        //gameGrid[2] = new GameObject[5];
-        //gameGrid[3] = new GameObject[4];
-        //gameGrid[4] = new GameObject[3];
 
-        //List<GameObject> hexPool = new List<GameObject> {
-        //    brick, brick, brick,
-        //    desert,
-        //    grain, grain, grain, grain,
-        //    lumber, lumber, lumber, lumber,
-        //    ore, ore, ore,
-        //    wool, wool, wool, wool
-        //};
 
-        ////Make the grid
-        //for (int x = 0; x <= gameGrid.Length / 2; x++)
-        //{
-        //    for (int y = 0; y < gameGrid[x].Length; y++)
-        //    {
-        //        int randomIndex = UnityEngine.Random.Range(0, hexPool.Count);
-        //        GameObject hex = hexPool[randomIndex];
-        //        hexPool.RemoveAt(randomIndex);
+                gameGrid[x][y].GetComponent<NetworkObject>().Spawn(true);
 
-        //        gameGrid[x][y] = Instantiate(
-        //            hex,
-        //            new Vector3(y * hexSize - x * hexSize / 2, 0, -x * hexSize * 3 / 4),
-        //            Quaternion.Euler(-90, 180, 0)
-        //            );
+                gameGrid[x][y].TryGetComponent(out NetworkObject no);
 
-        //        gameGrid[x][y].GetComponent<NetworkObject>().Spawn(true);
+                no.TrySetParent(gameGridNO.transform);
 
-        //        gameGrid[x][y].transform.parent = transform;
-        //        gameGrid[x][y].gameObject.name = hex.name;
-        //    }
-        //}
+                //gameGrid[x][y].gameObject.name = hex.name;
+            }
+        }
 
         //for (int x = gameGrid.Length / 2 + 1; x < gameGrid.Length; x++)
         //{
