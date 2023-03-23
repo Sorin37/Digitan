@@ -36,7 +36,6 @@ public class ButtonManager : MonoBehaviour
                 noLoadingScreenImplementedYet = false;
                 return;
             }
-            player.GetComponent<StartGame>().SecondServerRpc();
             //if (hasRoadResources())
             //{
             //    Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Road Circle"));
