@@ -38,6 +38,7 @@ public class StartGame : NetworkBehaviour
     public void FirstStepTowardsSuccessServerRpc()
     {
         gameGrid = Instantiate(gameGridPrefab);
+        gameGrid.name = "GameGrid";
         gameGrid.GetComponent<NetworkObject>().Spawn();
     }
 
