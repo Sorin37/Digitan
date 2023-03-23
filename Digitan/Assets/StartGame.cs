@@ -50,7 +50,7 @@ public class StartGame : NetworkBehaviour
     public void SecondServerRpc()
     {
         //xd.GetComponent<GameGrid>().CreateGrid();
-        print("Creez graful");
+        PrintClientRpc("Mda");
         //var brick = xd.GetComponent<GameGrid>().brick;
         //var brickGO = Instantiate(
         //            brick,
@@ -63,8 +63,8 @@ public class StartGame : NetworkBehaviour
     }
 
     [ClientRpc]
-    public void ClientRpc()
+    public void PrintClientRpc(string msg)
     {
-        print("n-ai");
+        print(msg);
     }
 }
