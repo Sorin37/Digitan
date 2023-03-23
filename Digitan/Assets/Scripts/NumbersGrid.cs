@@ -15,7 +15,7 @@ public class NumbersGrid : MonoBehaviour
     [SerializeField] private GameObject number10;
     [SerializeField] private GameObject number11;
     [SerializeField] private GameObject number12;
-    [SerializeField] private GameObject resourceGrid;
+    private GameObject resourceGrid;
     public GameObject[][] numbersGrid;
 
 
@@ -31,8 +31,7 @@ public class NumbersGrid : MonoBehaviour
             number9 == null ||
             number10 == null ||
             number11 == null ||
-            number12 == null ||
-            resourceGrid == null)
+            number12 == null)
         {
             Debug.LogError("Error: One of the prefabs is not assigned");
             return;

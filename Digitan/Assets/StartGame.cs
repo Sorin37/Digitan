@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -7,13 +8,18 @@ using UnityEngine.Assertions;
 
 public class StartGame : NetworkBehaviour
 {
-    [SerializeField] private GameObject gameGrid;
-    private GameObject xd;
+    [SerializeField] private GameObject gameGridPrefab;
+    private GameObject gameGrid;
+
+    public Dictionary<string, List<string>> resourcesDict;
+    public Dictionary<string, int> playerHand;
 
     // Start is called before the first frame update
     void Start()
     {
         DontDestroyOnLoad(gameObject);
+        InitializeResourceDict();
+        InitializeResourceDict();
     }
 
 
@@ -31,33 +37,14 @@ public class StartGame : NetworkBehaviour
     [ServerRpc]
     public void FirstStepTowardsSuccessServerRpc()
     {
-        xd = Instantiate(gameGrid);
-        xd.GetComponent<NetworkObject>().Spawn();
-        //xd.GetComponent<GameGrid>().CreateGrid();
-        //var brick = xd.GetComponent<GameGrid>().brick;
-        //var brickGO = Instantiate(
-        //            brick,
-        //            transform.position,
-        //            Quaternion.Euler(-90, 180, 0)
-        //            );
-        //brickGO.GetComponent<NetworkObject>().Spawn();
-        //brickGO.transform.parent = xd.transform;
-
+        gameGrid = Instantiate(gameGridPrefab);
+        gameGrid.GetComponent<NetworkObject>().Spawn();
     }
 
     [ServerRpc]
     public void SecondServerRpc()
     {
-        xd.GetComponent<GameGrid>().CreateGrid();
-        //var brick = xd.GetComponent<GameGrid>().brick;
-        //var brickGO = Instantiate(
-        //            brick,
-        //            transform.position,
-        //            Quaternion.Euler(-90, 180, 0)
-        //            );
-        //brickGO.GetComponent<NetworkObject>().Spawn();
-        //brickGO.transform.parent = xd.transform;
-
+        gameGrid.GetComponent<GameGrid>().CreateGrid();
     }
 
     [ClientRpc]
@@ -65,4 +52,20 @@ public class StartGame : NetworkBehaviour
     {
         print(msg);
     }
+
+    private void InitializeResourceDict()
+    {
+        resourcesDict = new Dictionary<String, List<String>>();
+    }
+
+    void InitializePlayerHand()
+    {
+        playerHand = new Dictionary<string, int>();
+        playerHand["Brick Resource"] = 0;
+        playerHand["Grain Resource"] = 0;
+        playerHand["Lumber Resource"] = 0;
+        playerHand["Ore Resource"] = 0;
+        playerHand["Wool Resource"] = 0;
+    }
+
 }

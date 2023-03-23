@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.Burst.Intrinsics;
 using Unity.Netcode;
 using Unity.Services.Lobbies.Models;
 using Unity.VisualScripting;
@@ -17,13 +18,12 @@ public class GameGrid : NetworkBehaviour
     [SerializeField] public GameObject wool;
     public GameObject numbersGrid;
     public GameObject[][] gameGrid;
-    public Dictionary<String, List<String>> resourcesDict;
-    public Dictionary<String, int> playerHand;
+    public string[][] resourcesInfo;
 
 
     // Start is called before the first frame update
     void Start()
-    {   
+    {
         deleteLobby();
         //numbersGrid = GameObject.Find("NumbersGrid");
         if (brick == null || desert == null || grain == null || ore == null || wool == null)
@@ -32,20 +32,14 @@ public class GameGrid : NetworkBehaviour
             return;
         }
 
-        resourcesDict = new Dictionary<String, List<String>>();
         print("I be spawning");
-        //initializePlayerHand();
         //numbersGrid.GetComponent<NumbersGrid>().CreateGrid();
     }
 
     public void CreateGrid()
     {
-        gameGrid = new GameObject[5][];
-        gameGrid[0] = new GameObject[3];
-        gameGrid[1] = new GameObject[4];
-        gameGrid[2] = new GameObject[5];
-        gameGrid[3] = new GameObject[4];
-        gameGrid[4] = new GameObject[3];
+        initializeGameGrid();
+        initializeResourcesInfo();
 
         List<GameObject> hexPool = new List<GameObject> {
             brick, brick, brick,
@@ -55,8 +49,6 @@ public class GameGrid : NetworkBehaviour
             ore, ore, ore,
             wool, wool, wool, wool
         };
-
-        //TryGetComponent(out NetworkObject gameGridNO);
 
         //Make the grid
         for (int x = 0; x <= gameGrid.Length / 2; x++)
@@ -73,10 +65,18 @@ public class GameGrid : NetworkBehaviour
                     Quaternion.Euler(-90, 180, 0)
                     );
 
-
                 gameGrid[x][y].GetComponent<NetworkObject>().Spawn(true);
 
-                //gameGrid[x][y].gameObject.name = hex.name;
+                gameGrid[x][y].gameObject.name = hex.name;
+
+                if (hex.name == "Desert")
+                {
+                    resourcesInfo[x][y] = hex.name;
+                }
+                else
+                {
+                    resourcesInfo[x][y] = hex.name.Substring(0, hex.name.IndexOf(" "));
+                }
             }
         }
 
@@ -96,10 +96,20 @@ public class GameGrid : NetworkBehaviour
 
                 gameGrid[x][y].GetComponent<NetworkObject>().Spawn(true);
 
-                //gameGrid[x][y].transform.parent = transform;
-                //gameGrid[x][y].gameObject.name = hex.name;
+                gameGrid[x][y].gameObject.name = hex.name;
+
+                if (hex.name == "Desert")
+                {
+                    resourcesInfo[x][y] = hex.name;
+                }
+                else
+                {
+                    resourcesInfo[x][y] = hex.name.Substring(0, hex.name.IndexOf(" "));
+                }
             }
         }
+
+        printResInfo();
     }
 
     // Update is called once per frame
@@ -108,15 +118,6 @@ public class GameGrid : NetworkBehaviour
 
     }
 
-    void initializePlayerHand()
-    {
-        playerHand = new Dictionary<string, int>();
-        playerHand["Brick Resource"] = 0;
-        playerHand["Grain Resource"] = 0;
-        playerHand["Lumber Resource"] = 0;
-        playerHand["Ore Resource"] = 0;
-        playerHand["Wool Resource"] = 0;
-    }
 
     void deleteLobby()
     {
@@ -129,5 +130,35 @@ public class GameGrid : NetworkBehaviour
     public void PrintClientRpc(string msg)
     {
         print(msg);
+    }
+
+    private void initializeGameGrid()
+    {
+        gameGrid = new GameObject[5][];
+        gameGrid[0] = new GameObject[3];
+        gameGrid[1] = new GameObject[4];
+        gameGrid[2] = new GameObject[5];
+        gameGrid[3] = new GameObject[4];
+        gameGrid[4] = new GameObject[3];
+
+    }
+
+    private void initializeResourcesInfo()
+    {
+        resourcesInfo = new string[5][];
+        resourcesInfo[0] = new string[3];
+        resourcesInfo[1] = new string[4];
+        resourcesInfo[2] = new string[5];
+        resourcesInfo[3] = new string[4];
+        resourcesInfo[4] = new string[3];
+    }
+
+    private void printResInfo()
+    {
+        foreach (var row in resourcesInfo)
+        {
+            List<string> list = new List<string>(row);
+            print(String.Join(", ", list));
+        }
     }
 }

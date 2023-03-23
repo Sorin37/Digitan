@@ -106,18 +106,18 @@ public class SettlementCircle : MonoBehaviour
             (int)Mathf.Pow(2, LayerMask.NameToLayer("Number"))
         );
 
-        var resourcesDict = gameGrid.GetComponent<GameGrid>().resourcesDict;
+        //var resourcesDict = gameGrid.GetComponent<GameGrid>().resourcesDict;
 
         foreach (var collider in colliders)
         {
-            if (resourcesDict.ContainsKey(collider.gameObject.name))
-            {
-                resourcesDict[collider.gameObject.name].Add(collider.gameObject.GetComponent<Number>().resource);
-            }
-            else
-            {
-                resourcesDict[collider.gameObject.name] = new List<String>() { collider.gameObject.GetComponent<Number>().resource };
-            }
+            //if (resourcesDict.ContainsKey(collider.gameObject.name))
+            //{
+            //    resourcesDict[collider.gameObject.name].Add(collider.gameObject.GetComponent<Number>().resource);
+            //}
+            //else
+            //{
+            //    resourcesDict[collider.gameObject.name] = new List<String>() { collider.gameObject.GetComponent<Number>().resource };
+            //}
 
             //first two settlements stuff
             giveResourcesForTheFirstSettlements(collider.gameObject.GetComponent<Number>().resource);
@@ -141,16 +141,16 @@ public class SettlementCircle : MonoBehaviour
 
         if (settlementGrid.is1stSettlementNext)
         {
-            var playerHand = gameGrid.GetComponent<GameGrid>().playerHand;
-            playerHand[resource]++;
+            //var playerHand = gameGrid.GetComponent<GameGrid>().playerHand;
+            //playerHand[resource]++;
 
             Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Settlement Circle"));
         }
 
         if (settlementGrid.is2ndSettlementNext)
         {
-            var playerHand = gameGrid.GetComponent<GameGrid>().playerHand;
-            playerHand[resource]++;
+            //var playerHand = gameGrid.GetComponent<GameGrid>().playerHand;
+            //playerHand[resource]++;
         }
     }
 }
