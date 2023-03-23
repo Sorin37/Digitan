@@ -40,7 +40,7 @@ public class GameGrid : NetworkBehaviour
 
     public void CreateGrid()
     {
-        print("Creez griful");
+        PrintClientRpc("Creez grifonuful");
         gameGrid = new GameObject[5][];
         gameGrid[0] = new GameObject[3];
         gameGrid[1] = new GameObject[4];
@@ -122,5 +122,11 @@ public class GameGrid : NetworkBehaviour
         var currentLobby = GameObject.FindGameObjectsWithTag("Lobby")[0];
 
         Destroy(currentLobby);
+    }
+
+    [ClientRpc]
+    public void PrintClientRpc(string msg)
+    {
+        print(msg);
     }
 }
