@@ -56,7 +56,7 @@ public class GameGrid : NetworkBehaviour
             wool, wool, wool, wool
         };
 
-        TryGetComponent(out NetworkObject gameGridNO);
+        //TryGetComponent(out NetworkObject gameGridNO);
 
         //Make the grid
         for (int x = 0; x <= gameGrid.Length / 2; x++)
@@ -76,34 +76,30 @@ public class GameGrid : NetworkBehaviour
 
                 gameGrid[x][y].GetComponent<NetworkObject>().Spawn(true);
 
-                gameGrid[x][y].TryGetComponent(out NetworkObject no);
-
-                no.TrySetParent(gameGridNO.transform);
-
                 //gameGrid[x][y].gameObject.name = hex.name;
             }
         }
 
-        //for (int x = gameGrid.Length / 2 + 1; x < gameGrid.Length; x++)
-        //{
-        //    for (int y = 0; y < gameGrid[x].Length; y++)
-        //    {
-        //        int randomIndex = UnityEngine.Random.Range(0, hexPool.Count);
-        //        GameObject hex = hexPool[randomIndex];
-        //        hexPool.RemoveAt(randomIndex);
+        for (int x = gameGrid.Length / 2 + 1; x < gameGrid.Length; x++)
+        {
+            for (int y = 0; y < gameGrid[x].Length; y++)
+            {
+                int randomIndex = UnityEngine.Random.Range(0, hexPool.Count);
+                GameObject hex = hexPool[randomIndex];
+                hexPool.RemoveAt(randomIndex);
 
-        //        gameGrid[x][y] = Instantiate(
-        //            hex,
-        //            new Vector3(y * hexSize + x * hexSize / 2 - hexSize * 2, 0, -x * hexSize * 3 / 4),
-        //            Quaternion.Euler(-90, 180, 0)
-        //        );
+                gameGrid[x][y] = Instantiate(
+                    hex,
+                    new Vector3(y * hexSize + x * hexSize / 2 - hexSize * 2, 0, -x * hexSize * 3 / 4),
+                    Quaternion.Euler(-90, 180, 0)
+                );
 
-        //        gameGrid[x][y].GetComponent<NetworkObject>().Spawn(true);
+                gameGrid[x][y].GetComponent<NetworkObject>().Spawn(true);
 
-        //        gameGrid[x][y].transform.parent = transform;
-        //        gameGrid[x][y].gameObject.name = hex.name;
-        //    }
-        //}
+                //gameGrid[x][y].transform.parent = transform;
+                //gameGrid[x][y].gameObject.name = hex.name;
+            }
+        }
     }
 
     // Update is called once per frame
