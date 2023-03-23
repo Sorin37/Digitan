@@ -40,6 +40,7 @@ public class GameGrid : NetworkBehaviour
 
     public void CreateGrid()
     {
+        print("Creez griful");
         gameGrid = new GameObject[5][];
         gameGrid[0] = new GameObject[3];
         gameGrid[1] = new GameObject[4];

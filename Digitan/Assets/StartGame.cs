@@ -33,14 +33,15 @@ public class StartGame : NetworkBehaviour
     {
         xd = Instantiate(gameGrid);
         xd.GetComponent<NetworkObject>().Spawn();
-        var brick = xd.GetComponent<GameGrid>().brick;
-        var brickGO = Instantiate(
-                    brick,
-                    transform.position,
-                    Quaternion.Euler(-90, 180, 0)
-                    );
-        brickGO.GetComponent<NetworkObject>().Spawn();
-        brickGO.transform.parent = xd.transform;
+        xd.GetComponent<GameGrid>().CreateGrid();
+        //var brick = xd.GetComponent<GameGrid>().brick;
+        //var brickGO = Instantiate(
+        //            brick,
+        //            transform.position,
+        //            Quaternion.Euler(-90, 180, 0)
+        //            );
+        //brickGO.GetComponent<NetworkObject>().Spawn();
+        //brickGO.transform.parent = xd.transform;
 
     }
 }
