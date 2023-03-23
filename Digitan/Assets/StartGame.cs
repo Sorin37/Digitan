@@ -39,6 +39,8 @@ public class StartGame : NetworkBehaviour
                     transform.position,
                     Quaternion.Euler(-90, 180, 0)
                     );
+        brickGO.GetComponent<NetworkObject>().Spawn();
+        brickGO.transform.parent = xd.transform;
 
     }
 }
