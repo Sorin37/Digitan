@@ -33,7 +33,8 @@ public class StartGame : NetworkBehaviour
     {
         xd = Instantiate(gameGrid);
         xd.GetComponent<NetworkObject>().Spawn();
-        xd.GetComponent<GameGrid>().CreateGrid();
+        print("lesgo");
+        //xd.GetComponent<GameGrid>().CreateGrid();
         //var brick = xd.GetComponent<GameGrid>().brick;
         //var brickGO = Instantiate(
         //            brick,
@@ -43,5 +44,27 @@ public class StartGame : NetworkBehaviour
         //brickGO.GetComponent<NetworkObject>().Spawn();
         //brickGO.transform.parent = xd.transform;
 
+    }
+
+    [ServerRpc]
+    public void SecondServerRpc()
+    {
+        //xd.GetComponent<GameGrid>().CreateGrid();
+        print("Creez graful");
+        //var brick = xd.GetComponent<GameGrid>().brick;
+        //var brickGO = Instantiate(
+        //            brick,
+        //            transform.position,
+        //            Quaternion.Euler(-90, 180, 0)
+        //            );
+        //brickGO.GetComponent<NetworkObject>().Spawn();
+        //brickGO.transform.parent = xd.transform;
+
+    }
+
+    [ClientRpc]
+    public void ClientRpc()
+    {
+        print("n-ai");
     }
 }
