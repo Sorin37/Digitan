@@ -33,7 +33,6 @@ public class StartGame : NetworkBehaviour
     {
         xd = Instantiate(gameGrid);
         xd.GetComponent<NetworkObject>().Spawn();
-        print("lesgo");
         //xd.GetComponent<GameGrid>().CreateGrid();
         //var brick = xd.GetComponent<GameGrid>().brick;
         //var brickGO = Instantiate(
@@ -49,8 +48,7 @@ public class StartGame : NetworkBehaviour
     [ServerRpc]
     public void SecondServerRpc()
     {
-        //xd.GetComponent<GameGrid>().CreateGrid();
-        PrintClientRpc("Mda");
+        xd.GetComponent<GameGrid>().CreateGrid();
         //var brick = xd.GetComponent<GameGrid>().brick;
         //var brickGO = Instantiate(
         //            brick,
