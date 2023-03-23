@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1875331112309333593}
   - component: {fileID: 1875331112309333598}
+  - component: {fileID: 5984780567699471597}
   m_Layer: 0
   m_Name: NumbersGrid
   m_TagString: Untagged
@@ -54,4 +55,19 @@ MonoBehaviour:
   number10: {fileID: 723881611686363969, guid: 5d9d9f0e174b1fe46b4b560903076215, type: 3}
   number11: {fileID: 5991857208210989749, guid: 35cc2fa7213732646aa93e17469abad1, type: 3}
   number12: {fileID: 9065892839303530086, guid: b40ba812b17eaed44ba0bfe2698c73de, type: 3}
-  resourceGrid: {fileID: 0}
+--- !u!114 &5984780567699471597
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1875331112309333599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 951099334
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1

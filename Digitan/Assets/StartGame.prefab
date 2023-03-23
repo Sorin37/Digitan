@@ -62,3 +62,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameGridPrefab: {fileID: 7912111142282129415, guid: 0f6d5643a8b3c4648a206e97d42a40ba, type: 3}
+  numbersGridPrefab: {fileID: 1875331112309333599, guid: b63d941a97a26e744ad503bee6465de9, type: 3}

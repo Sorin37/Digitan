@@ -9,7 +9,9 @@ using UnityEngine.Assertions;
 public class StartGame : NetworkBehaviour
 {
     [SerializeField] private GameObject gameGridPrefab;
+    [SerializeField] private GameObject numbersGridPrefab;
     private GameObject gameGrid;
+    private GameObject numbersGrid;
 
     public Dictionary<string, List<string>> resourcesDict;
     public Dictionary<string, int> playerHand;
@@ -19,7 +21,7 @@ public class StartGame : NetworkBehaviour
     {
         DontDestroyOnLoad(gameObject);
         InitializeResourceDict();
-        InitializeResourceDict();
+        InitializePlayerHand();
     }
 
 
@@ -40,12 +42,16 @@ public class StartGame : NetworkBehaviour
         gameGrid = Instantiate(gameGridPrefab);
         gameGrid.name = "GameGrid";
         gameGrid.GetComponent<NetworkObject>().Spawn();
+        gameGrid.GetComponent<GameGrid>().CreateGrid();
     }
 
     [ServerRpc]
     public void SecondServerRpc()
     {
-        gameGrid.GetComponent<GameGrid>().CreateGrid();
+        numbersGrid = Instantiate(numbersGridPrefab);
+        gameGrid.name = "NumbersGrid";
+        numbersGrid.GetComponent<NetworkObject>().Spawn();
+        numbersGrid.GetComponent<NumbersGrid>().CreateGrid(gameGrid);
     }
 
     [ClientRpc]
@@ -59,7 +65,7 @@ public class StartGame : NetworkBehaviour
         resourcesDict = new Dictionary<String, List<String>>();
     }
 
-    void InitializePlayerHand()
+    private void InitializePlayerHand()
     {
         playerHand = new Dictionary<string, int>();
         playerHand["Brick Resource"] = 0;

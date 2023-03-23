@@ -25,7 +25,7 @@ public class GameGrid : NetworkBehaviour
     void Start()
     {
         deleteLobby();
-        //numbersGrid = GameObject.Find("NumbersGrid");
+
         if (brick == null || desert == null || grain == null || ore == null || wool == null)
         {
             Debug.LogError("Error: One of the prefabs is not assigned");
@@ -33,7 +33,6 @@ public class GameGrid : NetworkBehaviour
         }
 
         print("I be spawning");
-        //numbersGrid.GetComponent<NumbersGrid>().CreateGrid();
     }
 
     public void CreateGrid()
@@ -108,8 +107,6 @@ public class GameGrid : NetworkBehaviour
                 }
             }
         }
-
-        printResInfo();
     }
 
     // Update is called once per frame

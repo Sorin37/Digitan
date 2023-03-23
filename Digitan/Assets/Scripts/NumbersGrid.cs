@@ -1,7 +1,8 @@
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class NumbersGrid : MonoBehaviour
+public class NumbersGrid : NetworkBehaviour
 {
     private float hexSize;
 
@@ -15,7 +16,7 @@ public class NumbersGrid : MonoBehaviour
     [SerializeField] private GameObject number10;
     [SerializeField] private GameObject number11;
     [SerializeField] private GameObject number12;
-    private GameObject resourceGrid;
+    private GameObject gameGrid;
     public GameObject[][] numbersGrid;
 
 
@@ -36,7 +37,6 @@ public class NumbersGrid : MonoBehaviour
             Debug.LogError("Error: One of the prefabs is not assigned");
             return;
         }
-
     }
 
     // Update is called once per frame
@@ -45,9 +45,10 @@ public class NumbersGrid : MonoBehaviour
 
     }
 
-    public void CreateGrid()
+    public void CreateGrid(GameObject gg)
     {
-        hexSize = resourceGrid.GetComponent<GameGrid>().hexSize;
+        gameGrid = gg;
+        hexSize = gameGrid.GetComponent<GameGrid>().hexSize;
 
         numbersGrid = new GameObject[5][];
         numbersGrid[0] = new GameObject[3];
@@ -95,7 +96,7 @@ public class NumbersGrid : MonoBehaviour
         {
             for (int y = 0; y < numbersGrid[x].Length; y++)
             {
-                if (resourceGrid.GetComponent<GameGrid>().gameGrid[x][y].name == "Desert")
+                if (gameGrid.GetComponent<GameGrid>().gameGrid[x][y].name == "Desert")
                     continue;
 
                 Vector3 position = new Vector3(y * hexSize - x * hexSize / 2,
@@ -122,9 +123,9 @@ public class NumbersGrid : MonoBehaviour
                     Quaternion.Euler(-90, -90, 90)
                     );
 
-                numbersGrid[x][y].transform.parent = transform;
                 numbersGrid[x][y].gameObject.name = number.name;
-                numbersGrid[x][y].gameObject.GetComponent<Number>().resource = resourceGrid.GetComponent<GameGrid>().gameGrid[x][y].gameObject.name;
+                numbersGrid[x][y].gameObject.GetComponent<Number>().resource = gameGrid.GetComponent<GameGrid>().gameGrid[x][y].gameObject.name;
+                numbersGrid[x][y].gameObject.GetComponent<NetworkObject>().Spawn();
             }
         }
 
@@ -135,7 +136,7 @@ public class NumbersGrid : MonoBehaviour
 
             for (int y = 0; y < numbersGrid[x].Length; y++)
             {
-                if (resourceGrid.GetComponent<GameGrid>().gameGrid[x][y].name == "Desert")
+                if (gameGrid.GetComponent<GameGrid>().gameGrid[x][y].name == "Desert")
                     continue;
 
                 Vector3 position = new Vector3(y * hexSize + x * hexSize / 2 - hexSize * 2,
@@ -169,9 +170,10 @@ public class NumbersGrid : MonoBehaviour
                     Quaternion.Euler(-90, -90, 90)
                 );
 
-                numbersGrid[x][y].transform.parent = transform;
+
                 numbersGrid[x][y].gameObject.name = number.name;
-                numbersGrid[x][y].gameObject.GetComponent<Number>().resource = resourceGrid.GetComponent<GameGrid>().gameGrid[x][y].gameObject.name;
+                numbersGrid[x][y].gameObject.GetComponent<Number>().resource = gameGrid.GetComponent<GameGrid>().gameGrid[x][y].gameObject.name;
+                numbersGrid[x][y].gameObject.GetComponent<NetworkObject>().Spawn();
             }
         }
     }
@@ -218,6 +220,6 @@ public class NumbersGrid : MonoBehaviour
                 );
         numbersGrid[spaceI][spaceJ].transform.parent = transform;
         numbersGrid[spaceI][spaceJ].gameObject.name = number.name;
-        numbersGrid[spaceI][spaceJ].gameObject.GetComponent<Number>().resource = resourceGrid.GetComponent<GameGrid>().gameGrid[spaceJ][spaceJ].gameObject.name;
+        numbersGrid[spaceI][spaceJ].gameObject.GetComponent<Number>().resource = gameGrid.GetComponent<GameGrid>().gameGrid[spaceJ][spaceJ].gameObject.name;
     }
 }
