@@ -16,7 +16,7 @@ public class StartGame : NetworkBehaviour
     private GameObject gameGrid;
     private GameObject numbersGrid;
 
-    public NetworkVariable<FixedString64Bytes> resourcesPrototype = new NetworkVariable<FixedString64Bytes>();
+    public NetworkVariable<FixedString64Bytes> resourcesPrototype = new NetworkVariable<FixedString64Bytes>("Unitialized");
 
     public Dictionary<string, List<string>> resourcesDict;
     public Dictionary<string, int> playerHand;
@@ -30,14 +30,6 @@ public class StartGame : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-        if (IsHost)
-        {
-            print("Am generat cod");
-            resourcesPrototype.Value = generateResourcesCode();
-        }
-
-        print("ASta e codul pe care il am acum");
-        print(OwnerClientId.ToString() + " " + resourcesPrototype.Value);
     }
 
     void Start()
@@ -49,8 +41,10 @@ public class StartGame : NetworkBehaviour
         InitializeResourceDict();
         InitializePlayerHand();
 
-        print("ASta e codul cu care fac trb");
-        print(OwnerClientId.ToString() + " " + resourcesPrototype.Value);
+        if (IsHost)
+        {
+            resourcesPrototype.Value = generateResourcesCode();
+        }
 
         gameGrid = Instantiate(gameGridPrefab);
         gameGrid.name = "GameGrid";
