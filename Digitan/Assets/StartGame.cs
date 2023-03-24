@@ -32,10 +32,12 @@ public class StartGame : NetworkBehaviour
         base.OnNetworkSpawn();
         if (IsHost)
         {
+            print("Am generat cod");
             resourcesPrototype.Value = generateResourcesCode();
         }
 
-        print(OwnerClientId.ToString() + resourcesPrototype.Value);
+        print("ASta e codul pe care il am acum");
+        print(OwnerClientId.ToString() + " " + resourcesPrototype.Value);
     }
 
     void Start()
@@ -46,6 +48,9 @@ public class StartGame : NetworkBehaviour
         DontDestroyOnLoad(gameObject);
         InitializeResourceDict();
         InitializePlayerHand();
+
+        print("ASta e codul cu care fac trb");
+        print(OwnerClientId.ToString() + " " + resourcesPrototype.Value);
 
         gameGrid = Instantiate(gameGridPrefab);
         gameGrid.name = "GameGrid";
