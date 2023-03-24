@@ -18,8 +18,6 @@ public class GameGrid : NetworkBehaviour
     [SerializeField] public GameObject wool;
     public GameObject numbersGrid;
     public GameObject[][] gameGrid;
-    public string[][] resourcesInfo;
-
 
     // Start is called before the first frame update
     void Start()
@@ -38,7 +36,6 @@ public class GameGrid : NetworkBehaviour
     public void CreateGrid()
     {
         initializeGameGrid();
-        initializeResourcesInfo();
 
         List<GameObject> hexPool = new List<GameObject> {
             brick, brick, brick,
@@ -67,15 +64,6 @@ public class GameGrid : NetworkBehaviour
                 gameGrid[x][y].GetComponent<NetworkObject>().Spawn(true);
 
                 //gameGrid[x][y].gameObject.name = hex.name;
-
-                if (hex.name == "Desert")
-                {
-                    resourcesInfo[x][y] = hex.name;
-                }
-                else
-                {
-                    resourcesInfo[x][y] = hex.name.Substring(0, hex.name.IndexOf(" "));
-                }
             }
         }
 
@@ -96,15 +84,6 @@ public class GameGrid : NetworkBehaviour
                 gameGrid[x][y].GetComponent<NetworkObject>().Spawn(true);
 
                 //gameGrid[x][y].gameObject.name = hex.name;
-
-                if (hex.name == "Desert")
-                {
-                    resourcesInfo[x][y] = hex.name;
-                }
-                else
-                {
-                    resourcesInfo[x][y] = hex.name.Substring(0, hex.name.IndexOf(" "));
-                }
             }
         }
     }
@@ -138,24 +117,5 @@ public class GameGrid : NetworkBehaviour
         gameGrid[3] = new GameObject[4];
         gameGrid[4] = new GameObject[3];
 
-    }
-
-    private void initializeResourcesInfo()
-    {
-        resourcesInfo = new string[5][];
-        resourcesInfo[0] = new string[3];
-        resourcesInfo[1] = new string[4];
-        resourcesInfo[2] = new string[5];
-        resourcesInfo[3] = new string[4];
-        resourcesInfo[4] = new string[3];
-    }
-
-    private void printResInfo()
-    {
-        foreach (var row in resourcesInfo)
-        {
-            List<string> list = new List<string>(row);
-            print(String.Join(", ", list));
-        }
     }
 }

@@ -13,19 +13,46 @@ public class StartGame : NetworkBehaviour
     private GameObject gameGrid;
     private GameObject numbersGrid;
 
+    public NetworkList<int> resourcesPrototype;
+
     public Dictionary<string, List<string>> resourcesDict;
     public Dictionary<string, int> playerHand;
 
+    void Awake()
+    {
+        print("Awake");
+        if(resourcesPrototype == null)
+        {
+            resourcesPrototype = new NetworkList<int>();
+        }
+    }
+
     // Start is called before the first frame update
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        if (IsHost) {
+            resourcesPrototype.Add(1); //if you want to initialize the list with some default values, this is a good time to do so.
+            print(OwnerClientId.ToString() + resourcesPrototype[0]);
+        }
+    }
+
     void Start()
     {
-        if (!IsOwner)
-            return;
-        print("start");
+        print("start" + IsOwner);
+
         DontDestroyOnLoad(gameObject);
         InitializeResourceDict();
         InitializePlayerHand();
+        if (IsHost)
+        {
+            //initializeResourcesInfo();
+            //printResInfo();
+            print("Sunt host duh");
+
+        }
     }
+
 
     // Update is called once per frame
     void Update()
@@ -71,5 +98,24 @@ public class StartGame : NetworkBehaviour
         playerHand["Ore Resource"] = 0;
         playerHand["Wool Resource"] = 0;
     }
+
+    //private void initializeResourcesInfo()
+    //{
+    //    resourcesPrototype.Value = new string[5][];
+    //    resourcesPrototype.Value[0] = new string[3];
+    //    resourcesPrototype.Value[1] = new string[4];
+    //    resourcesPrototype.Value[2] = new string[5];
+    //    resourcesPrototype.Value[3] = new string[4];
+    //    resourcesPrototype.Value[4] = new string[3];
+    //}
+
+    //private void printResInfo()
+    //{
+    //    foreach (var row in resourcesPrototype.Value)
+    //    {
+    //        List<string> list = new List<string>(row);
+    //        print(String.Join(", ", list));
+    //    }
+    //}
 
 }
