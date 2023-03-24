@@ -19,39 +19,40 @@ public class StartGame : NetworkBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        print("start");
         DontDestroyOnLoad(gameObject);
         InitializeResourceDict();
         InitializePlayerHand();
     }
 
+    override public void OnNetworkSpawn()
+    {
+        print("OnNetworkSpawn");
+    }
 
 
     // Update is called once per frame
     void Update()
     {
-        if(!IsOwner) return;
-        if (Input.GetKeyUp(KeyCode.W))
-        {
-            FirstStepTowardsSuccessServerRpc();
-        }
+
     }
 
     [ServerRpc]
     public void FirstStepTowardsSuccessServerRpc()
     {
-        gameGrid = Instantiate(gameGridPrefab);
-        gameGrid.name = "GameGrid";
-        gameGrid.GetComponent<NetworkObject>().Spawn();
-        gameGrid.GetComponent<GameGrid>().CreateGrid();
+        //gameGrid = Instantiate(gameGridPrefab);
+        //gameGrid.name = "GameGrid";
+        //gameGrid.GetComponent<NetworkObject>().Spawn();
+        //gameGrid.GetComponent<GameGrid>().CreateGrid();
     }
 
     [ServerRpc]
     public void SecondServerRpc()
     {
-        numbersGrid = Instantiate(numbersGridPrefab);
-        gameGrid.name = "NumbersGrid";
-        numbersGrid.GetComponent<NetworkObject>().Spawn();
-        numbersGrid.GetComponent<NumbersGrid>().CreateGrid(gameGrid);
+        //numbersGrid = Instantiate(numbersGridPrefab);
+        //gameGrid.name = "NumbersGrid";
+        //numbersGrid.GetComponent<NetworkObject>().Spawn();
+        //numbersGrid.GetComponent<NumbersGrid>().CreateGrid(gameGrid);
     }
 
     [ClientRpc]

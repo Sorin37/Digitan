@@ -66,7 +66,7 @@ public class GameGrid : NetworkBehaviour
 
                 gameGrid[x][y].GetComponent<NetworkObject>().Spawn(true);
 
-                gameGrid[x][y].gameObject.name = hex.name;
+                //gameGrid[x][y].gameObject.name = hex.name;
 
                 if (hex.name == "Desert")
                 {
@@ -95,7 +95,7 @@ public class GameGrid : NetworkBehaviour
 
                 gameGrid[x][y].GetComponent<NetworkObject>().Spawn(true);
 
-                gameGrid[x][y].gameObject.name = hex.name;
+                //gameGrid[x][y].gameObject.name = hex.name;
 
                 if (hex.name == "Desert")
                 {
