@@ -19,17 +19,13 @@ public class StartGame : NetworkBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (!IsOwner)
+            return;
         print("start");
         DontDestroyOnLoad(gameObject);
         InitializeResourceDict();
         InitializePlayerHand();
     }
-
-    override public void OnNetworkSpawn()
-    {
-        print("OnNetworkSpawn");
-    }
-
 
     // Update is called once per frame
     void Update()
