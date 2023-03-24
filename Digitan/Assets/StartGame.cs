@@ -1,13 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Netcode;
-using Unity.VisualScripting;
-using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEngine;
-using UnityEngine.Assertions;
-using static Unity.Collections.AllocatorManager;
 
 public class StartGame : NetworkBehaviour
 {
@@ -46,16 +41,16 @@ public class StartGame : NetworkBehaviour
             resourcesPrototype.Value = generateResourcesCode();
         }
 
-        gameGrid = Instantiate(gameGridPrefab);
-        gameGrid.name = "GameGrid";
-        gameGrid.GetComponent<GameGrid>().CreateGrid(resourcesPrototype.Value.ToString());
+        //gameGrid = Instantiate(gameGridPrefab);
+        //gameGrid.name = "GameGrid";
+        //gameGrid.GetComponent<GameGrid>().CreateGrid(resourcesPrototype.Value.ToString());
     }
 
 
     // Update is called once per frame
     void Update()
     {
-
+        print(OwnerClientId + "; " + resourcesPrototype.Value.ToString());
     }
 
     [ServerRpc]

@@ -187,7 +187,6 @@ public class LobbyManager : MonoBehaviour
             if (lobby.Data["RelayCode"].Value != "None")
             {
                 await JoinRelay(lobby.Data["RelayCode"].Value);
-                print("am setat");
                 SceneManager.LoadScene("Game");
             }
         }
