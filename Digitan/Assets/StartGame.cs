@@ -29,7 +29,7 @@ public class StartGame : NetworkBehaviour
 
     void Start()
     {
-        if (!IsOwner)
+        if (!IsOwnedByServer)
             return;
 
         DontDestroyOnLoad(gameObject);
@@ -38,12 +38,13 @@ public class StartGame : NetworkBehaviour
 
         if (IsHost)
         {
+            print("Generez alt cod");
             resourcesPrototype.Value = generateResourcesCode();
         }
 
-        //gameGrid = Instantiate(gameGridPrefab);
-        //gameGrid.name = "GameGrid";
-        //gameGrid.GetComponent<GameGrid>().CreateGrid(resourcesPrototype.Value.ToString());
+        gameGrid = Instantiate(gameGridPrefab);
+        gameGrid.name = "GameGrid";
+        gameGrid.GetComponent<GameGrid>().CreateGrid(resourcesPrototype.Value.ToString());
     }
 
 
