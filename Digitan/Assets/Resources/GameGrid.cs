@@ -34,8 +34,6 @@ public class GameGrid : MonoBehaviour
             return;
         }
 
-        print("GameGrid be spawning");
-
         OnGridCreated += DeleteLobbyOnGridCreated;
     }
 

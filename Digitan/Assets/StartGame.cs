@@ -11,7 +11,8 @@ public class StartGame : NetworkBehaviour
     private GameObject gameGrid;
     private GameObject numbersGrid;
 
-    public NetworkVariable<FixedString64Bytes> resourcesPrototype = new NetworkVariable<FixedString64Bytes>("Unitialized");
+    public NetworkVariable<FixedString64Bytes> resourcesCode = new NetworkVariable<FixedString64Bytes>("Uninitialized");
+    public NetworkVariable<FixedString64Bytes> numbersCode = new NetworkVariable<FixedString64Bytes>("Uninitialized");
 
     public Dictionary<string, List<string>> resourcesDict;
     public Dictionary<string, int> playerHand;
@@ -21,7 +22,7 @@ public class StartGame : NetworkBehaviour
         //print("Awake");
     }
 
-    // Start is called before the first frame update
+    // OnNetworkSpawn is called before Start
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
@@ -39,18 +40,18 @@ public class StartGame : NetworkBehaviour
         if (IsHost)
         {
             print("Generez alt cod");
-            resourcesPrototype.Value = generateResourcesCode();
+            resourcesCode.Value = generateResourcesCode();
         }
 
         gameGrid = GameObject.Find("GameGrid");
-        gameGrid.GetComponent<GameGrid>().CreateGrid(resourcesPrototype.Value.ToString());
+        gameGrid.GetComponent<GameGrid>().CreateGrid(resourcesCode.Value.ToString());
     }
 
 
     // Update is called once per frame
     void Update()
     {
-        //print(OwnerClientId + "; " + resourcesPrototype.Value.ToString());
+        //print(OwnerClientId + "; " + numbersCode.Value.ToString());
     }
 
     [ServerRpc]

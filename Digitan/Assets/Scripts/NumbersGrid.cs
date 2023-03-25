@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.Services.Lobbies.Models;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -101,8 +102,6 @@ public class NumbersGrid : MonoBehaviour
 
     private void instantiateThePieces()
     {
-        print("I be instantiating numbers");
-
         List<GameObject> numbersPool = new List<GameObject> {
             number2,
             number3,  number3,
@@ -200,6 +199,8 @@ public class NumbersGrid : MonoBehaviour
                 numbersGrid[x][y].gameObject.GetComponent<Number>().resource = gameGrid.GetComponent<GameGrid>().gameGrid[x][y].gameObject.name;
             }
         }
+
+        getHostPlayer().GetComponent<StartGame>().numbersCode.Value = "acesta este un cod";
     }
 
     void findAvailableSpace(int x, int y, Vector3 position, GameObject number)
@@ -247,7 +248,7 @@ public class NumbersGrid : MonoBehaviour
         numbersGrid[spaceI][spaceJ].gameObject.GetComponent<Number>().resource = gameGrid.GetComponent<GameGrid>().gameGrid[spaceJ][spaceJ].gameObject.name;
     }
 
-   
+
 
     private GameObject codeToNumber(string code)
     {
@@ -276,5 +277,18 @@ public class NumbersGrid : MonoBehaviour
             default:
                 return null;
         }
+    }
+
+    private GameObject getHostPlayer()
+    {
+        var players = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (var p in players)
+        {
+            if (p.GetComponent<StartGame>().IsOwnedByServer)
+                return p;
+        }
+
+        return null;
     }
 }
