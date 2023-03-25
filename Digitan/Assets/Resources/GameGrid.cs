@@ -18,22 +18,31 @@ public class GameGrid : MonoBehaviour
     [SerializeField] public GameObject lumber;
     [SerializeField] public GameObject ore;
     [SerializeField] public GameObject wool;
-    public GameObject numbersGrid;
+    [SerializeField] public GameObject numbersGridPrefab;
+    private GameObject numbersGrid;
     public GameObject[][] gameGrid;
 
+    public event EventHandler OnGridCreated;
     // Start is called before the first frame update
     void Start()
     {
-        deleteLobby();
         DontDestroyOnLoad(gameObject);
 
-        if (brick == null || desert == null || grain == null || ore == null || wool == null)
+        if (brick == null || desert == null || grain == null || ore == null || wool == null || numbersGridPrefab == null)
         {
             Debug.LogError("Error: One of the prefabs is not assigned");
             return;
         }
 
-        print("I be spawning");
+        print("GameGrid be spawning");
+
+        OnGridCreated += DeleteLobbyOnGridCreated;
+    }
+
+    private void DeleteLobbyOnGridCreated(object s, EventArgs e)
+    {
+        deleteLobby();
+        OnGridCreated -= DeleteLobbyOnGridCreated;
     }
 
     public void CreateGrid()
@@ -89,7 +98,6 @@ public class GameGrid : MonoBehaviour
 
     public void CreateGrid(string code)
     {
-        print(code);
         initializeGameGrid();
 
         //Make the grid
@@ -128,6 +136,9 @@ public class GameGrid : MonoBehaviour
                 gameGrid[x][y].gameObject.transform.parent = transform;
             }
         }
+
+        print("pai m-am creat");
+        OnGridCreated?.Invoke(this, EventArgs.Empty);
     }
 
     // Update is called once per frame

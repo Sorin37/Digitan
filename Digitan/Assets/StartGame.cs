@@ -42,8 +42,7 @@ public class StartGame : NetworkBehaviour
             resourcesPrototype.Value = generateResourcesCode();
         }
 
-        gameGrid = Instantiate(gameGridPrefab);
-        gameGrid.name = "GameGrid";
+        gameGrid = GameObject.Find("GameGrid");
         gameGrid.GetComponent<GameGrid>().CreateGrid(resourcesPrototype.Value.ToString());
     }
 
@@ -51,7 +50,7 @@ public class StartGame : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        print(OwnerClientId + "; " + resourcesPrototype.Value.ToString());
+        //print(OwnerClientId + "; " + resourcesPrototype.Value.ToString());
     }
 
     [ServerRpc]
@@ -61,6 +60,24 @@ public class StartGame : NetworkBehaviour
         //gameGrid.name = "GameGrid";
         //gameGrid.GetComponent<NetworkObject>().Spawn();
         //gameGrid.GetComponent<GameGrid>().CreateGrid();
+        print("Server rpc  called");
+        numbersGrid = Instantiate(numbersGridPrefab);
+        numbersGrid.name = "NumbersGrid";
+        numbersGrid.GetComponent<NumbersGrid>().CreateGrid();
+    }
+
+    [ClientRpc]
+    public void NumbersGridClientRpc()
+    {
+        //gameGrid = Instantiate(gameGridPrefab);
+        //gameGrid.name = "GameGrid";
+        //gameGrid.GetComponent<NetworkObject>().Spawn();
+        //gameGrid.GetComponent<GameGrid>().CreateGrid();
+        if (IsHost) return;
+        print("Client rpc  called");
+        numbersGrid = Instantiate(numbersGridPrefab);
+        numbersGrid.name = "NumbersGrid";
+        numbersGrid.GetComponent<NumbersGrid>().CreateGrid();
     }
 
     [ServerRpc]
@@ -133,6 +150,40 @@ public class StartGame : NetworkBehaviour
                 string letter = hexPool[randomIndex];
                 hexPool.RemoveAt(randomIndex);
                 code += letter;
+            }
+        }
+
+        return code;
+    }
+
+    private string generateNumbersCode()
+    {
+        string code = "";
+
+        List<string> numbersPool = new List<string> {
+            "a",
+            "b",  "b",
+            "c",  "c",
+            "d",  "d",
+            "e",  "e",
+            "f",  "f",
+            "g",  "g",
+            "h", "h",
+            "i", "i",
+            "j"
+        };
+
+        List<int> lengths = new List<int>() { 3, 4, 5, 4, 3 };
+
+        for (int i = 0; i < lengths.Count; i++)
+        {
+            code += i;
+            for (int j = 0; j < lengths[i]; j++)
+            {
+                int randomIndex = UnityEngine.Random.Range(0, numbersPool.Count);
+                string number = numbersPool[randomIndex];
+                numbersPool.RemoveAt(randomIndex);
+                code += number;
             }
         }
 

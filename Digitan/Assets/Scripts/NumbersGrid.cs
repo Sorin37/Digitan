@@ -1,8 +1,11 @@
+using System;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Assertions;
 
-public class NumbersGrid : NetworkBehaviour
+public class NumbersGrid : MonoBehaviour
 {
     private float hexSize;
 
@@ -19,10 +22,17 @@ public class NumbersGrid : NetworkBehaviour
     private GameObject gameGrid;
     public GameObject[][] numbersGrid;
 
+    // Awake is called before all the Start functions when the script is loaded
+    void Awake()
+    {
+        gameGrid = GameObject.Find("GameGrid");
+    }
 
     // Start is called before the first frame update
     void Start()
     {
+        DontDestroyOnLoad(gameObject);
+
         if (number2 == null ||
             number3 == null ||
             number4 == null ||
@@ -37,6 +47,8 @@ public class NumbersGrid : NetworkBehaviour
             Debug.LogError("Error: One of the prefabs is not assigned");
             return;
         }
+
+        gameGrid.GetComponent<GameGrid>().OnGridCreated += CreateGridOnGameGridCreated;
     }
 
     // Update is called once per frame
@@ -45,10 +57,18 @@ public class NumbersGrid : NetworkBehaviour
 
     }
 
-    public void CreateGrid(GameObject gg)
+    private void CreateGridOnGameGridCreated(object s, EventArgs e)
     {
-        gameGrid = gg;
+        CreateGrid();
+        //print("OK POT CREA??");
+        gameGrid.GetComponent<GameGrid>().OnGridCreated -= CreateGridOnGameGridCreated;
+    }
+
+    public void CreateGrid()
+    {
         hexSize = gameGrid.GetComponent<GameGrid>().hexSize;
+
+        print(hexSize.ToString());
 
         numbersGrid = new GameObject[5][];
         numbersGrid[0] = new GameObject[3];
@@ -59,6 +79,8 @@ public class NumbersGrid : NetworkBehaviour
 
         instantiateThePieces();
     }
+
+
 
     private bool isRedNumberNearby(Vector3 position)
     {
@@ -79,6 +101,8 @@ public class NumbersGrid : NetworkBehaviour
 
     private void instantiateThePieces()
     {
+        print("I be instantiating numbers");
+
         List<GameObject> numbersPool = new List<GameObject> {
             number2,
             number3,  number3,
@@ -103,7 +127,7 @@ public class NumbersGrid : NetworkBehaviour
                                                0.1f,
                                                -x * hexSize * 3 / 4);
 
-                int randomIndex = Random.Range(0, numbersPool.Count);
+                int randomIndex = UnityEngine.Random.Range(0, numbersPool.Count);
                 GameObject number = numbersPool[randomIndex];
                 numbersPool.RemoveAt(randomIndex);
 
@@ -124,8 +148,8 @@ public class NumbersGrid : NetworkBehaviour
                     );
 
                 numbersGrid[x][y].gameObject.name = number.name;
+                numbersGrid[x][y].gameObject.transform.parent = transform;
                 numbersGrid[x][y].gameObject.GetComponent<Number>().resource = gameGrid.GetComponent<GameGrid>().gameGrid[x][y].gameObject.name;
-                numbersGrid[x][y].gameObject.GetComponent<NetworkObject>().Spawn();
             }
         }
 
@@ -143,7 +167,7 @@ public class NumbersGrid : NetworkBehaviour
                                 0.1f,
                                 -x * hexSize * 3 / 4);
 
-                int randomIndex = Random.Range(0, numbersPool.Count);
+                int randomIndex = UnityEngine.Random.Range(0, numbersPool.Count);
                 GameObject number = numbersPool[randomIndex];
                 numbersPool.RemoveAt(randomIndex);
 
@@ -172,19 +196,19 @@ public class NumbersGrid : NetworkBehaviour
 
 
                 numbersGrid[x][y].gameObject.name = number.name;
+                numbersGrid[x][y].gameObject.transform.parent = transform;
                 numbersGrid[x][y].gameObject.GetComponent<Number>().resource = gameGrid.GetComponent<GameGrid>().gameGrid[x][y].gameObject.name;
-                numbersGrid[x][y].gameObject.GetComponent<NetworkObject>().Spawn();
             }
         }
     }
 
     void findAvailableSpace(int x, int y, Vector3 position, GameObject number)
     {
-        List<(int, int)> availableSpaces= new List<(int, int)> ();
+        List<(int, int)> availableSpaces = new List<(int, int)>();
 
-        for(int i=0; i < numbersGrid.Length; i++)
+        for (int i = 0; i < numbersGrid.Length; i++)
         {
-            for(int j = 0; j < numbersGrid[i].Length; j++)
+            for (int j = 0; j < numbersGrid[i].Length; j++)
             {
                 if (numbersGrid[i][j] != null)
                 {
@@ -196,7 +220,7 @@ public class NumbersGrid : NetworkBehaviour
             }
         }
 
-        int randomIndex = Random.Range(0, availableSpaces.Count);
+        int randomIndex = UnityEngine.Random.Range(0, availableSpaces.Count);
         int spaceI = availableSpaces[randomIndex].Item1;
         int spaceJ = availableSpaces[randomIndex].Item2;
         Vector3 availableSpacePosition = numbersGrid[spaceI][spaceJ].gameObject.transform.position;
@@ -221,5 +245,36 @@ public class NumbersGrid : NetworkBehaviour
         numbersGrid[spaceI][spaceJ].transform.parent = transform;
         numbersGrid[spaceI][spaceJ].gameObject.name = number.name;
         numbersGrid[spaceI][spaceJ].gameObject.GetComponent<Number>().resource = gameGrid.GetComponent<GameGrid>().gameGrid[spaceJ][spaceJ].gameObject.name;
+    }
+
+   
+
+    private GameObject codeToNumber(string code)
+    {
+        switch (code)
+        {
+            case "a":
+                return number2;
+            case "b":
+                return number3;
+            case "c":
+                return number4;
+            case "d":
+                return number5;
+            case "e":
+                return number6;
+            case "f":
+                return number8;
+            case "g":
+                return number9;
+            case "h":
+                return number10;
+            case "i":
+                return number11;
+            case "j":
+                return number12;
+            default:
+                return null;
+        }
     }
 }
