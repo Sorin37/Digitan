@@ -90,12 +90,6 @@ public class StartGame : NetworkBehaviour
         //numbersGrid.GetComponent<NumbersGrid>().CreateGrid(gameGrid);
     }
 
-    [ClientRpc]
-    public void PrintClientRpc(string msg)
-    {
-        print(msg);
-    }
-
     private void InitializeResourceDict()
     {
         resourcesDict = new Dictionary<String, List<String>>();
@@ -157,38 +151,18 @@ public class StartGame : NetworkBehaviour
         return code;
     }
 
-    private string generateNumbersCode()
+    public bool getIsServer()
     {
-        string code = "";
-
-        List<string> numbersPool = new List<string> {
-            "a",
-            "b",  "b",
-            "c",  "c",
-            "d",  "d",
-            "e",  "e",
-            "f",  "f",
-            "g",  "g",
-            "h", "h",
-            "i", "i",
-            "j"
-        };
-
-        List<int> lengths = new List<int>() { 3, 4, 5, 4, 3 };
-
-        for (int i = 0; i < lengths.Count; i++)
-        {
-            code += i;
-            for (int j = 0; j < lengths[i]; j++)
-            {
-                int randomIndex = UnityEngine.Random.Range(0, numbersPool.Count);
-                string number = numbersPool[randomIndex];
-                numbersPool.RemoveAt(randomIndex);
-                code += number;
-            }
-        }
-
-        return code;
+        return IsServer;
     }
 
+    public bool getIsHost()
+    {
+        return IsHost;
+    }
+
+    public bool getIsClient()
+    {
+        return IsClient;
+    }
 }
