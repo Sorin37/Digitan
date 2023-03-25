@@ -14,13 +14,9 @@ public class ButtonManager : MonoBehaviour
     [SerializeField] private Button diceButton;
     public GameObject gameGrid;
     public GameObject player;
-    private bool noLoadingScreenImplementedYet = true;
 
     private void Awake()
     {
-        var players = GameObject.FindGameObjectsWithTag("Player");
-        print(players.Length + "playeri");
-        player = players[0];
         initSettlementButton();
         initRoadButton();
         initDiceButton();
@@ -30,17 +26,9 @@ public class ButtonManager : MonoBehaviour
     {
         roadButton.onClick.AddListener(() =>
         {
-            if (noLoadingScreenImplementedYet)
-            {
-                player.GetComponent<StartGame>().NumbersGridClientRpc();
-                noLoadingScreenImplementedYet = false;
-                return;
-            }
-            player.GetComponent<StartGame>().SecondServerRpc();
-
             //if (hasRoadResources())
             //{
-            //    Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Road Circle"));
+            Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Road Circle"));
             //}
             //else
             //{

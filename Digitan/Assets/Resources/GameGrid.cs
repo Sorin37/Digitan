@@ -43,57 +43,6 @@ public class GameGrid : MonoBehaviour
         OnGridCreated -= DeleteLobbyOnGridCreated;
     }
 
-    public void CreateGrid()
-    {
-        initializeGameGrid();
-
-        List<GameObject> hexPool = new List<GameObject> {
-            brick, brick, brick,
-            desert,
-            grain, grain, grain, grain,
-            lumber, lumber, lumber, lumber,
-            ore, ore, ore,
-            wool, wool, wool, wool
-        };
-
-        //Make the grid
-        for (int x = 0; x <= gameGrid.Length / 2; x++)
-        {
-            for (int y = 0; y < gameGrid[x].Length; y++)
-            {
-                int randomIndex = UnityEngine.Random.Range(0, hexPool.Count);
-                GameObject hex = hexPool[randomIndex];
-                hexPool.RemoveAt(randomIndex);
-
-                gameGrid[x][y] = Instantiate(
-                    hex,
-                    new Vector3(y * hexSize - x * hexSize / 2, 0, -x * hexSize * 3 / 4),
-                    Quaternion.Euler(-90, 180, 0)
-                    );
-
-                //gameGrid[x][y].gameObject.name = hex.name;
-            }
-        }
-
-        for (int x = gameGrid.Length / 2 + 1; x < gameGrid.Length; x++)
-        {
-            for (int y = 0; y < gameGrid[x].Length; y++)
-            {
-                int randomIndex = UnityEngine.Random.Range(0, hexPool.Count);
-                GameObject hex = hexPool[randomIndex];
-                hexPool.RemoveAt(randomIndex);
-
-                gameGrid[x][y] = Instantiate(
-                    hex,
-                    new Vector3(y * hexSize + x * hexSize / 2 - hexSize * 2, 0, -x * hexSize * 3 / 4),
-                    Quaternion.Euler(-90, 180, 0)
-                );
-
-                //gameGrid[x][y].gameObject.name = hex.name;
-            }
-        }
-    }
-
     public void CreateGrid(string code)
     {
         initializeGameGrid();
@@ -136,7 +85,6 @@ public class GameGrid : MonoBehaviour
             }
         }
 
-        print("pai m-am creat");
         OnGridCreated?.Invoke(this, EventArgs.Empty);
     }
 
@@ -152,12 +100,6 @@ public class GameGrid : MonoBehaviour
         var currentLobby = GameObject.FindGameObjectsWithTag("Lobby")[0];
 
         Destroy(currentLobby);
-    }
-
-    [ClientRpc]
-    public void PrintClientRpc(string msg)
-    {
-        print(msg);
     }
 
     private void initializeGameGrid()

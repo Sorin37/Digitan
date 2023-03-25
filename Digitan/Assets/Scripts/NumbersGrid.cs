@@ -23,6 +23,8 @@ public class NumbersGrid : MonoBehaviour
     private GameObject gameGrid;
     public GameObject[][] numbersGrid;
 
+    public event EventHandler OnGridCreated;
+
     // Awake is called before all the Start functions when the script is loaded
     void Awake()
     {
@@ -199,129 +201,9 @@ public class NumbersGrid : MonoBehaviour
         }
 
         getHostPlayer().GetComponent<StartGame>().numbersCode.Value = code;
+
+        OnGridCreated?.Invoke(this, EventArgs.Empty);
     }
-
-
-
-    private bool isRedNumberNearby(Vector3 position)
-    {
-        var colliders = Physics.OverlapSphere(
-            position,
-            hexSize / 2 + 2,
-            (int)Mathf.Pow(2, LayerMask.NameToLayer("Number"))
-        );
-
-        for (int i = 0; i < colliders.Length; i++)
-        {
-            if (colliders[i].gameObject.name == "6" || colliders[i].gameObject.name == "8")
-                return true;
-        }
-
-        return false;
-    }
-
-    void findAvailableSpace(int x, int y, Vector3 position, GameObject number)
-    {
-        List<(int, int)> availableSpaces = new List<(int, int)>();
-
-        for (int i = 0; i < numbersGrid.Length; i++)
-        {
-            for (int j = 0; j < numbersGrid[i].Length; j++)
-            {
-                if (numbersGrid[i][j] != null)
-                {
-                    if (!isRedNumberNearby(numbersGrid[i][j].gameObject.transform.position))
-                    {
-                        availableSpaces.Add((i, j));
-                    }
-                }
-            }
-        }
-
-        int randomIndex = UnityEngine.Random.Range(0, availableSpaces.Count);
-        int spaceI = availableSpaces[randomIndex].Item1;
-        int spaceJ = availableSpaces[randomIndex].Item2;
-        Vector3 availableSpacePosition = numbersGrid[spaceI][spaceJ].gameObject.transform.position;
-
-        //move the old number
-        numbersGrid[x][y] = Instantiate(
-                    numbersGrid[spaceI][spaceJ].gameObject,
-                    position,
-                    Quaternion.Euler(-90, -90, 90)
-        );
-        numbersGrid[x][y].transform.parent = transform;
-        numbersGrid[x][y].gameObject.name = numbersGrid[spaceI][spaceJ].gameObject.name;
-        numbersGrid[x][y].gameObject.GetComponent<Number>().resource = numbersGrid[spaceI][spaceJ].gameObject.GetComponent<Number>().resource;
-
-        //instantiate the new number
-        Destroy(numbersGrid[spaceI][spaceJ]);
-        numbersGrid[spaceI][spaceJ] = Instantiate(
-                    number,
-                    availableSpacePosition,
-                    Quaternion.Euler(-90, -90, 90)
-                );
-        numbersGrid[spaceI][spaceJ].transform.parent = transform;
-        numbersGrid[spaceI][spaceJ].gameObject.name = number.name;
-        numbersGrid[spaceI][spaceJ].gameObject.GetComponent<Number>().resource = gameGrid.GetComponent<GameGrid>().gameGrid[spaceJ][spaceJ].gameObject.name;
-    }
-
-
-
-    private GameObject letterToNumber(string code)
-    {
-        switch (code)
-        {
-            case "a":
-                return number2;
-            case "b":
-                return number3;
-            case "c":
-                return number4;
-            case "d":
-                return number5;
-            case "e":
-                return number6;
-            case "f":
-                return number8;
-            case "g":
-                return number9;
-            case "h":
-                return number10;
-            case "i":
-                return number11;
-            case "j":
-                return number12;
-            default:
-                return null;
-        }
-    }
-
-    private GameObject getHostPlayer()
-    {
-        var players = GameObject.FindGameObjectsWithTag("Player");
-
-        foreach (var p in players)
-        {
-            if (p.GetComponent<StartGame>().IsOwnedByServer)
-                return p;
-        }
-
-        return null;
-    }
-
-    private GameObject getMyPlayer()
-    {
-        var players = GameObject.FindGameObjectsWithTag("Player");
-
-        foreach (var p in players)
-        {
-            if (p.GetComponent<StartGame>().IsOwner)
-                return p;
-        }
-
-        return null;
-    }
-
     public void CreateGrid(string code)
     {
         hexSize = gameGrid.GetComponent<GameGrid>().hexSize;
@@ -391,7 +273,102 @@ public class NumbersGrid : MonoBehaviour
                 numbersGrid[x][y].gameObject.GetComponent<Number>().resource = gameGrid.GetComponent<GameGrid>().gameGrid[x][y].gameObject.name;
             }
         }
+
+        OnGridCreated?.Invoke(this, EventArgs.Empty);
     }
+
+    private bool isRedNumberNearby(Vector3 position)
+    {
+        var colliders = Physics.OverlapSphere(
+            position,
+            hexSize / 2 + 2,
+            (int)Mathf.Pow(2, LayerMask.NameToLayer("Number"))
+        );
+
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            if (colliders[i].gameObject.name == "6" || colliders[i].gameObject.name == "8")
+                return true;
+        }
+
+        return false;
+    }
+
+    void findAvailableSpace(int x, int y, Vector3 position, GameObject number)
+    {
+        List<(int, int)> availableSpaces = new List<(int, int)>();
+
+        for (int i = 0; i < numbersGrid.Length; i++)
+        {
+            for (int j = 0; j < numbersGrid[i].Length; j++)
+            {
+                if (numbersGrid[i][j] != null)
+                {
+                    if (!isRedNumberNearby(numbersGrid[i][j].gameObject.transform.position))
+                    {
+                        availableSpaces.Add((i, j));
+                    }
+                }
+            }
+        }
+
+        int randomIndex = UnityEngine.Random.Range(0, availableSpaces.Count);
+        int spaceI = availableSpaces[randomIndex].Item1;
+        int spaceJ = availableSpaces[randomIndex].Item2;
+        Vector3 availableSpacePosition = numbersGrid[spaceI][spaceJ].gameObject.transform.position;
+
+        //move the old number
+        numbersGrid[x][y] = Instantiate(
+                    numbersGrid[spaceI][spaceJ].gameObject,
+                    position,
+                    Quaternion.Euler(-90, -90, 90)
+        );
+        numbersGrid[x][y].transform.parent = transform;
+        numbersGrid[x][y].gameObject.name = numbersGrid[spaceI][spaceJ].gameObject.name;
+        numbersGrid[x][y].gameObject.GetComponent<Number>().resource = numbersGrid[spaceI][spaceJ].gameObject.GetComponent<Number>().resource;
+
+        //instantiate the new number
+        Destroy(numbersGrid[spaceI][spaceJ]);
+        numbersGrid[spaceI][spaceJ] = Instantiate(
+                    number,
+                    availableSpacePosition,
+                    Quaternion.Euler(-90, -90, 90)
+                );
+        numbersGrid[spaceI][spaceJ].transform.parent = transform;
+        numbersGrid[spaceI][spaceJ].gameObject.name = number.name;
+        numbersGrid[spaceI][spaceJ].gameObject.GetComponent<Number>().resource = gameGrid.GetComponent<GameGrid>().gameGrid[spaceJ][spaceJ].gameObject.name;
+    }
+
+
+    private GameObject letterToNumber(string code)
+    {
+        switch (code)
+        {
+            case "a":
+                return number2;
+            case "b":
+                return number3;
+            case "c":
+                return number4;
+            case "d":
+                return number5;
+            case "e":
+                return number6;
+            case "f":
+                return number8;
+            case "g":
+                return number9;
+            case "h":
+                return number10;
+            case "i":
+                return number11;
+            case "j":
+                return number12;
+            default:
+                return null;
+        }
+    }
+
 
     private string prefabToLetter(GameObject numberPrefab)
     {
@@ -420,5 +397,31 @@ public class NumbersGrid : MonoBehaviour
             default:
                 return "Error";
         }
+    }
+
+    private GameObject getHostPlayer()
+    {
+        var players = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (var p in players)
+        {
+            if (p.GetComponent<StartGame>().IsOwnedByServer)
+                return p;
+        }
+
+        return null;
+    }
+
+    private GameObject getMyPlayer()
+    {
+        var players = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (var p in players)
+        {
+            if (p.GetComponent<StartGame>().IsOwner)
+                return p;
+        }
+
+        return null;
     }
 }

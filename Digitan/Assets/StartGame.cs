@@ -17,9 +17,10 @@ public class StartGame : NetworkBehaviour
     public Dictionary<string, List<string>> resourcesDict;
     public Dictionary<string, int> playerHand;
 
+    // Awake is called before all the Starts in a random order
     void Awake()
     {
-        //print("Awake");
+
     }
 
     // OnNetworkSpawn is called before Start
@@ -39,7 +40,6 @@ public class StartGame : NetworkBehaviour
 
         if (IsHost)
         {
-            print("Generez alt cod");
             resourcesCode.Value = generateResourcesCode();
         }
 
@@ -51,43 +51,7 @@ public class StartGame : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        //print(OwnerClientId + "; " + numbersCode.Value.ToString());
-    }
 
-    [ServerRpc]
-    public void FirstStepTowardsSuccessServerRpc()
-    {
-        //gameGrid = Instantiate(gameGridPrefab);
-        //gameGrid.name = "GameGrid";
-        //gameGrid.GetComponent<NetworkObject>().Spawn();
-        //gameGrid.GetComponent<GameGrid>().CreateGrid();
-        print("Server rpc  called");
-        numbersGrid = Instantiate(numbersGridPrefab);
-        numbersGrid.name = "NumbersGrid";
-        numbersGrid.GetComponent<NumbersGrid>().CreateGrid();
-    }
-
-    [ClientRpc]
-    public void NumbersGridClientRpc()
-    {
-        //gameGrid = Instantiate(gameGridPrefab);
-        //gameGrid.name = "GameGrid";
-        //gameGrid.GetComponent<NetworkObject>().Spawn();
-        //gameGrid.GetComponent<GameGrid>().CreateGrid();
-        if (IsHost) return;
-        print("Client rpc  called");
-        numbersGrid = Instantiate(numbersGridPrefab);
-        numbersGrid.name = "NumbersGrid";
-        numbersGrid.GetComponent<NumbersGrid>().CreateGrid();
-    }
-
-    [ServerRpc]
-    public void SecondServerRpc()
-    {
-        //numbersGrid = Instantiate(numbersGridPrefab);
-        //gameGrid.name = "NumbersGrid";
-        //numbersGrid.GetComponent<NetworkObject>().Spawn();
-        //numbersGrid.GetComponent<NumbersGrid>().CreateGrid(gameGrid);
     }
 
     private void InitializeResourceDict()

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -10,16 +11,37 @@ public class RoadGrid : MonoBehaviour
     private float HexSize = 5f;
     [SerializeField] private GameObject circlePrefab;
     public GameObject[][] roadGrid;
+    private GameObject gameGrid;
+
+    // Awake is called before all the Start functions when the script is loaded
+    void Awake()
+    {
+        gameGrid = GameObject.Find("GameGrid");
+    }
 
     // Start is called before the first frame update
     void Start()
     {
+        DontDestroyOnLoad(gameObject);
+
         if (circlePrefab == null)
         {
             Debug.LogError("Error: No prefab assigned");
             return;
         }
 
+        gameGrid.GetComponent<GameGrid>().OnGridCreated += CreateGridEvent;
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
+
+    public void CreateGrid()
+    {
         roadGrid = new GameObject[11][];
         roadGrid[0] = new GameObject[6];
         roadGrid[1] = new GameObject[4];
@@ -90,9 +112,10 @@ public class RoadGrid : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    private void CreateGridEvent(object s, EventArgs e)
     {
+        CreateGrid();
 
+        gameGrid.GetComponent<GameGrid>().OnGridCreated -= CreateGridEvent;
     }
 }

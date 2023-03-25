@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,29 +8,46 @@ public class SettlementGrid : MonoBehaviour
     private float HexSize = 5f;
     [SerializeField] private GameObject circlePrefab;
     public GameObject[][] settlementGrid;
+    public GameObject gameGrid;
     public bool is1stSettlementNext;
     public bool is2ndSettlementNext;
+
+    // Awake is called before all the Start functions when the script is loaded
+    void Awake()
+    {
+        gameGrid = GameObject.Find("GameGrid");
+    }
 
     // Start is called before the first frame update
     void Start()
     {
+        DontDestroyOnLoad(gameObject);
+
         if (circlePrefab == null)
         {
             Debug.LogError("Error: No prefab assigned");
             return;
         }
 
-        createGrid();
+        gameGrid.GetComponent<GameGrid>().OnGridCreated += CreateGridEvent;
+
         placeFirstSettlement();
     }
+
 
     // Update is called once per frame
     void Update()
     {
 
     }
+    private void CreateGridEvent(object s, EventArgs e)
+    {
+        CreateGrid();
 
-    void createGrid()
+        gameGrid.GetComponent<GameGrid>().OnGridCreated -= CreateGridEvent;
+    }
+
+    void CreateGrid()
     {
         settlementGrid = new GameObject[12][];
         settlementGrid[0] = new GameObject[3];
@@ -85,5 +103,31 @@ public class SettlementGrid : MonoBehaviour
 
         is1stSettlementNext = true;
         is2ndSettlementNext = false;
+    }
+
+    private GameObject getHostPlayer()
+    {
+        var players = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (var p in players)
+        {
+            if (p.GetComponent<StartGame>().IsOwnedByServer)
+                return p;
+        }
+
+        return null;
+    }
+
+    private GameObject getMyPlayer()
+    {
+        var players = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (var p in players)
+        {
+            if (p.GetComponent<StartGame>().IsOwner)
+                return p;
+        }
+
+        return null;
     }
 }
