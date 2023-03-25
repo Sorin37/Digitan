@@ -106,6 +106,7 @@ public class GameGrid : MonoBehaviour
                 int index = code.IndexOf(x.ToString()) + 1;
                 string letter = code.Substring(index + y, 1);
                 var resource = letterToResource(letter);
+
                 gameGrid[x][y] = Instantiate(
                     resource,
                     new Vector3(y * hexSize - x * hexSize / 2, 0, -x * hexSize * 3 / 4),

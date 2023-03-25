@@ -69,8 +69,6 @@ public class NumbersGrid : MonoBehaviour
     {
         hexSize = gameGrid.GetComponent<GameGrid>().hexSize;
 
-        print(hexSize.ToString());
-
         numbersGrid = new GameObject[5][];
         numbersGrid[0] = new GameObject[3];
         numbersGrid[1] = new GameObject[4];
@@ -78,30 +76,6 @@ public class NumbersGrid : MonoBehaviour
         numbersGrid[3] = new GameObject[4];
         numbersGrid[4] = new GameObject[3];
 
-        instantiateThePieces();
-    }
-
-
-
-    private bool isRedNumberNearby(Vector3 position)
-    {
-        var colliders = Physics.OverlapSphere(
-            position,
-            hexSize / 2 + 2,
-            (int)Mathf.Pow(2, LayerMask.NameToLayer("Number"))
-        );
-
-        for (int i = 0; i < colliders.Length; i++)
-        {
-            if (colliders[i].gameObject.name == "6" || colliders[i].gameObject.name == "8")
-                return true;
-        }
-
-        return false;
-    }
-
-    private void instantiateThePieces()
-    {
         List<GameObject> numbersPool = new List<GameObject> {
             number2,
             number3,  number3,
@@ -193,14 +167,53 @@ public class NumbersGrid : MonoBehaviour
                     Quaternion.Euler(-90, -90, 90)
                 );
 
-
                 numbersGrid[x][y].gameObject.name = number.name;
                 numbersGrid[x][y].gameObject.transform.parent = transform;
                 numbersGrid[x][y].gameObject.GetComponent<Number>().resource = gameGrid.GetComponent<GameGrid>().gameGrid[x][y].gameObject.name;
+
             }
         }
 
-        getHostPlayer().GetComponent<StartGame>().numbersCode.Value = "acesta este un cod";
+        //getHostPlayer().GetComponent<StartGame>().numbersCode.Value = "acesta este un cod";
+        //print("Codul numerelor: " + code);
+        string code = "";
+        int i = 0;
+        foreach (var row in numbersGrid)
+        {
+            code += i++;
+            foreach (var number in row)
+            {
+                if (number == null)
+                {
+                    code += "z";
+                }
+                else
+                {
+                    code += prefabToLetter(number.gameObject);
+                }
+            }
+        }
+
+        getHostPlayer().GetComponent<StartGame>().numbersCode.Value = code;
+    }
+
+
+
+    private bool isRedNumberNearby(Vector3 position)
+    {
+        var colliders = Physics.OverlapSphere(
+            position,
+            hexSize / 2 + 2,
+            (int)Mathf.Pow(2, LayerMask.NameToLayer("Number"))
+        );
+
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            if (colliders[i].gameObject.name == "6" || colliders[i].gameObject.name == "8")
+                return true;
+        }
+
+        return false;
     }
 
     void findAvailableSpace(int x, int y, Vector3 position, GameObject number)
@@ -250,7 +263,7 @@ public class NumbersGrid : MonoBehaviour
 
 
 
-    private GameObject codeToNumber(string code)
+    private GameObject letterToNumber(string code)
     {
         switch (code)
         {
@@ -290,5 +303,105 @@ public class NumbersGrid : MonoBehaviour
         }
 
         return null;
+    }
+
+    public void CreateGrid(string code)
+    {
+        hexSize = gameGrid.GetComponent<GameGrid>().hexSize;
+
+        numbersGrid = new GameObject[5][];
+        numbersGrid[0] = new GameObject[3];
+        numbersGrid[1] = new GameObject[4];
+        numbersGrid[2] = new GameObject[5];
+        numbersGrid[3] = new GameObject[4];
+        numbersGrid[4] = new GameObject[3];
+
+        for (int x = 0; x <= numbersGrid.Length / 2; x++)
+        {
+            for (int y = 0; y < numbersGrid[x].Length; y++)
+            {
+
+                int index = code.IndexOf(x.ToString()) + 1;
+                string letter = code.Substring(index + y, 1);
+
+                if (letter == "z")
+                    continue;
+
+                var number = letterToNumber(letter);
+
+                Vector3 position = new Vector3(y * hexSize - x * hexSize / 2,
+                                               0.1f,
+                                               -x * hexSize * 3 / 4);
+
+                numbersGrid[x][y] = Instantiate(
+                    number,
+                    position,
+                    Quaternion.Euler(-90, -90, 90)
+                    );
+
+                numbersGrid[x][y].gameObject.name = number.name;
+                numbersGrid[x][y].gameObject.transform.parent = transform;
+                numbersGrid[x][y].gameObject.GetComponent<Number>().resource = gameGrid.GetComponent<GameGrid>().gameGrid[x][y].gameObject.name;
+            }
+        }
+
+
+        for (int x = numbersGrid.Length / 2 + 1; x < numbersGrid.Length; x++)
+        {
+            for (int y = 0; y < numbersGrid[x].Length; y++)
+            {
+
+                int index = code.IndexOf(x.ToString()) + 1;
+                string letter = code.Substring(index + y, 1);
+
+                if (letter == "z")
+                    continue;
+
+                Vector3 position = new Vector3(y * hexSize + x * hexSize / 2 - hexSize * 2,
+                                0.1f,
+                                -x * hexSize * 3 / 4);
+
+                var number = letterToNumber(letter);
+
+                numbersGrid[x][y] = Instantiate(
+                    number,
+                    position,
+                    Quaternion.Euler(-90, -90, 90)
+                );
+
+                numbersGrid[x][y].gameObject.name = number.name;
+                numbersGrid[x][y].gameObject.transform.parent = transform;
+                numbersGrid[x][y].gameObject.GetComponent<Number>().resource = gameGrid.GetComponent<GameGrid>().gameGrid[x][y].gameObject.name;
+            }
+        }
+    }
+
+    private string prefabToLetter(GameObject numberPrefab)
+    {
+        switch (numberPrefab.name)
+        {
+            case "2":
+                return "a";
+            case "3":
+                return "b";
+            case "4":
+                return "c";
+            case "5":
+                return "d";
+            case "6":
+                return "e";
+            case "8":
+                return "f";
+            case "9":
+                return "g";
+            case "10":
+                return "h";
+            case "11":
+                return "i";
+            case "12":
+                return "j";
+            default:
+                return "Error";
+        }
     }
 }
