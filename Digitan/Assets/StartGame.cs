@@ -130,8 +130,11 @@ public class StartGame : NetworkBehaviour
         return IsClient;
     }
 
-    public void printToAll(string msg)
+    [ClientRpc]
+    public void printClientRpc(string msg)
     {
+        if (!IsOwner)
+            return;
         print(msg);
     }
 }

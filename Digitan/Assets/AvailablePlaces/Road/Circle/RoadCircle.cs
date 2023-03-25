@@ -56,7 +56,7 @@ public class RoadCircle : MonoBehaviour
 
             var indexes = getIndexesOfElem(gameObject);
 
-            getHostPlayer().GetComponent<StartGame>().printToAll("chiar merge? xddd");
+            getHostPlayer().GetComponent<StartGame>().printClientRpc("chiar merge? xddd");
 
             //create the model
             GameObject roadObject = Instantiate(Road,
