@@ -29,7 +29,6 @@ public class RoadCircle : MonoBehaviour
 
     public void OnMouseDown()
     {
-        //_renderer.material.color = Color.white;
         if (!isOccupied)
         {
             var colliders = Physics.OverlapSphere(
@@ -38,6 +37,8 @@ public class RoadCircle : MonoBehaviour
                (int)Mathf.Pow(2, LayerMask.NameToLayer("Unvisible Circle"))
             );
 
+
+            //turn them invisible
             for (int i = 0; i < colliders.Length; i++)
             {
                 if (colliders[i].gameObject.GetComponent<SettlementCircle>() != null)
@@ -53,11 +54,19 @@ public class RoadCircle : MonoBehaviour
                 }
             }
 
+            var indexes = getIndexesOfElem(gameObject);
+
+            getHostPlayer().GetComponent<StartGame>().printToAll("chiar merge? xddd");
+
+            //create the model
             GameObject roadObject = Instantiate(Road,
                                                 transform.position,
-                                                getRotationFromPos(getIndexesOfElem(gameObject)));
+                                                getRotationFromPos(indexes));
+
+            //neccessary piece of code so that the nearby circles know that it just got occupied
             roadObject.GetComponent<RoadCircle>().isOccupied = true;
 
+            //destroy the road circle
             Destroy(this.gameObject);
 
             //make the road circles invisible
@@ -111,5 +120,18 @@ public class RoadCircle : MonoBehaviour
         }
 
         return Quaternion.Euler(-90, y, 0);
+    }
+
+    private GameObject getHostPlayer()
+    {
+        var players = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (var p in players)
+        {
+            if (p.GetComponent<StartGame>().IsOwnedByServer)
+                return p;
+        }
+
+        return null;
     }
 }

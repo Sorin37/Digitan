@@ -129,4 +129,9 @@ public class StartGame : NetworkBehaviour
     {
         return IsClient;
     }
+
+    public void printToAll(string msg)
+    {
+        print(msg);
+    }
 }
