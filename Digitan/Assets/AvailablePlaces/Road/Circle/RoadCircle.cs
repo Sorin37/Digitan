@@ -34,7 +34,14 @@ public class RoadCircle : MonoBehaviour
         {
             var indexes = getIndexesOfElem(gameObject);
 
-            getHostPlayer().GetComponent<StartGame>().placeRoadClientRpc(indexes.x, indexes.y);
+            if (getMyPlayer().GetComponent<StartGame>().getIsHost())
+            {
+                getHostPlayer().GetComponent<StartGame>().placeRoadClientRpc(indexes.x, indexes.y);
+            }
+            else
+            {
+                getHostPlayer().GetComponent<StartGame>().placeRoadServerRpc(indexes.x, indexes.y);
+            }
         }
     }
 
@@ -98,4 +105,17 @@ public class RoadCircle : MonoBehaviour
 
         return null;
     }
+    private GameObject getMyPlayer()
+    {
+        var players = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (var p in players)
+        {
+            if (p.GetComponent<StartGame>().IsOwner)
+                return p;
+        }
+
+        return null;
+    }
+
 }

@@ -137,6 +137,12 @@ public class StartGame : NetworkBehaviour
         print(msg);
     }
 
+    [ServerRpc]
+    public void placeRoadServerRpc(int x, int y)
+    {
+        placeRoadClientRpc(x, y);
+    }
+
     [ClientRpc]
     public void placeRoadClientRpc(int x, int y)
     {
