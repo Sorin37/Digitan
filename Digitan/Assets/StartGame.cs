@@ -137,7 +137,7 @@ public class StartGame : NetworkBehaviour
         print(msg);
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     public void placeRoadServerRpc(int x, int y)
     {
         placeRoadClientRpc(x, y);
