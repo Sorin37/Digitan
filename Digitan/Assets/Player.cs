@@ -36,7 +36,7 @@ public class Player : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-        color = idToColor(OwnerClientId);
+        color = idToColor(NetworkManager.Singleton.LocalClientId);
     }
 
     void Start()
@@ -282,4 +282,18 @@ public class Player : NetworkBehaviour
                 return Color.magenta;
         }
     }
+
+    private GameObject getMyPlayer()
+    {
+        var players = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (var p in players)
+        {
+            if (p.GetComponent<Player>().IsOwner)
+                return p;
+        }
+
+        return null;
+    }
+
 }
