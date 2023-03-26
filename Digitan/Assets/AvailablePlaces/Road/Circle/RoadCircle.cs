@@ -29,48 +29,12 @@ public class RoadCircle : MonoBehaviour
 
     public void OnMouseDown()
     {
+
         if (!isOccupied)
         {
-            var colliders = Physics.OverlapSphere(
-                transform.position,
-                2,
-               (int)Mathf.Pow(2, LayerMask.NameToLayer("Unvisible Circle"))
-            );
-
-
-            //turn them invisible
-            for (int i = 0; i < colliders.Length; i++)
-            {
-                if (colliders[i].gameObject.GetComponent<SettlementCircle>() != null)
-                {
-                    if (!colliders[i].gameObject.GetComponent<SettlementCircle>().isTooClose)
-                    {
-                        colliders[i].gameObject.layer = LayerMask.NameToLayer("Settlement Circle");
-                    }
-                }
-                else
-                {
-                    colliders[i].gameObject.layer = LayerMask.NameToLayer("Road Circle");
-                }
-            }
-
             var indexes = getIndexesOfElem(gameObject);
 
-            getHostPlayer().GetComponent<StartGame>().printClientRpc("chiar merge? xddd");
-
-            //create the model
-            GameObject roadObject = Instantiate(Road,
-                                                transform.position,
-                                                getRotationFromPos(indexes));
-
-            //neccessary piece of code so that the nearby circles know that it just got occupied
-            roadObject.GetComponent<RoadCircle>().isOccupied = true;
-
-            //destroy the road circle
-            Destroy(this.gameObject);
-
-            //make the road circles invisible
-            Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("Road Circle"));
+            getHostPlayer().GetComponent<StartGame>().placeRoadClientRpc(indexes.x, indexes.y);
         }
     }
 
@@ -97,13 +61,13 @@ public class RoadCircle : MonoBehaviour
 
     private Quaternion getRotationFromPos((int x, int y) pos)
     {
-        int y=0;
+        int y = 0;
 
         if (pos.x % 2 == 0)
         {
             y = 60;
 
-            if(pos.y % 2 == 1)
+            if (pos.y % 2 == 1)
             {
                 y *= -1;
             }

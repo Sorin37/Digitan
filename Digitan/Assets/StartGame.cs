@@ -8,8 +8,9 @@ public class StartGame : NetworkBehaviour
 {
     [SerializeField] private GameObject gameGridPrefab;
     [SerializeField] private GameObject numbersGridPrefab;
+    [SerializeField] private GameObject roadPrefab;
     private GameObject gameGrid;
-    private GameObject numbersGrid;
+    private GameObject roadGrid;
 
     public NetworkVariable<FixedString64Bytes> resourcesCode = new NetworkVariable<FixedString64Bytes>("Uninitialized");
     public NetworkVariable<FixedString64Bytes> numbersCode = new NetworkVariable<FixedString64Bytes>("Uninitialized");
@@ -20,7 +21,7 @@ public class StartGame : NetworkBehaviour
     // Awake is called before all the Starts in a random order
     void Awake()
     {
-
+        roadGrid = GameObject.Find("AvailableRoadsGrid");
     }
 
     // OnNetworkSpawn is called before Start
@@ -134,5 +135,76 @@ public class StartGame : NetworkBehaviour
     public void printClientRpc(string msg)
     {
         print(msg);
+    }
+
+    [ClientRpc]
+    public void placeRoadClientRpc(int x, int y)
+    {
+        GameObject pressedCircle = roadGrid.GetComponent<RoadGrid>().roadGrid[x][y].gameObject;
+
+        var colliders = Physics.OverlapSphere(
+                pressedCircle.transform.position,
+                2,
+               (int)Mathf.Pow(2, LayerMask.NameToLayer("Unvisible Circle"))
+            );
+
+
+        //turn the nearby road circles visible
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            if (colliders[i].gameObject.GetComponent<SettlementCircle>() != null)
+            {
+                if (!colliders[i].gameObject.GetComponent<SettlementCircle>().isTooClose)
+                {
+                    colliders[i].gameObject.layer = LayerMask.NameToLayer("Settlement Circle");
+                }
+            }
+            else
+            {
+                colliders[i].gameObject.layer = LayerMask.NameToLayer("Road Circle");
+            }
+        }
+
+
+        //create the model
+        GameObject roadObject = Instantiate(roadPrefab,
+                                            pressedCircle.transform.position,
+                                            getRotationFromPos((x, y)));
+
+        //neccessary piece of code so that the nearby circles know that it just got occupied
+        roadObject.GetComponent<RoadCircle>().isOccupied = true;
+
+        //destroy the road circle
+        Destroy(pressedCircle);
+
+        //make the road circles invisible
+        Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("Road Circle"));
+    }
+
+    private Quaternion getRotationFromPos((int x, int y) pos)
+    {
+        int y = 0;
+
+        if (pos.x % 2 == 0)
+        {
+            y = 60;
+
+            if (pos.y % 2 == 1)
+            {
+                y *= -1;
+            }
+        }
+
+        if (pos.x % 2 == 0 && pos.x > 5)
+        {
+            y = -60;
+
+            if (pos.y % 2 == 1)
+            {
+                y *= -1;
+            }
+        }
+
+        return Quaternion.Euler(-90, y, 0);
     }
 }

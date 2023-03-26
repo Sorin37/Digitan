@@ -63,3 +63,142 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameGridPrefab: {fileID: 7912111142282129415, guid: 0f6d5643a8b3c4648a206e97d42a40ba, type: 3}
   numbersGridPrefab: {fileID: 1875331112309333599, guid: b63d941a97a26e744ad503bee6465de9, type: 3}
+  roadPrefab: {fileID: 6736439349771075845, guid: 02679582dec926d4d8240c367004d820, type: 3}
+  resourcesCode:
+    m_InternalValue:
+      utf8LengthInBytes: 13
+      bytes:
+        offset0000:
+          byte0000: 85
+          byte0001: 110
+          byte0002: 105
+          byte0003: 110
+          byte0004: 105
+          byte0005: 116
+          byte0006: 105
+          byte0007: 97
+          byte0008: 108
+          byte0009: 105
+          byte0010: 122
+          byte0011: 101
+          byte0012: 100
+          byte0013: 0
+          byte0014: 0
+          byte0015: 0
+        offset0016:
+          byte0000: 0
+          byte0001: 0
+          byte0002: 0
+          byte0003: 0
+          byte0004: 0
+          byte0005: 0
+          byte0006: 0
+          byte0007: 0
+          byte0008: 0
+          byte0009: 0
+          byte0010: 0
+          byte0011: 0
+          byte0012: 0
+          byte0013: 0
+          byte0014: 0
+          byte0015: 0
+        offset0032:
+          byte0000: 0
+          byte0001: 0
+          byte0002: 0
+          byte0003: 0
+          byte0004: 0
+          byte0005: 0
+          byte0006: 0
+          byte0007: 0
+          byte0008: 0
+          byte0009: 0
+          byte0010: 0
+          byte0011: 0
+          byte0012: 0
+          byte0013: 0
+          byte0014: 0
+          byte0015: 0
+        byte0048: 0
+        byte0049: 0
+        byte0050: 0
+        byte0051: 0
+        byte0052: 0
+        byte0053: 0
+        byte0054: 0
+        byte0055: 0
+        byte0056: 0
+        byte0057: 0
+        byte0058: 0
+        byte0059: 0
+        byte0060: 0
+        byte0061: 0
+  numbersCode:
+    m_InternalValue:
+      utf8LengthInBytes: 13
+      bytes:
+        offset0000:
+          byte0000: 85
+          byte0001: 110
+          byte0002: 105
+          byte0003: 110
+          byte0004: 105
+          byte0005: 116
+          byte0006: 105
+          byte0007: 97
+          byte0008: 108
+          byte0009: 105
+          byte0010: 122
+          byte0011: 101
+          byte0012: 100
+          byte0013: 0
+          byte0014: 0
+          byte0015: 0
+        offset0016:
+          byte0000: 0
+          byte0001: 0
+          byte0002: 0
+          byte0003: 0
+          byte0004: 0
+          byte0005: 0
+          byte0006: 0
+          byte0007: 0
+          byte0008: 0
+          byte0009: 0
+          byte0010: 0
+          byte0011: 0
+          byte0012: 0
+          byte0013: 0
+          byte0014: 0
+          byte0015: 0
+        offset0032:
+          byte0000: 0
+          byte0001: 0
+          byte0002: 0
+          byte0003: 0
+          byte0004: 0
+          byte0005: 0
+          byte0006: 0
+          byte0007: 0
+          byte0008: 0
+          byte0009: 0
+          byte0010: 0
+          byte0011: 0
+          byte0012: 0
+          byte0013: 0
+          byte0014: 0
+          byte0015: 0
+        byte0048: 0
+        byte0049: 0
+        byte0050: 0
+        byte0051: 0
+        byte0052: 0
+        byte0053: 0
+        byte0054: 0
+        byte0055: 0
+        byte0056: 0
+        byte0057: 0
+        byte0058: 0
+        byte0059: 0
+        byte0060: 0
+        byte0061: 0
