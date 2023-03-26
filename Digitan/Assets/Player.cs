@@ -10,6 +10,7 @@ public class Player : NetworkBehaviour
     [SerializeField] private GameObject numbersGridPrefab;
     [SerializeField] private GameObject roadPrefab;
     [SerializeField] private GameObject settlementPrefab;
+
     private GameObject gameGrid;
     private GameObject roadGrid;
     private GameObject settlementGrid;
@@ -19,6 +20,9 @@ public class Player : NetworkBehaviour
 
     public Dictionary<string, List<string>> resourcesDict;
     public Dictionary<string, int> playerHand;
+
+    public Color color;
+
 
     // Awake is called before all the Starts in a random order
     void Awake()
@@ -32,6 +36,7 @@ public class Player : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
+        color = idToColor(OwnerClientId);
     }
 
     void Start()
@@ -49,6 +54,7 @@ public class Player : NetworkBehaviour
         }
 
         gameGrid.GetComponent<GameGrid>().CreateGrid(resourcesCode.Value.ToString());
+        //roadPrefab.GetComponent<Renderer>().sharedMaterial.SetColor("_Color", Color.cyan);
     }
 
 
@@ -180,6 +186,8 @@ public class Player : NetworkBehaviour
                                             pressedCircle.transform.position,
                                             getRotationFromPos((x, y)));
 
+        roadObject.GetComponent<Renderer>().material.color = color;
+
         //neccessary piece of code so that the nearby circles know that it just got occupied
         roadObject.GetComponent<RoadCircle>().isOccupied = true;
 
@@ -226,8 +234,6 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void placeSettlementClientRpc(int x, int y)
     {
-        print("I be placing");
-
         GameObject pressedCircle = settlementGrid.GetComponent<SettlementGrid>().settlementGrid[x][y].gameObject;
 
         var colliders = Physics.OverlapSphere(
@@ -258,5 +264,22 @@ public class Player : NetworkBehaviour
         Destroy(pressedCircle);
 
         Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("Settlement Circle"));
+    }
+
+    private Color idToColor(ulong id)
+    {
+        switch (id)
+        {
+            case 0ul: 
+                return new Color(0f, 0f, 200/255f);
+            case 1ul: 
+                return Color.red;
+            case 2ul: 
+                return new Color(1.0f, 0.64f, 0.0f);
+            case 4ul:
+                return Color.white;
+            default:
+                return Color.magenta;
+        }
     }
 }
