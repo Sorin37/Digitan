@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -69,29 +70,16 @@ public class SettlementCircle : MonoBehaviour
 
         if (!isOccupied)
         {
-            var colliders = Physics.OverlapSphere(
-                transform.position,
-                2.5f,
-               (int)(Mathf.Pow(2, LayerMask.NameToLayer("Unvisible Circle")) +
-               Mathf.Pow(2, LayerMask.NameToLayer("Settlement Circle")))
-            );
+            var indexes = getIndexesOfElem(gameObject, settlementGrid.settlementGrid);
 
-            for (int i = 0; i < colliders.Length; i++)
+            if (getMyPlayer().GetComponent<Player>().getIsHost())
             {
-                if (colliders[i].gameObject.GetComponent<SettlementCircle>() != null)
-                {
-                    colliders[i].gameObject.GetComponent<SettlementCircle>().isTooClose = true;
-                    colliders[i].gameObject.layer = LayerMask.NameToLayer("Unvisible Circle");
-                }
+                getHostPlayer().GetComponent<Player>().placeSettlementClientRpc(indexes.x, indexes.y);
             }
-
-            GameObject settlementObject = Instantiate(settlement, transform.position, Quaternion.Euler(90, 0, 0));
-
-            //todo: change to settlement circle
-            settlementObject.GetComponent<RoadCircle>().isOccupied = true;
-            Destroy(this.gameObject);
-
-            Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("Settlement Circle"));
+            else
+            {
+                getHostPlayer().GetComponent<Player>().placeSettlementServerRpc(indexes.x, indexes.y);
+            }
 
             addResourcesToDict();
         }
@@ -152,5 +140,51 @@ public class SettlementCircle : MonoBehaviour
             //var playerHand = gameGrid.GetComponent<GameGrid>().playerHand;
             //playerHand[resource]++;
         }
+    }
+
+    private (int x, int y) getIndexesOfElem(GameObject circle, GameObject[][] grid)
+    {
+        GameObject[] row = null;
+
+        foreach (GameObject[] roadGridRow in grid)
+        {
+            if (roadGridRow.Contains(circle))
+            {
+                row = roadGridRow;
+                break;
+            }
+        }
+
+        if (row != null)
+        {
+            return (grid.ToList().IndexOf(row), row.ToList().IndexOf(circle));
+        }
+
+        return (-1, -1);
+    }
+
+    private GameObject getHostPlayer()
+    {
+        var players = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (var p in players)
+        {
+            if (p.GetComponent<Player>().IsOwnedByServer)
+                return p;
+        }
+
+        return null;
+    }
+    private GameObject getMyPlayer()
+    {
+        var players = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (var p in players)
+        {
+            if (p.GetComponent<Player>().IsOwner)
+                return p;
+        }
+
+        return null;
     }
 }

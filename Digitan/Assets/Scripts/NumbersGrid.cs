@@ -62,12 +62,12 @@ public class NumbersGrid : MonoBehaviour
 
     private void CreateGridOnGameGridCreated(object s, EventArgs e)
     {
-        if (getMyPlayer().GetComponent<StartGame>().getIsHost())
+        if (getMyPlayer().GetComponent<Player>().getIsHost())
         {
             CreateGrid();
         }else
         {
-            CreateGrid(getHostPlayer().GetComponent<StartGame>().numbersCode.Value.ToString());
+            CreateGrid(getHostPlayer().GetComponent<Player>().numbersCode.Value.ToString());
         }
 
         gameGrid.GetComponent<GameGrid>().OnGridCreated -= CreateGridOnGameGridCreated;
@@ -200,7 +200,7 @@ public class NumbersGrid : MonoBehaviour
             }
         }
 
-        getHostPlayer().GetComponent<StartGame>().numbersCode.Value = code;
+        getHostPlayer().GetComponent<Player>().numbersCode.Value = code;
 
         OnGridCreated?.Invoke(this, EventArgs.Empty);
     }
@@ -405,7 +405,7 @@ public class NumbersGrid : MonoBehaviour
 
         foreach (var p in players)
         {
-            if (p.GetComponent<StartGame>().IsOwnedByServer)
+            if (p.GetComponent<Player>().IsOwnedByServer)
                 return p;
         }
 
@@ -418,7 +418,7 @@ public class NumbersGrid : MonoBehaviour
 
         foreach (var p in players)
         {
-            if (p.GetComponent<StartGame>().IsOwner)
+            if (p.GetComponent<Player>().IsOwner)
                 return p;
         }
 

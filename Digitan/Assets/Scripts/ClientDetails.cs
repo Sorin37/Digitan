@@ -49,7 +49,7 @@ public class ClientDetails : MonoBehaviour
 
             JoinLobbyByIdOptions options = new JoinLobbyByIdOptions
             {
-                Player = new Player
+                Player = new Unity.Services.Lobbies.Models.Player
                 {
                     Data = new Dictionary<string, PlayerDataObject> {
                     { 

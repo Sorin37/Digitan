@@ -110,7 +110,7 @@ public class LobbyManager : MonoBehaviour
         }
 
         int i = 0;
-        foreach (Player player in lobby.Players)
+        foreach (Unity.Services.Lobbies.Models.Player player in lobby.Players)
         {
             PlayerDetails.transform.Find("PlayerName")
                 .gameObject.GetComponent<TextMeshProUGUI>()

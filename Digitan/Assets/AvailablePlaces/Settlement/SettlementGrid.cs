@@ -111,7 +111,7 @@ public class SettlementGrid : MonoBehaviour
 
         foreach (var p in players)
         {
-            if (p.GetComponent<StartGame>().IsOwnedByServer)
+            if (p.GetComponent<Player>().IsOwnedByServer)
                 return p;
         }
 
@@ -124,7 +124,7 @@ public class SettlementGrid : MonoBehaviour
 
         foreach (var p in players)
         {
-            if (p.GetComponent<StartGame>().IsOwner)
+            if (p.GetComponent<Player>().IsOwner)
                 return p;
         }
 

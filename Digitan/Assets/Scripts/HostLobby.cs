@@ -54,7 +54,7 @@ public class HostLobby : MonoBehaviour
             Data = new Dictionary<string, DataObject> {
                     { "RelayCode", new DataObject(DataObject.VisibilityOptions.Public, "None") }
             },
-            Player = new Player
+            Player = new Unity.Services.Lobbies.Models.Player
             {
                 Data = new Dictionary<string, PlayerDataObject> {
                     { "PlayerName", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Public, nickname) },

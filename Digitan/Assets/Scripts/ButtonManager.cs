@@ -40,14 +40,14 @@ public class ButtonManager : MonoBehaviour
     {
         settlementButton.onClick.AddListener(() =>
         {
-            if (hasSettlementResources())
-            {
-                Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Settlement Circle"));
-            }
-            else
-            {
-                print("You don't have enough resources for a settlement!");
-            }
+            //if (hasSettlementResources())
+            //{
+            Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Settlement Circle"));
+            //}
+            //else
+            //{
+            //    print("You don't have enough resources for a settlement!");
+            //}
         });
     }
     private void initDiceButton()

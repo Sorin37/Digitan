@@ -4,13 +4,15 @@ using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
-public class StartGame : NetworkBehaviour
+public class Player : NetworkBehaviour
 {
     [SerializeField] private GameObject gameGridPrefab;
     [SerializeField] private GameObject numbersGridPrefab;
     [SerializeField] private GameObject roadPrefab;
+    [SerializeField] private GameObject settlementPrefab;
     private GameObject gameGrid;
     private GameObject roadGrid;
+    private GameObject settlementGrid;
 
     public NetworkVariable<FixedString64Bytes> resourcesCode = new NetworkVariable<FixedString64Bytes>("Uninitialized");
     public NetworkVariable<FixedString64Bytes> numbersCode = new NetworkVariable<FixedString64Bytes>("Uninitialized");
@@ -21,7 +23,9 @@ public class StartGame : NetworkBehaviour
     // Awake is called before all the Starts in a random order
     void Awake()
     {
+        gameGrid = GameObject.Find("GameGrid");
         roadGrid = GameObject.Find("AvailableRoadsGrid");
+        settlementGrid = GameObject.Find("AvailableSettlementGrid");
     }
 
     // OnNetworkSpawn is called before Start
@@ -44,7 +48,6 @@ public class StartGame : NetworkBehaviour
             resourcesCode.Value = generateResourcesCode();
         }
 
-        gameGrid = GameObject.Find("GameGrid");
         gameGrid.GetComponent<GameGrid>().CreateGrid(resourcesCode.Value.ToString());
     }
 
@@ -212,5 +215,48 @@ public class StartGame : NetworkBehaviour
         }
 
         return Quaternion.Euler(-90, y, 0);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void placeSettlementServerRpc(int x, int y)
+    {
+        placeSettlementClientRpc(x, y);
+    }
+
+    [ClientRpc]
+    public void placeSettlementClientRpc(int x, int y)
+    {
+        print("I be placing");
+
+        GameObject pressedCircle = settlementGrid.GetComponent<SettlementGrid>().settlementGrid[x][y].gameObject;
+
+        var colliders = Physics.OverlapSphere(
+            pressedCircle.transform.position,
+            2.5f,
+            (int)(Mathf.Pow(2, LayerMask.NameToLayer("Unvisible Circle")) +
+                Mathf.Pow(2, LayerMask.NameToLayer("Settlement Circle")))
+            );
+
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            if (colliders[i].gameObject.GetComponent<SettlementCircle>() != null)
+            {
+                colliders[i].gameObject.GetComponent<SettlementCircle>().isTooClose = true;
+                colliders[i].gameObject.layer = LayerMask.NameToLayer("Unvisible Circle");
+            }
+        }
+
+        GameObject settlementObject = Instantiate(
+            settlementPrefab,
+            pressedCircle.transform.position,
+            Quaternion.Euler(90, 0, 0)
+        );
+
+        //todo: change to settlement circle when getting a real settlement model
+        // (since the current model has a road circle script attached to it)
+        settlementObject.GetComponent<RoadCircle>().isOccupied = true;
+        Destroy(pressedCircle);
+
+        Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("Settlement Circle"));
     }
 }

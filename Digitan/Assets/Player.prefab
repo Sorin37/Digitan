@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 2137127884781025008}
   - component: {fileID: 4677101135200282684}
-  - component: {fileID: 3345211850170974214}
+  - component: {fileID: 7487815376680671326}
   m_Layer: 0
-  m_Name: StartGame
+  m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -49,7 +49,7 @@ MonoBehaviour:
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &3345211850170974214
+--- !u!114 &7487815376680671326
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -58,12 +58,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 2849310152704803817}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 794ae230a77f7b4408afd530f626d169, type: 3}
+  m_Script: {fileID: 11500000, guid: 0e36336d2208ee34d82493e4134f71fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   gameGridPrefab: {fileID: 7912111142282129415, guid: 0f6d5643a8b3c4648a206e97d42a40ba, type: 3}
   numbersGridPrefab: {fileID: 1875331112309333599, guid: b63d941a97a26e744ad503bee6465de9, type: 3}
   roadPrefab: {fileID: 6736439349771075845, guid: 02679582dec926d4d8240c367004d820, type: 3}
+  settlementPrefab: {fileID: 4748187627253956761, guid: a0ab8d06dc4f50e449063604a25218bd, type: 3}
   resourcesCode:
     m_InternalValue:
       utf8LengthInBytes: 13

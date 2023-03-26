@@ -32,24 +32,24 @@ public class RoadCircle : MonoBehaviour
 
         if (!isOccupied)
         {
-            var indexes = getIndexesOfElem(gameObject);
+            var indexes = getIndexesOfElem(gameObject, roadGrid);
 
-            if (getMyPlayer().GetComponent<StartGame>().getIsHost())
+            if (getMyPlayer().GetComponent<Player>().getIsHost())
             {
-                getHostPlayer().GetComponent<StartGame>().placeRoadClientRpc(indexes.x, indexes.y);
+                getHostPlayer().GetComponent<Player>().placeRoadClientRpc(indexes.x, indexes.y);
             }
             else
             {
-                getHostPlayer().GetComponent<StartGame>().placeRoadServerRpc(indexes.x, indexes.y);
+                getHostPlayer().GetComponent<Player>().placeRoadServerRpc(indexes.x, indexes.y);
             }
         }
     }
 
-    private (int x, int y) getIndexesOfElem(GameObject circle)
+    private (int x, int y) getIndexesOfElem(GameObject circle, GameObject[][] grid)
     {
         GameObject[] row = null;
 
-        foreach (GameObject[] roadGridRow in roadGrid)
+        foreach (GameObject[] roadGridRow in grid)
         {
             if (roadGridRow.Contains(circle))
             {
@@ -60,7 +60,7 @@ public class RoadCircle : MonoBehaviour
 
         if (row != null)
         {
-            return (roadGrid.ToList().IndexOf(row), row.ToList().IndexOf(circle));
+            return (grid.ToList().IndexOf(row), row.ToList().IndexOf(circle));
         }
 
         return (-1, -1);
@@ -99,7 +99,7 @@ public class RoadCircle : MonoBehaviour
 
         foreach (var p in players)
         {
-            if (p.GetComponent<StartGame>().IsOwnedByServer)
+            if (p.GetComponent<Player>().IsOwnedByServer)
                 return p;
         }
 
@@ -111,7 +111,7 @@ public class RoadCircle : MonoBehaviour
 
         foreach (var p in players)
         {
-            if (p.GetComponent<StartGame>().IsOwner)
+            if (p.GetComponent<Player>().IsOwner)
                 return p;
         }
 
