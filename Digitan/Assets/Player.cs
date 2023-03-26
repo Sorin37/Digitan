@@ -147,13 +147,13 @@ public class Player : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void placeRoadServerRpc(int x, int y)
+    public void placeRoadServerRpc(int x, int y, Color color)
     {
-        placeRoadClientRpc(x, y);
+        placeRoadClientRpc(x, y, color);
     }
 
     [ClientRpc]
-    public void placeRoadClientRpc(int x, int y)
+    public void placeRoadClientRpc(int x, int y, Color color)
     {
         GameObject pressedCircle = roadGrid.GetComponent<RoadGrid>().roadGrid[x][y].gameObject;
 

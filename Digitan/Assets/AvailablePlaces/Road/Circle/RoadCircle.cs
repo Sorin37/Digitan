@@ -34,13 +34,23 @@ public class RoadCircle : MonoBehaviour
         {
             var indexes = getIndexesOfElem(gameObject, roadGrid);
 
-            if (getMyPlayer().GetComponent<Player>().getIsHost())
+            var myPlayer = getMyPlayer().GetComponent<Player>();
+
+            if (myPlayer.getIsHost())
             {
-                getHostPlayer().GetComponent<Player>().placeRoadClientRpc(indexes.x, indexes.y);
+                getHostPlayer().GetComponent<Player>().placeRoadClientRpc(
+                    indexes.x,
+                    indexes.y,
+                    myPlayer.color
+                );
             }
             else
             {
-                getHostPlayer().GetComponent<Player>().placeRoadServerRpc(indexes.x, indexes.y);
+                getHostPlayer().GetComponent<Player>().placeRoadServerRpc(
+                    indexes.x, 
+                    indexes.y, 
+                    myPlayer.color
+                );
             }
         }
     }
