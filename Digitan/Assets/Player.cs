@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Unity.Collections;
 using Unity.Netcode;
+using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
 
@@ -36,12 +38,12 @@ public class Player : NetworkBehaviour
     }
 
     // OnNetworkSpawn is called before Start
-    public override void OnNetworkSpawn()
+    public override async void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
         color = idToColor(NetworkManager.Singleton.LocalClientId);
 
-        popInformationFromLobby();
+        await popInformationFromLobbyAsync();
 
         print(nrOfPlayers);
     }
@@ -287,7 +289,7 @@ public class Player : NetworkBehaviour
         return null;
     }
 
-    private void popInformationFromLobby()
+    private async Task popInformationFromLobbyAsync()
     {
         var lobbyGo = GameObject.FindGameObjectsWithTag("Lobby")[0];
 
@@ -302,8 +304,10 @@ public class Player : NetworkBehaviour
             lobby = GameObject.FindGameObjectsWithTag("Lobby")[0].GetComponent<LobbyDetails>().lobby;
         }
 
-        nrOfPlayers = lobby.Players.Count;          
+        lobby = await LobbyService.Instance.GetLobbyAsync(lobby.Id);
 
+        nrOfPlayers = lobby.Players.Count;
+        
         //Destroy(lobbyGo);
     }
 }
