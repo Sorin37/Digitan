@@ -45,6 +45,8 @@ public class Player : NetworkBehaviour
         base.OnNetworkSpawn();
         color = idToColor(NetworkManager.Singleton.LocalClientId);
 
+        if (!IsOwnedByServer)
+            return;
         await popInformationFromLobbyAsync();
 
         currentNrOfPlayers.Value++;
