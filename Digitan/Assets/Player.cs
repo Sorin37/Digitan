@@ -341,4 +341,18 @@ public class Player : NetworkBehaviour
     { 
         PlayersJoinedClientRpc();
     }
+
+    private void TurnCloseRoadsAvailable()
+    {
+        var colliders = Physics.OverlapSphere(
+            transform.position,
+            1,
+           (int)Mathf.Pow(2, LayerMask.NameToLayer("Unvisible Circle"))
+        );
+
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            colliders[i].gameObject.layer = LayerMask.NameToLayer("Road Circle");
+        }
+    }
 }

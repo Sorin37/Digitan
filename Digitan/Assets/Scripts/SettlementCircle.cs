@@ -37,39 +37,21 @@ public class SettlementCircle : MonoBehaviour
     {
         var settlementGrid = transform.parent.gameObject.GetComponent<SettlementGrid>();
 
-        if (settlementGrid.is1stSettlementNext || settlementGrid.is2ndSettlementNext)
-        {
-            GameObject[][] grid = transform.parent.gameObject.GetComponent<SettlementGrid>().settlementGrid;
+        //if (settlementGrid.is1stSettlementNext || settlementGrid.is2ndSettlementNext)
+        //{
 
-            //turns the settlement circle invisible after the 2nd settlement
-            if (settlementGrid.is2ndSettlementNext)
-            {
-                for (int i = 0; i < grid.Length; i++)
-                {
-                    for (int j = 0; j < grid[i].Length; j++)
-                    {
-                        if (grid[i][j] != null)
-                        {
-                            grid[i][j].layer = LayerMask.NameToLayer("Unvisible Circle");
-                        }
-                    }
-                }
-            }
+        //    //turns the settlement circle invisible after the 2nd settlement
+        //    if (settlementGrid.is2ndSettlementNext)
+        //    {
+        //        TurnSettlementsInvisible();
+        //    }
 
-            var colliders = Physics.OverlapSphere(
-                transform.position,
-                1,
-               (int)Mathf.Pow(2, LayerMask.NameToLayer("Unvisible Circle"))
-            );
-
-            for (int i = 0; i < colliders.Length; i++)
-            {
-                colliders[i].gameObject.layer = LayerMask.NameToLayer("Road Circle");
-            }
-        }
+        //}
 
         if (!isOccupied)
         {
+            TurnCloseRoadsAvailable();
+
             var indexes = getIndexesOfElem(gameObject, settlementGrid.settlementGrid);
 
             var myPlayer = getMyPlayer().GetComponent<Player>();
@@ -91,7 +73,7 @@ public class SettlementCircle : MonoBehaviour
                 );
             }
 
-            addResourcesToDict();
+            //addResourcesToDict();
         }
 
     }
@@ -196,5 +178,35 @@ public class SettlementCircle : MonoBehaviour
         }
 
         return null;
+    }
+
+    private void TurnSettlementsInvisible()
+    {
+        GameObject[][] grid = transform.parent.gameObject.GetComponent<SettlementGrid>().settlementGrid;
+
+        for (int i = 0; i < grid.Length; i++)
+        {
+            for (int j = 0; j < grid[i].Length; j++)
+            {
+                if (grid[i][j] != null)
+                {
+                    grid[i][j].layer = LayerMask.NameToLayer("Unvisible Circle");
+                }
+            }
+        }
+    }
+
+    private void TurnCloseRoadsAvailable()
+    {
+        var colliders = Physics.OverlapSphere(
+            transform.position,
+            1,
+           (int)Mathf.Pow(2, LayerMask.NameToLayer("Unvisible Circle"))
+        );
+
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            colliders[i].gameObject.layer = LayerMask.NameToLayer("Road Circle");
+        }
     }
 }
