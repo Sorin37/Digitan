@@ -48,13 +48,6 @@ public class Player : NetworkBehaviour
 
     async void Start()
     {
-        if (IsOwner)
-        {
-            await popInformationFromLobbyAsync();
-
-            playerJoinedServerRpc();
-        }
-
         if (!IsOwnedByServer)
             return;
 
@@ -68,6 +61,11 @@ public class Player : NetworkBehaviour
         }
 
         gameGrid.GetComponent<GameGrid>().CreateGrid(resourcesCode.Value.ToString());
+
+        await popInformationFromLobbyAsync();
+
+        playerJoinedServerRpc();
+
     }
 
 
@@ -267,11 +265,11 @@ public class Player : NetworkBehaviour
     {
         switch (id)
         {
-            case 0ul: 
-                return new Color(0f, 0f, 200/255f);
-            case 1ul: 
+            case 0ul:
+                return new Color(0f, 0f, 200 / 255f);
+            case 1ul:
                 return Color.red;
-            case 2ul: 
+            case 2ul:
                 return new Color(1.0f, 0.64f, 0.0f);
             case 4ul:
                 return Color.white;
