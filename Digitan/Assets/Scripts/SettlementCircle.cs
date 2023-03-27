@@ -74,7 +74,7 @@ public class SettlementCircle : MonoBehaviour
 
             var myPlayer = getMyPlayer().GetComponent<Player>();
 
-            if (getMyPlayer().GetComponent<Player>().getIsHost())
+            if (getMyPlayer().GetComponent<Player>().GetIsHost())
             {
                 getHostPlayer().GetComponent<Player>().placeSettlementClientRpc(
                     indexes.x, 

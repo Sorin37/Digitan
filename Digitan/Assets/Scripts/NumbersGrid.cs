@@ -62,7 +62,7 @@ public class NumbersGrid : MonoBehaviour
 
     private void CreateGridOnGameGridCreated(object s, EventArgs e)
     {
-        if (getMyPlayer().GetComponent<Player>().getIsHost())
+        if (getMyPlayer().GetComponent<Player>().GetIsHost())
         {
             CreateGrid();
         }else

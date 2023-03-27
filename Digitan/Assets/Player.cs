@@ -29,7 +29,7 @@ public class Player : NetworkBehaviour
     public string nickName;
     public Color color;
 
-    public event EventHandler OnPlayerJoin;
+    public event EventHandler OnPlayersJoined;
 
     // Awake is called before all the Starts in a random order
     void Awake()
@@ -37,13 +37,15 @@ public class Player : NetworkBehaviour
         gameGrid = GameObject.Find("GameGrid");
         roadGrid = GameObject.Find("AvailableRoadsGrid");
         settlementGrid = GameObject.Find("AvailableSettlementGrid");
+
+        OnPlayersJoined += (s, a) => { PlayersConnectedClientRpc(); };
     }
 
     // OnNetworkSpawn is called before Start
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-        color = idToColor(NetworkManager.Singleton.LocalClientId);
+        color = IdToColor(NetworkManager.Singleton.LocalClientId);
     }
 
     async void Start()
@@ -57,14 +59,14 @@ public class Player : NetworkBehaviour
 
         if (IsHost)
         {
-            resourcesCode.Value = generateResourcesCode();
+            resourcesCode.Value = GenerateResourcesCode();
         }
 
         gameGrid.GetComponent<GameGrid>().CreateGrid(resourcesCode.Value.ToString());
 
-        await popInformationFromLobby();
+        await PopInformationFromLobby();
 
-        playerJoinedServerRpc();
+        PlayerJoinedServerRpc();
     }
 
 
@@ -107,7 +109,7 @@ public class Player : NetworkBehaviour
     //        print(String.Join(", ", list));
     //    }
     //}
-    private string generateResourcesCode()
+    private string GenerateResourcesCode()
     {
         string code = "";
 
@@ -135,42 +137,42 @@ public class Player : NetworkBehaviour
         return code;
     }
 
-    public bool getIsServer()
+    public bool GetIsServer()
     {
         return IsServer;
     }
 
-    public bool getIsHost()
+    public bool GetIsHost()
     {
         return IsHost;
     }
 
-    public bool getIsClient()
+    public bool GetIsClient()
     {
         return IsClient;
     }
 
     [ClientRpc]
-    public void printClientRpc(string msg)
+    public void PrintClientRpc(string msg)
     {
         print(msg);
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void placeRoadServerRpc(int x, int y, Color color)
+    public void PlaceRoadServerRpc(int x, int y, Color color)
     {
-        placeRoadClientRpc(x, y, color);
+        PlaceRoadClientRpc(x, y, color);
     }
 
     [ClientRpc]
-    public void placeRoadClientRpc(int x, int y, Color color)
+    public void PlaceRoadClientRpc(int x, int y, Color color)
     {
         GameObject pressedCircle = roadGrid.GetComponent<RoadGrid>().roadGrid[x][y].gameObject;
 
         //create the model
         GameObject roadObject = Instantiate(roadPrefab,
                                             pressedCircle.transform.position,
-                                            getRotationFromPos((x, y)));
+                                            GetRotationFromPos((x, y)));
 
         //change the color
         roadObject.GetComponent<Renderer>().material.color = color;
@@ -185,7 +187,7 @@ public class Player : NetworkBehaviour
         Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("Road Circle"));
     }
 
-    private Quaternion getRotationFromPos((int x, int y) pos)
+    private Quaternion GetRotationFromPos((int x, int y) pos)
     {
         int y = 0;
 
@@ -260,7 +262,7 @@ public class Player : NetworkBehaviour
         Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("Settlement Circle"));
     }
 
-    private Color idToColor(ulong id)
+    private Color IdToColor(ulong id)
     {
         switch (id)
         {
@@ -277,7 +279,7 @@ public class Player : NetworkBehaviour
         }
     }
 
-    private GameObject getMyPlayer()
+    private GameObject GetMyPlayer()
     {
         var players = GameObject.FindGameObjectsWithTag("Player");
 
@@ -290,7 +292,7 @@ public class Player : NetworkBehaviour
         return null;
     }
 
-    private async Task popInformationFromLobby()
+    private async Task PopInformationFromLobby()
     {
         var lobbyGo = GameObject.FindGameObjectsWithTag("Lobby")[0];
 
@@ -313,9 +315,20 @@ public class Player : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void playerJoinedServerRpc()
+    public void PlayerJoinedServerRpc()
     {
         currentNrOfPlayers.Value++;
-        print("Another one joined" + currentNrOfPlayers.Value);
+        print("Another one joi " + nrOfPlayers + " ned" + currentNrOfPlayers.Value);
+
+        if (nrOfPlayers == currentNrOfPlayers.Value)
+        {
+            OnPlayersJoined?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
+    [ClientRpc]
+    public void PlayersConnectedClientRpc()
+    {
+        print("Da fra, ne-am conectat");
     }
 }

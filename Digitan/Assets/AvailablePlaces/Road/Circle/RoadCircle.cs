@@ -38,9 +38,9 @@ public class RoadCircle : MonoBehaviour
 
             turnNearbyCirclesAvailable();
 
-            if (myPlayer.getIsHost())
+            if (myPlayer.GetIsHost())
             {
-                getHostPlayer().GetComponent<Player>().placeRoadClientRpc(
+                getHostPlayer().GetComponent<Player>().PlaceRoadClientRpc(
                     indexes.x,
                     indexes.y,
                     myPlayer.color
@@ -48,7 +48,7 @@ public class RoadCircle : MonoBehaviour
             }
             else
             {
-                getHostPlayer().GetComponent<Player>().placeRoadServerRpc(
+                getHostPlayer().GetComponent<Player>().PlaceRoadServerRpc(
                     indexes.x,
                     indexes.y,
                     myPlayer.color
