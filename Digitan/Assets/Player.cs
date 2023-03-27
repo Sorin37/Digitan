@@ -44,8 +44,9 @@ public class Player : NetworkBehaviour
     {
         base.OnNetworkSpawn();
         color = idToColor(NetworkManager.Singleton.LocalClientId);
+
         if (IsOwner)
-            print("I be spawning");
+            playerJoinedServerRpc();
     }
 
     async void Start()
