@@ -20,6 +20,7 @@ public class Player : NetworkBehaviour
 
     public NetworkVariable<FixedString64Bytes> resourcesCode = new NetworkVariable<FixedString64Bytes>("Uninitialized");
     public NetworkVariable<FixedString64Bytes> numbersCode = new NetworkVariable<FixedString64Bytes>("Uninitialized");
+    public NetworkVariable<int> currentNrOfPlayers = new NetworkVariable<int>(0);
 
     public Dictionary<string, List<string>> resourcesDict;
     public Dictionary<string, int> playerHand;
@@ -28,6 +29,7 @@ public class Player : NetworkBehaviour
     public string nickName;
     public Color color;
 
+    public event EventHandler OnPlayerJoin;
 
     // Awake is called before all the Starts in a random order
     void Awake()
@@ -45,7 +47,8 @@ public class Player : NetworkBehaviour
 
         await popInformationFromLobbyAsync();
 
-        print(nrOfPlayers);
+        currentNrOfPlayers.Value++;
+        print("Atatia jucatori avem deocamdat" + currentNrOfPlayers.Value);
     }
 
     void Start()
@@ -307,7 +310,7 @@ public class Player : NetworkBehaviour
         lobby = await LobbyService.Instance.GetLobbyAsync(lobby.Id);
 
         nrOfPlayers = lobby.Players.Count;
-        
-        //Destroy(lobbyGo);
+
+        Destroy(lobbyGo);
     }
 }
