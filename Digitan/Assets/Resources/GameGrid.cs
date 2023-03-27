@@ -33,16 +33,7 @@ public class GameGrid : MonoBehaviour
             Debug.LogError("Error: One of the prefabs is not assigned");
             return;
         }
-
-        OnGridCreated += DeleteLobbyOnGridCreated;
     }
-
-    private void DeleteLobbyOnGridCreated(object s, EventArgs e)
-    {
-        deleteLobby();
-        OnGridCreated -= DeleteLobbyOnGridCreated;
-    }
-
     public void CreateGrid(string code)
     {
         initializeGameGrid();
@@ -93,15 +84,6 @@ public class GameGrid : MonoBehaviour
     {
 
     }
-
-
-    void deleteLobby()
-    {
-        var currentLobby = GameObject.FindGameObjectsWithTag("Lobby")[0];
-
-        Destroy(currentLobby);
-    }
-
     private void initializeGameGrid()
     {
         gameGrid = new GameObject[5][];

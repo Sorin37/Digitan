@@ -52,7 +52,6 @@ public class LobbyManager : MonoBehaviour
         else
         {
             lobby = GameObject.FindGameObjectsWithTag("Lobby")[0].GetComponent<LobbyDetails>().lobby;
-
         }
 
         LobbyName.GetComponent<TextMeshProUGUI>().text = lobby.Name;

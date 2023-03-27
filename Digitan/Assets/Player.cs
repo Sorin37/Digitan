@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Netcode;
+using Unity.Services.Lobbies.Models;
 using UnityEngine;
 
 public class Player : NetworkBehaviour
@@ -21,6 +22,8 @@ public class Player : NetworkBehaviour
     public Dictionary<string, List<string>> resourcesDict;
     public Dictionary<string, int> playerHand;
 
+    public int nrOfPlayers;
+    public string nickName;
     public Color color;
 
 
@@ -30,7 +33,6 @@ public class Player : NetworkBehaviour
         gameGrid = GameObject.Find("GameGrid");
         roadGrid = GameObject.Find("AvailableRoadsGrid");
         settlementGrid = GameObject.Find("AvailableSettlementGrid");
-        print("git test");
     }
 
     // OnNetworkSpawn is called before Start
@@ -38,6 +40,10 @@ public class Player : NetworkBehaviour
     {
         base.OnNetworkSpawn();
         color = idToColor(NetworkManager.Singleton.LocalClientId);
+
+        popInformationFromLobby();
+
+        print(nrOfPlayers);
     }
 
     void Start()
@@ -281,4 +287,23 @@ public class Player : NetworkBehaviour
         return null;
     }
 
+    private void popInformationFromLobby()
+    {
+        var lobbyGo = GameObject.FindGameObjectsWithTag("Lobby")[0];
+
+        Lobby lobby;
+
+        if (lobbyGo.GetComponent<HostLobby>())
+        {
+            lobby = GameObject.FindGameObjectsWithTag("Lobby")[0].GetComponent<HostLobby>().lobby;
+        }
+        else
+        {
+            lobby = GameObject.FindGameObjectsWithTag("Lobby")[0].GetComponent<LobbyDetails>().lobby;
+        }
+
+        nrOfPlayers = lobby.Players.Count;          
+
+        Destroy(lobbyGo);
+    }
 }
