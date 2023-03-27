@@ -44,6 +44,8 @@ public class Player : NetworkBehaviour
     {
         base.OnNetworkSpawn();
         color = idToColor(NetworkManager.Singleton.LocalClientId);
+        if (IsOwner)
+            print("I be spawning");
     }
 
     async void Start()
@@ -62,10 +64,7 @@ public class Player : NetworkBehaviour
 
         gameGrid.GetComponent<GameGrid>().CreateGrid(resourcesCode.Value.ToString());
 
-        await popInformationFromLobbyAsync();
-
-        playerJoinedServerRpc();
-
+        await popInformationFromLobby();
     }
 
 
@@ -291,7 +290,7 @@ public class Player : NetworkBehaviour
         return null;
     }
 
-    private async Task popInformationFromLobbyAsync()
+    private async Task popInformationFromLobby()
     {
         var lobbyGo = GameObject.FindGameObjectsWithTag("Lobby")[0];
 
