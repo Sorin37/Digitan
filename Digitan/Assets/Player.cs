@@ -30,6 +30,7 @@ public class Player : NetworkBehaviour
         gameGrid = GameObject.Find("GameGrid");
         roadGrid = GameObject.Find("AvailableRoadsGrid");
         settlementGrid = GameObject.Find("AvailableSettlementGrid");
+        print("git test");
     }
 
     // OnNetworkSpawn is called before Start
