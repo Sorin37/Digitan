@@ -304,6 +304,6 @@ public class Player : NetworkBehaviour
 
         nrOfPlayers = lobby.Players.Count;          
 
-        Destroy(lobbyGo);
+        //Destroy(lobbyGo);
     }
 }
