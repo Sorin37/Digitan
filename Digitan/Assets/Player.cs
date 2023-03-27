@@ -157,14 +157,12 @@ public class Player : NetworkBehaviour
     {
         GameObject pressedCircle = roadGrid.GetComponent<RoadGrid>().roadGrid[x][y].gameObject;
 
-        
-
-
         //create the model
         GameObject roadObject = Instantiate(roadPrefab,
                                             pressedCircle.transform.position,
                                             getRotationFromPos((x, y)));
 
+        //change the color
         roadObject.GetComponent<Renderer>().material.color = color;
 
         //neccessary piece of code so that the nearby circles know that it just got occupied
@@ -205,16 +203,17 @@ public class Player : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void placeSettlementServerRpc(int x, int y)
+    public void placeSettlementServerRpc(int x, int y, Color color)
     {
-        placeSettlementClientRpc(x, y);
+        placeSettlementClientRpc(x, y, color);
     }
 
     [ClientRpc]
-    public void placeSettlementClientRpc(int x, int y)
+    public void placeSettlementClientRpc(int x, int y, Color color)
     {
         GameObject pressedCircle = settlementGrid.GetComponent<SettlementGrid>().settlementGrid[x][y].gameObject;
 
+        //get the nearby circles
         var colliders = Physics.OverlapSphere(
             pressedCircle.transform.position,
             2.5f,
@@ -222,6 +221,7 @@ public class Player : NetworkBehaviour
                 Mathf.Pow(2, LayerMask.NameToLayer("Settlement Circle")))
             );
 
+        //turn them visible
         for (int i = 0; i < colliders.Length; i++)
         {
             if (colliders[i].gameObject.GetComponent<SettlementCircle>() != null)
@@ -231,17 +231,22 @@ public class Player : NetworkBehaviour
             }
         }
 
+        //create the model
         GameObject settlementObject = Instantiate(
             settlementPrefab,
             pressedCircle.transform.position,
             Quaternion.Euler(90, 0, 0)
         );
 
+        //change the color of the settlement
+        settlementObject.GetComponent<Renderer>().material.color = color;
+
         //todo: change to settlement circle when getting a real settlement model
         // (since the current model has a road circle script attached to it)
         settlementObject.GetComponent<RoadCircle>().isOccupied = true;
         Destroy(pressedCircle);
 
+        //make the settlement circles invisible
         Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("Settlement Circle"));
     }
 

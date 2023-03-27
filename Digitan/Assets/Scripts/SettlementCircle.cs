@@ -72,13 +72,23 @@ public class SettlementCircle : MonoBehaviour
         {
             var indexes = getIndexesOfElem(gameObject, settlementGrid.settlementGrid);
 
+            var myPlayer = getMyPlayer().GetComponent<Player>();
+
             if (getMyPlayer().GetComponent<Player>().getIsHost())
             {
-                getHostPlayer().GetComponent<Player>().placeSettlementClientRpc(indexes.x, indexes.y);
+                getHostPlayer().GetComponent<Player>().placeSettlementClientRpc(
+                    indexes.x, 
+                    indexes.y,
+                    myPlayer.color
+                );
             }
             else
             {
-                getHostPlayer().GetComponent<Player>().placeSettlementServerRpc(indexes.x, indexes.y);
+                getHostPlayer().GetComponent<Player>().placeSettlementServerRpc(
+                    indexes.x,
+                    indexes.y,
+                    myPlayer.color
+                );
             }
 
             addResourcesToDict();

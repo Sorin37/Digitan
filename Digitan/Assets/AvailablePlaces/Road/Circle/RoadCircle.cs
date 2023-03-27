@@ -36,27 +36,7 @@ public class RoadCircle : MonoBehaviour
 
             var myPlayer = getMyPlayer().GetComponent<Player>();
 
-            var colliders = Physics.OverlapSphere(
-                transform.position,
-                2,
-               (int)Mathf.Pow(2, LayerMask.NameToLayer("Unvisible Circle"))
-            );
-
-            //turn the nearby road circles visible
-            for (int i = 0; i < colliders.Length; i++)
-            {
-                if (colliders[i].gameObject.GetComponent<SettlementCircle>() != null)
-                {
-                    if (!colliders[i].gameObject.GetComponent<SettlementCircle>().isTooClose)
-                    {
-                        colliders[i].gameObject.layer = LayerMask.NameToLayer("Settlement Circle");
-                    }
-                }
-                else
-                {
-                    colliders[i].gameObject.layer = LayerMask.NameToLayer("Road Circle");
-                }
-            }
+            turnNearbyCirclesAvailable();
 
             if (myPlayer.getIsHost())
             {
@@ -69,8 +49,8 @@ public class RoadCircle : MonoBehaviour
             else
             {
                 getHostPlayer().GetComponent<Player>().placeRoadServerRpc(
-                    indexes.x, 
-                    indexes.y, 
+                    indexes.x,
+                    indexes.y,
                     myPlayer.color
                 );
             }
@@ -150,4 +130,28 @@ public class RoadCircle : MonoBehaviour
         return null;
     }
 
+
+    private void turnNearbyCirclesAvailable()
+    {
+        var colliders = Physics.OverlapSphere(
+                transform.position,
+                2,
+               (int)Mathf.Pow(2, LayerMask.NameToLayer("Unvisible Circle"))
+            );
+
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            if (colliders[i].gameObject.GetComponent<SettlementCircle>() != null)
+            {
+                if (!colliders[i].gameObject.GetComponent<SettlementCircle>().isTooClose)
+                {
+                    colliders[i].gameObject.layer = LayerMask.NameToLayer("Settlement Circle");
+                }
+            }
+            else
+            {
+                colliders[i].gameObject.layer = LayerMask.NameToLayer("Road Circle");
+            }
+        }
+    }
 }
