@@ -44,9 +44,6 @@ public class Player : NetworkBehaviour
     {
         base.OnNetworkSpawn();
         color = idToColor(NetworkManager.Singleton.LocalClientId);
-
-        if (IsOwner)
-            playerJoinedServerRpc();
     }
 
     async void Start()
@@ -66,6 +63,8 @@ public class Player : NetworkBehaviour
         gameGrid.GetComponent<GameGrid>().CreateGrid(resourcesCode.Value.ToString());
 
         await popInformationFromLobby();
+
+        playerJoinedServerRpc();
     }
 
 
@@ -313,7 +312,7 @@ public class Player : NetworkBehaviour
         Destroy(lobbyGo);
     }
 
-    [ServerRpc(RequireOwnership = true)]
+    [ServerRpc(RequireOwnership = false)]
     public void playerJoinedServerRpc()
     {
         currentNrOfPlayers.Value++;
