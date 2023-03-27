@@ -320,10 +320,10 @@ public class Player : NetworkBehaviour
         currentNrOfPlayers.Value++;
         print("Another one joi " + nrOfPlayers + " ned" + currentNrOfPlayers.Value);
 
-        if (nrOfPlayers == currentNrOfPlayers.Value)
-        {
-            OnPlayersJoined?.Invoke(this, EventArgs.Empty);
-        }
+        //if (nrOfPlayers == currentNrOfPlayers.Value)
+        //{
+        //    OnPlayersJoined?.Invoke(this, EventArgs.Empty);
+        //}
     }
 
     [ClientRpc]
