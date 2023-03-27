@@ -57,7 +57,7 @@ public class Player : NetworkBehaviour
         InitializeResourceDict();
         InitializePlayerHand();
 
-        OnPlayersJoined += (s, a) => { PlayersConnectedClientRpc(); };
+        //OnPlayersJoined += (s, a) => { PlayersConnectedClientRpc(); };
 
         if (IsHost)
         {
@@ -67,8 +67,6 @@ public class Player : NetworkBehaviour
         gameGrid.GetComponent<GameGrid>().CreateGrid(resourcesCode.Value.ToString());
 
         await PopInformationFromLobby();
-
-
 
         PlayerJoinedServerRpc();
     }
