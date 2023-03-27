@@ -65,8 +65,7 @@ public class Player : NetworkBehaviour
 
         await popInformationFromLobbyAsync();
 
-        currentNrOfPlayers.Value++;
-        print("Atatia jucatori avem deocamdat" + currentNrOfPlayers.Value);
+        playerJoinedServerRpc();
     }
 
 
@@ -312,5 +311,12 @@ public class Player : NetworkBehaviour
         nrOfPlayers = lobby.Players.Count;
 
         Destroy(lobbyGo);
+    }
+
+    [ServerRpc(RequireOwnership = true)]
+    public void playerJoinedServerRpc()
+    {
+        currentNrOfPlayers.Value++;
+        print("Another one joined" + currentNrOfPlayers.Value);
     }
 }
