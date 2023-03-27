@@ -158,7 +158,13 @@ public class NumbersGrid : MonoBehaviour
                     {
                         if (++tries == 10)
                         {
-                            findAvailableSpace(x, y, position, number);
+                            try
+                            {
+                                findAvailableSpace(x, y, position, number);
+                            }catch(IndexOutOfRangeException)
+                            {
+                                Debug.LogError("exceptie speciala");
+                            }
                             tries = 0;
                             continue;
                         }

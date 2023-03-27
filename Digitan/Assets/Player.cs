@@ -40,20 +40,13 @@ public class Player : NetworkBehaviour
     }
 
     // OnNetworkSpawn is called before Start
-    public override async void OnNetworkSpawn()
+    public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
         color = idToColor(NetworkManager.Singleton.LocalClientId);
-
-        if (!IsOwnedByServer)
-            return;
-        await popInformationFromLobbyAsync();
-
-        currentNrOfPlayers.Value++;
-        print("Atatia jucatori avem deocamdat" + currentNrOfPlayers.Value);
     }
 
-    void Start()
+    async void Start()
     {
         if (!IsOwnedByServer)
             return;
@@ -69,6 +62,11 @@ public class Player : NetworkBehaviour
 
         gameGrid.GetComponent<GameGrid>().CreateGrid(resourcesCode.Value.ToString());
         //roadPrefab.GetComponent<Renderer>().sharedMaterial.SetColor("_Color", Color.cyan);
+
+        await popInformationFromLobbyAsync();
+
+        currentNrOfPlayers.Value++;
+        print("Atatia jucatori avem deocamdat" + currentNrOfPlayers.Value);
     }
 
 
