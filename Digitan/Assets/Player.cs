@@ -38,7 +38,7 @@ public class Player : NetworkBehaviour
         roadGrid = GameObject.Find("AvailableRoadsGrid");
         settlementGrid = GameObject.Find("AvailableSettlementGrid");
 
-        OnPlayersJoined += (s, a) => { PlayersConnectedClientRpc(); };
+        //OnPlayersJoined += (s, a) => { PlayersConnectedClientRpc(); };
     }
 
     // OnNetworkSpawn is called before Start
