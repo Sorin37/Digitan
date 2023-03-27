@@ -38,7 +38,6 @@ public class Player : NetworkBehaviour
         roadGrid = GameObject.Find("AvailableRoadsGrid");
         settlementGrid = GameObject.Find("AvailableSettlementGrid");
 
-        //OnPlayersJoined += (s, a) => { PlayersConnectedClientRpc(); };
     }
 
     // OnNetworkSpawn is called before Start
@@ -53,9 +52,12 @@ public class Player : NetworkBehaviour
         if (!IsOwnedByServer)
             return;
 
+        //this is where you should do normal initialisations
         DontDestroyOnLoad(gameObject);
         InitializeResourceDict();
         InitializePlayerHand();
+
+        OnPlayersJoined += (s, a) => { PlayersConnectedClientRpc(); };
 
         if (IsHost)
         {
@@ -65,6 +67,8 @@ public class Player : NetworkBehaviour
         gameGrid.GetComponent<GameGrid>().CreateGrid(resourcesCode.Value.ToString());
 
         await PopInformationFromLobby();
+
+
 
         PlayerJoinedServerRpc();
     }
@@ -320,10 +324,10 @@ public class Player : NetworkBehaviour
         currentNrOfPlayers.Value++;
         print("Another one joi " + nrOfPlayers + " ned" + currentNrOfPlayers.Value);
 
-        //if (nrOfPlayers == currentNrOfPlayers.Value)
-        //{
-        //    OnPlayersJoined?.Invoke(this, EventArgs.Empty);
-        //}
+        if (nrOfPlayers == currentNrOfPlayers.Value)
+        {
+            OnPlayersJoined?.Invoke(this, EventArgs.Empty);
+        }
     }
 
     [ClientRpc]
