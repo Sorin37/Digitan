@@ -157,28 +157,7 @@ public class Player : NetworkBehaviour
     {
         GameObject pressedCircle = roadGrid.GetComponent<RoadGrid>().roadGrid[x][y].gameObject;
 
-        var colliders = Physics.OverlapSphere(
-                pressedCircle.transform.position,
-                2,
-               (int)Mathf.Pow(2, LayerMask.NameToLayer("Unvisible Circle"))
-            );
-
-
-        //turn the nearby road circles visible
-        for (int i = 0; i < colliders.Length; i++)
-        {
-            if (colliders[i].gameObject.GetComponent<SettlementCircle>() != null)
-            {
-                if (!colliders[i].gameObject.GetComponent<SettlementCircle>().isTooClose)
-                {
-                    colliders[i].gameObject.layer = LayerMask.NameToLayer("Settlement Circle");
-                }
-            }
-            else
-            {
-                colliders[i].gameObject.layer = LayerMask.NameToLayer("Road Circle");
-            }
-        }
+        
 
 
         //create the model
