@@ -48,6 +48,13 @@ public class Player : NetworkBehaviour
 
     async void Start()
     {
+        if (IsOwner)
+        {
+            await popInformationFromLobbyAsync();
+
+            playerJoinedServerRpc();
+        }
+
         if (!IsOwnedByServer)
             return;
 
@@ -61,11 +68,6 @@ public class Player : NetworkBehaviour
         }
 
         gameGrid.GetComponent<GameGrid>().CreateGrid(resourcesCode.Value.ToString());
-        //roadPrefab.GetComponent<Renderer>().sharedMaterial.SetColor("_Color", Color.cyan);
-
-        await popInformationFromLobbyAsync();
-
-        playerJoinedServerRpc();
     }
 
 
