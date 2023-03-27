@@ -322,6 +322,9 @@ public class Player : NetworkBehaviour
         currentNrOfPlayers.Value++;
         print("Another one joi " + nrOfPlayers + " ned" + currentNrOfPlayers.Value);
 
+        OnPlayersJoined -= PlayersJoinedEvent;
+        OnPlayersJoined += PlayersJoinedEvent;
+
         if (nrOfPlayers == currentNrOfPlayers.Value)
         {
             OnPlayersJoined?.Invoke(this, EventArgs.Empty);
@@ -329,8 +332,13 @@ public class Player : NetworkBehaviour
     }
 
     [ClientRpc]
-    public void PlayersConnectedClientRpc()
+    public void PlayersJoinedClientRpc()
     {
         print("Da fra, ne-am conectat");
+    }
+
+    private void PlayersJoinedEvent(object s, EventArgs e)
+    { 
+        PlayersJoinedClientRpc();
     }
 }
