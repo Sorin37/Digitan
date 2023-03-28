@@ -370,7 +370,7 @@ public class Player : NetworkBehaviour
     public void PlacedServerRpc() {
         print("Am cam pus" + OwnerClientId + GetHostPlayer().GetComponent<Player>().nrOfPlayers);
 
-        if ((int)OwnerClientId == nrOfPlayers - 1) {
+        if ((int)OwnerClientId == GetHostPlayer().GetComponent<Player>().nrOfPlayers - 1) {
             print("xd");
             return;
         }
