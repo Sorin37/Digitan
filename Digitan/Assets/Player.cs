@@ -368,6 +368,6 @@ public class Player : NetworkBehaviour
 
     [ServerRpc(RequireOwnership = false)]
     public void PlacedServerRpc() {
-        print(NetworkManager.Singleton.LocalClientId);
+        print(GetMyPlayer().GetComponent<Player>().OwnerClientId);
     }
 }
