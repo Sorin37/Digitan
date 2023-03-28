@@ -10,6 +10,7 @@ public class SettlementGrid : MonoBehaviour
     public GameObject[][] settlementGrid;
     public GameObject gameGrid;
     public bool isStartPhase;
+    public bool endStartPhase;
 
     // Awake is called before all the Start functions when the script is loaded
     void Awake()

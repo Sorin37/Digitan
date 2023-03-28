@@ -387,7 +387,7 @@ public class Player : NetworkBehaviour
         if ((int)OwnerClientId + player.order.Value == 0)
         {
             Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Settlement Circle"));
-            settlementGrid.GetComponent<SettlementGrid>().isStartPhase = false;
+            settlementGrid.GetComponent<SettlementGrid>().endStartPhase = true;
             return;
         }
 
@@ -408,5 +408,11 @@ public class Player : NetworkBehaviour
         }
 
         return null;
+    }
+
+    [ClientRpc]
+    public void EndStartPhaseClientRpc()
+    {
+        print("It shall end");
     }
 }
