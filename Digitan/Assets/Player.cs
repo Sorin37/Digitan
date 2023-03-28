@@ -413,6 +413,6 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void EndStartPhaseClientRpc()
     {
-        print("It shall end");
+        GetHostPlayer().GetComponent<Player>().settlementGrid.GetComponent<SettlementGrid>().isStartPhase = false;
     }
 }
