@@ -374,7 +374,7 @@ public class Player : NetworkBehaviour
         var player = GetHostPlayer().GetComponent<Player>();
         print("Am cam pus" + OwnerClientId + player.nrOfPlayers);
 
-        if ((int)OwnerClientId == GetHostPlayer().GetComponent<Player>().nrOfPlayers + player.order.Value)
+        if ((int)OwnerClientId + player.order.Value == player.nrOfPlayers)
         {
             print("Am ajuns la max:" + OwnerClientId);
             player.order.Value = -1;
