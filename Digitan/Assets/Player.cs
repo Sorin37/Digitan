@@ -414,5 +414,6 @@ public class Player : NetworkBehaviour
     public void EndStartPhaseClientRpc()
     {
         GetHostPlayer().GetComponent<Player>().settlementGrid.GetComponent<SettlementGrid>().isStartPhase = false;
+        GetHostPlayer().GetComponent<Player>().settlementGrid.GetComponent<SettlementGrid>().TurnSettlementsInvisible();
     }
 }

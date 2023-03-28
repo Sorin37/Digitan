@@ -122,4 +122,19 @@ public class SettlementGrid : MonoBehaviour
 
         return null;
     }
+
+    public void TurnSettlementsInvisible()
+    {
+
+        for (int i = 0; i < settlementGrid.Length; i++)
+        {
+            for (int j = 0; j < settlementGrid[i].Length; j++)
+            {
+                if (settlementGrid[i][j] != null)
+                {
+                    settlementGrid[i][j].layer = LayerMask.NameToLayer("Unvisible Circle");
+                }
+            }
+        }
+    }
 }
