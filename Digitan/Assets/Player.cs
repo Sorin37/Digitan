@@ -372,7 +372,6 @@ public class Player : NetworkBehaviour
     public void PlacedServerRpc()
     {
         var player = GetHostPlayer().GetComponent<Player>();
-        print("Am cam pus" + OwnerClientId + player.nrOfPlayers);
 
         if ((int)OwnerClientId + player.order.Value == player.nrOfPlayers)
         {
