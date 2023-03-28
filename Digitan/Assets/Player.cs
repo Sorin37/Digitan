@@ -384,7 +384,7 @@ public class Player : NetworkBehaviour
             return;
         }
 
-        if ((int)OwnerClientId + player.order.Value == 0)
+        if ((int)OwnerClientId + player.order.Value == 0||((int)OwnerClientId + player.order.Value < 1))
         {
             Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Settlement Circle"));
             settlementGrid.GetComponent<SettlementGrid>().endStartPhase = true;
