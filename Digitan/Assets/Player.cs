@@ -376,6 +376,7 @@ public class Player : NetworkBehaviour
 
         if ((int)OwnerClientId == GetHostPlayer().GetComponent<Player>().nrOfPlayers + player.order.Value)
         {
+            print("Am ajuns la max:" + OwnerClientId);
             player.order.Value = -1;
             StartPlacingClientRpc(new ClientRpcParams
             {
@@ -384,7 +385,7 @@ public class Player : NetworkBehaviour
             return;
         }
 
-        if ((int)OwnerClientId == GetHostPlayer().GetComponent<Player>().nrOfPlayers + player.order.Value)
+        if ((int)OwnerClientId + player.order.Value == 0)
         {
             print("we are back lol");
             return;
