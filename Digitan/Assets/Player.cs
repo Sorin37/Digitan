@@ -28,6 +28,7 @@ public class Player : NetworkBehaviour
     public int nrOfPlayers;
     public string nickName;
     public Color color;
+    private int order = 1;
 
     public event EventHandler OnPlayersJoined;
 
@@ -339,8 +340,9 @@ public class Player : NetworkBehaviour
 
     private void PlayersJoinedEvent(object s, EventArgs e)
     {
-        StartPlacingClientRpc(new ClientRpcParams { 
-            Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { 0 } } 
+        StartPlacingClientRpc(new ClientRpcParams
+        {
+            Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { 0 } }
         });
     }
 
@@ -367,17 +369,29 @@ public class Player : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void PlacedServerRpc() {
+    public void PlacedServerRpc()
+    {
         print("Am cam pus" + OwnerClientId + GetHostPlayer().GetComponent<Player>().nrOfPlayers);
 
-        if ((int)OwnerClientId == GetHostPlayer().GetComponent<Player>().nrOfPlayers - 1) {
-            print("xd");
+        if ((int)OwnerClientId == GetHostPlayer().GetComponent<Player>().nrOfPlayers + order)
+        {
+            order = -1;
+            StartPlacingClientRpc(new ClientRpcParams
+            {
+                Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { OwnerClientId } }
+            });
             return;
         }
-            
+
+        if ((int)OwnerClientId == GetHostPlayer().GetComponent<Player>().nrOfPlayers + order)
+        {
+            print("we are back lol");
+            return;
+        }
+
         StartPlacingClientRpc(new ClientRpcParams
         {
-            Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { OwnerClientId + 1 } }
+            Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { (ulong)((int)OwnerClientId + order) } }
         });
     }
 
