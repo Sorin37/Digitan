@@ -376,7 +376,6 @@ public class Player : NetworkBehaviour
 
         if ((int)OwnerClientId + player.order.Value == player.nrOfPlayers)
         {
-            print("Am ajuns la max:" + OwnerClientId);
             player.order.Value = -1;
             StartPlacingClientRpc(new ClientRpcParams
             {
@@ -387,7 +386,8 @@ public class Player : NetworkBehaviour
 
         if ((int)OwnerClientId + player.order.Value == 0)
         {
-            print("we are back lol");
+            Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Settlement Circle"));
+            settlementGrid.GetComponent<SettlementGrid>().isStartPhase = false;
             return;
         }
 
