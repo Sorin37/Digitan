@@ -9,8 +9,7 @@ public class SettlementGrid : MonoBehaviour
     [SerializeField] private GameObject circlePrefab;
     public GameObject[][] settlementGrid;
     public GameObject gameGrid;
-    public bool is1stSettlementNext;
-    public bool is2ndSettlementNext;
+    public bool isStartPhase;
 
     // Awake is called before all the Start functions when the script is loaded
     void Awake()
@@ -22,6 +21,7 @@ public class SettlementGrid : MonoBehaviour
     void Start()
     {
         DontDestroyOnLoad(gameObject);
+        isStartPhase = true;
 
         if (circlePrefab == null)
         {
@@ -31,7 +31,6 @@ public class SettlementGrid : MonoBehaviour
 
         gameGrid.GetComponent<GameGrid>().OnGridCreated += CreateGridEvent;
 
-        placeFirstSettlement();
     }
 
 
@@ -95,14 +94,6 @@ public class SettlementGrid : MonoBehaviour
                 settlementGrid[x][y].gameObject.name = "SettlementSpace(" + x.ToString() + ", " + y.ToString() + ")";
             }
         }
-    }
-
-    void placeFirstSettlement()
-    {
-        Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Settlement Circle"));
-
-        is1stSettlementNext = true;
-        is2ndSettlementNext = false;
     }
 
     private GameObject getHostPlayer()

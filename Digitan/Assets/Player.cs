@@ -363,5 +363,6 @@ public class Player : NetworkBehaviour
     {
         print("let me place");
         Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Settlement Circle"));
+        //Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Start Circle"));
     }
 }

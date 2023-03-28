@@ -9,6 +9,7 @@ public class RoadCircle : MonoBehaviour
 {
     private GameObject _renderer;
     [SerializeField] private GameObject Road;
+    private GameObject settlementGrid;
     private GameObject[][] roadGrid;
     public bool isOccupied = false;
 
@@ -16,9 +17,7 @@ public class RoadCircle : MonoBehaviour
     void Start()
     {
         roadGrid = GameObject.Find("AvailableRoadsGrid").transform.GetComponent<RoadGrid>().roadGrid;
-        //_renderer = GetComponent<Renderer>();
-
-        //_renderer = GetComponent<GameObject>();
+        settlementGrid = GameObject.Find("AvailableSettlementGrid");
     }
 
     // Update is called once per frame
@@ -54,6 +53,11 @@ public class RoadCircle : MonoBehaviour
                     myPlayer.color
                 );
             }
+        }
+
+        if (settlementGrid.GetComponent<SettlementGrid>().isStartPhase)
+        {
+            TurnAllStartCirclesToRoad();
         }
     }
 
@@ -151,6 +155,24 @@ public class RoadCircle : MonoBehaviour
             else
             {
                 colliders[i].gameObject.layer = LayerMask.NameToLayer("Road Circle");
+            }
+        }
+    }
+
+    private void TurnAllStartCirclesToRoad()
+    {
+
+        for (int i = 0; i < roadGrid.Length; i++)
+        {
+            for (int j = 0; j < roadGrid[i].Length; j++)
+            {
+                if (roadGrid[i][j] != null)
+                {
+                    if (roadGrid[i][j].layer == LayerMask.NameToLayer("Start Circle"))
+                    {
+                        roadGrid[i][j].layer = LayerMask.NameToLayer("Road Circle");
+                    }
+                }
             }
         }
     }

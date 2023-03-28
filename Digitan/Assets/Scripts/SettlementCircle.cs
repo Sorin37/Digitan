@@ -24,7 +24,6 @@ public class SettlementCircle : MonoBehaviour
             Debug.LogError("Error: One of the prefabs is not assigned");
             return;
         }
-
     }
 
     // Update is called once per frame
@@ -37,7 +36,7 @@ public class SettlementCircle : MonoBehaviour
     {
         var settlementGrid = transform.parent.gameObject.GetComponent<SettlementGrid>();
 
-        //if (settlementGrid.is1stSettlementNext || settlementGrid.is2ndSettlementNext)
+            //if (settlementGrid.is1stSettlementNext || settlementGrid.is2ndSettlementNext)
         //{
 
         //    //turns the settlement circle invisible after the 2nd settlement
@@ -59,7 +58,7 @@ public class SettlementCircle : MonoBehaviour
             if (getMyPlayer().GetComponent<Player>().GetIsHost())
             {
                 getHostPlayer().GetComponent<Player>().placeSettlementClientRpc(
-                    indexes.x, 
+                    indexes.x,
                     indexes.y,
                     myPlayer.color
                 );
@@ -76,6 +75,22 @@ public class SettlementCircle : MonoBehaviour
             //addResourcesToDict();
         }
 
+        if (settlementGrid.isStartPhase)
+        {
+            print("I should create some Start Circles");
+            var colliders = Physics.OverlapSphere(
+                transform.position,
+                1,
+                (int)Mathf.Pow(2, LayerMask.NameToLayer("Road Circle"))
+            );
+
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                colliders[i].gameObject.layer = LayerMask.NameToLayer("Start Circle");
+            }
+
+            Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Start Circle"));
+        }
     }
 
     private void addResourcesToDict()
@@ -105,33 +120,33 @@ public class SettlementCircle : MonoBehaviour
         }
         var settlementGrid = transform.parent.gameObject.GetComponent<SettlementGrid>();
 
-        if (settlementGrid.is1stSettlementNext)
-        {
-            settlementGrid.is1stSettlementNext = false;
-            settlementGrid.is2ndSettlementNext = true;
-        }
-        else if (settlementGrid.is2ndSettlementNext)
-        {
-            settlementGrid.is2ndSettlementNext = false;
-        }
+        //if (settlementGrid.is1stSettlementNext)
+        //{
+        //    settlementGrid.is1stSettlementNext = false;
+        //    settlementGrid.is2ndSettlementNext = true;
+        //}
+        //else if (settlementGrid.is2ndSettlementNext)
+        //{
+        //    settlementGrid.is2ndSettlementNext = false;
+        //}
     }
     void giveResourcesForTheFirstSettlements(String resource)
     {
         var settlementGrid = transform.parent.gameObject.GetComponent<SettlementGrid>();
 
-        if (settlementGrid.is1stSettlementNext)
-        {
-            //var playerHand = gameGrid.GetComponent<GameGrid>().playerHand;
-            //playerHand[resource]++;
+        //if (settlementGrid.is1stSettlementNext)
+        //{
+        //var playerHand = gameGrid.GetComponent<GameGrid>().playerHand;
+        //playerHand[resource]++;
 
-            Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Settlement Circle"));
-        }
+        Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Settlement Circle"));
+        //}
 
-        if (settlementGrid.is2ndSettlementNext)
-        {
-            //var playerHand = gameGrid.GetComponent<GameGrid>().playerHand;
-            //playerHand[resource]++;
-        }
+        //if (settlementGrid.is2ndSettlementNext)
+        //{
+        //var playerHand = gameGrid.GetComponent<GameGrid>().playerHand;
+        //playerHand[resource]++;
+        //}
     }
 
     private (int x, int y) getIndexesOfElem(GameObject circle, GameObject[][] grid)
