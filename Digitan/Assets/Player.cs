@@ -368,6 +368,16 @@ public class Player : NetworkBehaviour
 
     [ServerRpc(RequireOwnership = false)]
     public void PlacedServerRpc() {
-        print(OwnerClientId);
+        print("Am cam pus" + OwnerClientId + nrOfPlayers);
+
+        if ((int)OwnerClientId == nrOfPlayers - 1) {
+            print("xd");
+            return;
+        }
+            
+        StartPlacingClientRpc(new ClientRpcParams
+        {
+            Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { OwnerClientId + 1 } }
+        });
     }
 }
