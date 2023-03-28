@@ -368,7 +368,7 @@ public class Player : NetworkBehaviour
 
     [ServerRpc(RequireOwnership = false)]
     public void PlacedServerRpc() {
-        print("Am cam pus" + OwnerClientId + nrOfPlayers);
+        print("Am cam pus" + OwnerClientId + GetHostPlayer().GetComponent<Player>().nrOfPlayers);
 
         if ((int)OwnerClientId == nrOfPlayers - 1) {
             print("xd");
@@ -379,5 +379,18 @@ public class Player : NetworkBehaviour
         {
             Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { OwnerClientId + 1 } }
         });
+    }
+
+    private GameObject GetHostPlayer()
+    {
+        var players = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (var p in players)
+        {
+            if (p.GetComponent<Player>().IsOwnedByServer)
+                return p;
+        }
+
+        return null;
     }
 }
