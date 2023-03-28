@@ -368,6 +368,6 @@ public class Player : NetworkBehaviour
 
     [ServerRpc(RequireOwnership = false)]
     public void PlacedServerRpc() {
-        print(GetMyPlayer().GetComponent<Player>().OwnerClientId);
+        print(OwnerClientId);
     }
 }

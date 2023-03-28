@@ -77,7 +77,6 @@ public class SettlementCircle : MonoBehaviour
 
         if (settlementGrid.isStartPhase)
         {
-            print("I should create some Start Circles");
             var colliders = Physics.OverlapSphere(
                 transform.position,
                 1,
