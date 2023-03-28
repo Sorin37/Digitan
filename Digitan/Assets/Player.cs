@@ -338,8 +338,10 @@ public class Player : NetworkBehaviour
     }
 
     private void PlayersJoinedEvent(object s, EventArgs e)
-    { 
-        PlayersJoinedClientRpc();
+    {
+        StartPlacingClientRpc(new ClientRpcParams { 
+            Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { 0 } } 
+        });
     }
 
     private void TurnCloseRoadsAvailable()
@@ -354,5 +356,12 @@ public class Player : NetworkBehaviour
         {
             colliders[i].gameObject.layer = LayerMask.NameToLayer("Road Circle");
         }
+    }
+
+    [ClientRpc]
+    public void StartPlacingClientRpc(ClientRpcParams clientRpcParams)
+    {
+        print("let me place");
+        Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Settlement Circle"));
     }
 }
