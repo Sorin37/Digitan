@@ -21,6 +21,7 @@ public class Player : NetworkBehaviour
     public NetworkVariable<FixedString64Bytes> resourcesCode = new NetworkVariable<FixedString64Bytes>("Uninitialized");
     public NetworkVariable<FixedString64Bytes> numbersCode = new NetworkVariable<FixedString64Bytes>("Uninitialized");
     public NetworkVariable<int> currentNrOfPlayers = new NetworkVariable<int>(0);
+    public NetworkVariable<int> order = new NetworkVariable<int>(1);
 
     public Dictionary<string, List<string>> resourcesDict;
     public Dictionary<string, int> playerHand;
@@ -28,7 +29,6 @@ public class Player : NetworkBehaviour
     public int nrOfPlayers;
     public string nickName;
     public Color color;
-    private int order = 1;
 
     public event EventHandler OnPlayersJoined;
 
@@ -371,11 +371,12 @@ public class Player : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void PlacedServerRpc()
     {
-        print("Am cam pus" + OwnerClientId + GetHostPlayer().GetComponent<Player>().nrOfPlayers);
+        var player = GetHostPlayer().GetComponent<Player>();
+        print("Am cam pus" + OwnerClientId + player.nrOfPlayers);
 
-        if ((int)OwnerClientId == GetHostPlayer().GetComponent<Player>().nrOfPlayers + order)
+        if ((int)OwnerClientId == GetHostPlayer().GetComponent<Player>().nrOfPlayers + player.order.Value)
         {
-            order = -1;
+            player.order.Value = -1;
             StartPlacingClientRpc(new ClientRpcParams
             {
                 Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { OwnerClientId } }
@@ -383,7 +384,7 @@ public class Player : NetworkBehaviour
             return;
         }
 
-        if ((int)OwnerClientId == GetHostPlayer().GetComponent<Player>().nrOfPlayers + order)
+        if ((int)OwnerClientId == GetHostPlayer().GetComponent<Player>().nrOfPlayers + player.order.Value)
         {
             print("we are back lol");
             return;
@@ -391,7 +392,7 @@ public class Player : NetworkBehaviour
 
         StartPlacingClientRpc(new ClientRpcParams
         {
-            Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { (ulong)((int)OwnerClientId + order) } }
+            Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { (ulong)((int)OwnerClientId + player.order.Value) } }
         });
     }
 
