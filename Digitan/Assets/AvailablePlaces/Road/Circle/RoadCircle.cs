@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -58,6 +59,7 @@ public class RoadCircle : MonoBehaviour
         if (settlementGrid.GetComponent<SettlementGrid>().isStartPhase)
         {
             TurnAllStartCirclesToRoad();
+            getHostPlayer().GetComponent<Player>().PlacedServerRpc();
         }
     }
 

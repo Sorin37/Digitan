@@ -365,4 +365,9 @@ public class Player : NetworkBehaviour
         Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Settlement Circle"));
         //Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Start Circle"));
     }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void PlacedServerRpc() {
+        print(NetworkManager.Singleton.LocalClientId);
+    }
 }
