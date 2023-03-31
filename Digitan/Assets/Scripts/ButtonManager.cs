@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -12,20 +13,28 @@ public class ButtonManager : MonoBehaviour
     [SerializeField] private Button settlementButton;
     [SerializeField] private Button roadButton;
     [SerializeField] private Button diceButton;
+    [SerializeField] private Button endTurnButton;
     public GameObject gameGrid;
     public GameObject player;
 
     private void Awake()
     {
+        initEndTurnButton();
+        initDiceButton();
         initSettlementButton();
         initRoadButton();
-        initDiceButton();
     }
 
     private void initRoadButton()
     {
         roadButton.onClick.AddListener(() =>
         {
+            if (GetHostPlayer().GetComponent<Player>().currentPlayerTurn.Value != (int)NetworkManager.Singleton.LocalClientId)
+            {
+                print("nu e runda mea :/");
+                return;
+            }
+
             //if (hasRoadResources())
             //{
             Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Road Circle"));
@@ -40,6 +49,11 @@ public class ButtonManager : MonoBehaviour
     {
         settlementButton.onClick.AddListener(() =>
         {
+            if (GetHostPlayer().GetComponent<Player>().currentPlayerTurn.Value != (int)NetworkManager.Singleton.LocalClientId)
+            {
+                print("nu e runda mea :/");
+                return;
+            }
             //if (hasSettlementResources())
             //{
             Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Settlement Circle"));
@@ -54,6 +68,11 @@ public class ButtonManager : MonoBehaviour
     {
         diceButton.onClick.AddListener(() =>
         {
+            if (GetHostPlayer().GetComponent<Player>().currentPlayerTurn.Value == (int)NetworkManager.Singleton.LocalClientId)
+            {
+                print("nu e runda mea :/");
+                return;
+            }
             int dice1 = Random.Range(1, 7);
             int dice2 = Random.Range(1, 7);
 
@@ -115,5 +134,31 @@ public class ButtonManager : MonoBehaviour
         //{
         //    gameObject.transform.Find(card.Key.Substring(0, card.Key.IndexOf(" ")) + "Label").GetComponent<TextMeshProUGUI>().SetText("x " + card.Value.ToString());
         //}
+    }
+
+    private GameObject GetHostPlayer()
+    {
+        var players = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (var p in players)
+        {
+            if (p.GetComponent<Player>().IsOwnedByServer)
+                return p;
+        }
+
+        return null;
+    }
+
+    private void initEndTurnButton()
+    {
+        endTurnButton.onClick.AddListener(() =>
+        {
+            if (GetHostPlayer().GetComponent<Player>().currentPlayerTurn.Value != (int)NetworkManager.Singleton.LocalClientId)
+            {
+                print("nu e runda mea :/");
+                return;
+            }
+            print("e runda mea hehe");
+        });
     }
 }

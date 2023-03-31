@@ -22,11 +22,12 @@ public class Player : NetworkBehaviour
     public NetworkVariable<FixedString64Bytes> numbersCode = new NetworkVariable<FixedString64Bytes>("Uninitialized");
     public NetworkVariable<int> currentNrOfPlayers = new NetworkVariable<int>(0);
     public NetworkVariable<int> order = new NetworkVariable<int>(1);
+    public NetworkVariable<int> currentPlayerTurn = new NetworkVariable<int>(-1);
 
     public Dictionary<string, List<string>> resourcesDict;
     public Dictionary<string, int> playerHand;
 
-    public int nrOfPlayers;
+    public int nrOfMaxPlayers;
     public string nickName;
     public Color color;
 
@@ -312,7 +313,7 @@ public class Player : NetworkBehaviour
 
         lobby = await LobbyService.Instance.GetLobbyAsync(lobby.Id);
 
-        nrOfPlayers = lobby.Players.Count;
+        nrOfMaxPlayers = lobby.Players.Count;
 
         Destroy(lobbyGo);
     }
@@ -321,12 +322,12 @@ public class Player : NetworkBehaviour
     public void PlayerJoinedServerRpc()
     {
         currentNrOfPlayers.Value++;
-        print("Another one joi " + nrOfPlayers + " ned" + currentNrOfPlayers.Value);
+        print("Another one joi " + nrOfMaxPlayers + " ned" + currentNrOfPlayers.Value);
 
         OnPlayersJoined -= PlayersJoinedEvent;
         OnPlayersJoined += PlayersJoinedEvent;
 
-        if (nrOfPlayers == currentNrOfPlayers.Value)
+        if (nrOfMaxPlayers == currentNrOfPlayers.Value)
         {
             OnPlayersJoined?.Invoke(this, EventArgs.Empty);
         }
@@ -373,7 +374,7 @@ public class Player : NetworkBehaviour
     {
         var player = GetHostPlayer().GetComponent<Player>();
 
-        if ((int)OwnerClientId + player.order.Value == player.nrOfPlayers)
+        if ((int)OwnerClientId + player.order.Value == player.nrOfMaxPlayers)
         {
             player.order.Value = -1;
             StartPlacingClientRpc(new ClientRpcParams
@@ -387,6 +388,7 @@ public class Player : NetworkBehaviour
         {
             Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Settlement Circle"));
             settlementGrid.GetComponent<SettlementGrid>().endStartPhase = true;
+            currentPlayerTurn.Value = 0;
             return;
         }
 
