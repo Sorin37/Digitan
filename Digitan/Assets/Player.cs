@@ -418,4 +418,10 @@ public class Player : NetworkBehaviour
         GetHostPlayer().GetComponent<Player>().settlementGrid.GetComponent<SettlementGrid>().isStartPhase = false;
         GetHostPlayer().GetComponent<Player>().settlementGrid.GetComponent<SettlementGrid>().TurnSettlementsInvisible();
     }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void PassTurnServerRpc()
+    {
+        currentPlayerTurn.Value = (currentPlayerTurn.Value + 1) % nrOfMaxPlayers;
+    }
 }
