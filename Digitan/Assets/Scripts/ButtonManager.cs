@@ -153,6 +153,7 @@ public class ButtonManager : MonoBehaviour
     {
         endTurnButton.onClick.AddListener(() =>
         {
+            print(GetHostPlayer().GetComponent<Player>().currentPlayerTurn.Value);
             if (GetHostPlayer().GetComponent<Player>().currentPlayerTurn.Value != (int)NetworkManager.Singleton.LocalClientId)
             {
                 print("nu e runda mea :/");
