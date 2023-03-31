@@ -11,6 +11,7 @@ public class SettlementGrid : MonoBehaviour
     public GameObject gameGrid;
     public bool isStartPhase;
     public bool endStartPhase;
+    public bool canGetStartPhaseResources;
 
     // Awake is called before all the Start functions when the script is loaded
     void Awake()
@@ -23,6 +24,7 @@ public class SettlementGrid : MonoBehaviour
     {
         DontDestroyOnLoad(gameObject);
         isStartPhase = true;
+        canGetStartPhaseResources = false;
 
         if (circlePrefab == null)
         {

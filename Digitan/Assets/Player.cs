@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using TMPro;
 using Unity.Collections;
 using Unity.Netcode;
 using Unity.Services.Lobbies;
@@ -85,6 +86,16 @@ public class Player : NetworkBehaviour
     private void InitializeResourceDict()
     {
         resourcesDict = new Dictionary<String, List<String>>();
+        resourcesDict["2"] = new List<String>();
+        resourcesDict["3"] = new List<String>();
+        resourcesDict["4"] = new List<String>();
+        resourcesDict["5"] = new List<String>();
+        resourcesDict["6"] = new List<String>();
+        resourcesDict["8"] = new List<String>();
+        resourcesDict["9"] = new List<String>();
+        resourcesDict["10"] = new List<String>();
+        resourcesDict["11"] = new List<String>();
+        resourcesDict["12"] = new List<String>();
     }
 
     private void InitializePlayerHand()
@@ -423,5 +434,15 @@ public class Player : NetworkBehaviour
     public void PassTurnServerRpc()
     {
         currentPlayerTurn.Value = (currentPlayerTurn.Value + 1) % nrOfMaxPlayers;
+    }
+
+    public void UpdateHand()
+    {
+        var playerHand = GetMyPlayer().GetComponent<Player>().playerHand;
+
+        foreach (var card in playerHand)
+        {
+            GameObject.Find(card.Key.Substring(0, card.Key.IndexOf(" ")) + "Label").GetComponent<TextMeshProUGUI>().SetText("x " + card.Value.ToString());
+        }
     }
 }

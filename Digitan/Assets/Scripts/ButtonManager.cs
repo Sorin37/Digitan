@@ -126,16 +126,6 @@ public class ButtonManager : MonoBehaviour
         return false;
     }
 
-    public void displayCards()
-    {
-        //var playerHand = gameGrid.GetComponent<GameGrid>().playerHand;
-
-        //foreach (var card in playerHand)
-        //{
-        //    gameObject.transform.Find(card.Key.Substring(0, card.Key.IndexOf(" ")) + "Label").GetComponent<TextMeshProUGUI>().SetText("x " + card.Value.ToString());
-        //}
-    }
-
     private GameObject GetHostPlayer()
     {
         var players = GameObject.FindGameObjectsWithTag("Player");

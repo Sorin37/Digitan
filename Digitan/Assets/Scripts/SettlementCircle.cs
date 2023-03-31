@@ -36,7 +36,7 @@ public class SettlementCircle : MonoBehaviour
     {
         var settlementGrid = transform.parent.gameObject.GetComponent<SettlementGrid>();
 
-            //if (settlementGrid.is1stSettlementNext || settlementGrid.is2ndSettlementNext)
+        //if (settlementGrid.is1stSettlementNext || settlementGrid.is2ndSettlementNext)
         //{
 
         //    //turns the settlement circle invisible after the 2nd settlement
@@ -53,9 +53,9 @@ public class SettlementCircle : MonoBehaviour
 
             var indexes = getIndexesOfElem(gameObject, settlementGrid.settlementGrid);
 
-            var myPlayer = getMyPlayer().GetComponent<Player>();
+            var myPlayer = GetMyPlayer().GetComponent<Player>();
 
-            if (getMyPlayer().GetComponent<Player>().GetIsHost())
+            if (GetMyPlayer().GetComponent<Player>().GetIsHost())
             {
                 getHostPlayer().GetComponent<Player>().placeSettlementClientRpc(
                     indexes.x,
@@ -72,7 +72,8 @@ public class SettlementCircle : MonoBehaviour
                 );
             }
 
-            //addResourcesToDict();
+            addResourcesToDict();
+            GetMyPlayer().GetComponent<Player>().UpdateHand();
         }
 
         if (settlementGrid.isStartPhase)
@@ -100,52 +101,32 @@ public class SettlementCircle : MonoBehaviour
             (int)Mathf.Pow(2, LayerMask.NameToLayer("Number"))
         );
 
-        //var resourcesDict = gameGrid.GetComponent<GameGrid>().resourcesDict;
+        var settlementGrid = transform.parent.gameObject.GetComponent<SettlementGrid>();
 
         foreach (var collider in colliders)
         {
-            //if (resourcesDict.ContainsKey(collider.gameObject.name))
-            //{
-            //    resourcesDict[collider.gameObject.name].Add(collider.gameObject.GetComponent<Number>().resource);
-            //}
-            //else
-            //{
-            //    resourcesDict[collider.gameObject.name] = new List<String>() { collider.gameObject.GetComponent<Number>().resource };
-            //}
+            var resourcesDict = GetMyPlayer().GetComponent<Player>().resourcesDict;
+            resourcesDict[collider.gameObject.name].Add(collider.gameObject.GetComponent<Number>().resource);
 
             //first two settlements stuff
-            giveResourcesForTheFirstSettlements(collider.gameObject.GetComponent<Number>().resource);
-
+            if (settlementGrid.isStartPhase)
+            {
+                GiveResourcesForStartPhase(collider.gameObject.GetComponent<Number>().resource);
+            }
         }
-        var settlementGrid = transform.parent.gameObject.GetComponent<SettlementGrid>();
 
-        //if (settlementGrid.is1stSettlementNext)
-        //{
-        //    settlementGrid.is1stSettlementNext = false;
-        //    settlementGrid.is2ndSettlementNext = true;
-        //}
-        //else if (settlementGrid.is2ndSettlementNext)
-        //{
-        //    settlementGrid.is2ndSettlementNext = false;
-        //}
+        //so that they will get it the second time
+        settlementGrid.canGetStartPhaseResources = true;
     }
-    void giveResourcesForTheFirstSettlements(String resource)
+
+    void GiveResourcesForStartPhase(string resource)
     {
         var settlementGrid = transform.parent.gameObject.GetComponent<SettlementGrid>();
 
-        //if (settlementGrid.is1stSettlementNext)
-        //{
-        //var playerHand = gameGrid.GetComponent<GameGrid>().playerHand;
-        //playerHand[resource]++;
-
-        Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Settlement Circle"));
-        //}
-
-        //if (settlementGrid.is2ndSettlementNext)
-        //{
-        //var playerHand = gameGrid.GetComponent<GameGrid>().playerHand;
-        //playerHand[resource]++;
-        //}
+        if (settlementGrid.canGetStartPhaseResources)
+        {
+            GetMyPlayer().GetComponent<Player>().playerHand[resource]++;
+        }
     }
 
     private (int x, int y) getIndexesOfElem(GameObject circle, GameObject[][] grid)
@@ -181,7 +162,7 @@ public class SettlementCircle : MonoBehaviour
 
         return null;
     }
-    private GameObject getMyPlayer()
+    private GameObject GetMyPlayer()
     {
         var players = GameObject.FindGameObjectsWithTag("Player");
 
