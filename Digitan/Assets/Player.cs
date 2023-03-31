@@ -390,7 +390,7 @@ public class Player : NetworkBehaviour
         {
             Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Settlement Circle"));
             settlementGrid.GetComponent<SettlementGrid>().endStartPhase = true;
-            currentPlayerTurn.Value = 0;
+            player.currentPlayerTurn.Value = 0;
             print("m-am facut 0");
             return;
         }
