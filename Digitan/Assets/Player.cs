@@ -47,6 +47,8 @@ public class Player : NetworkBehaviour
     {
         base.OnNetworkSpawn();
         color = IdToColor(NetworkManager.Singleton.LocalClientId);
+        currentPlayerTurn.Value = -1;
+        print("m-am executat");
     }
 
     async void Start()
