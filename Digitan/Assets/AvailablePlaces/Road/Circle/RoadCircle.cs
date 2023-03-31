@@ -66,6 +66,7 @@ public class RoadCircle : MonoBehaviour
             else
             {
                 getHostPlayer().GetComponent<Player>().EndStartPhaseClientRpc();
+                getHostPlayer().GetComponent<Player>().currentPlayerTurn.Value = 0;
             }
         }
     }
