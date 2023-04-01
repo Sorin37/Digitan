@@ -74,6 +74,9 @@ public class ButtonManager : MonoBehaviour
             playerHand["Grain Resource"]--;
             playerHand["Lumber Resource"]--;
             playerHand["Wool Resource"]--;
+
+            GetMyPlayer().GetComponent<Player>().UpdateHand();
+
             return true;
         }
 
@@ -84,11 +87,13 @@ public class ButtonManager : MonoBehaviour
     {
         var playerHand = GetMyPlayer().GetComponent<Player>().playerHand;
 
-        if (playerHand["Brick Resource"] > 0 &&
-            playerHand["Lumber Resource"] > 0)
+        if (playerHand["Brick Resource"] > 0 && playerHand["Lumber Resource"] > 0)
         {
             playerHand["Brick Resource"]--;
             playerHand["Lumber Resource"]--;
+
+            GetMyPlayer().GetComponent<Player>().UpdateHand();
+
             return true;
         }
 
