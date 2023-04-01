@@ -477,7 +477,7 @@ public class Player : NetworkBehaviour
         ChangeCurrentPlayerDetailsColorClientRpc((ulong)currentPlayerTurn.Value);
         ChangeCurrentPlayerDetailsNameClientRpc(
             GetPlayerWithId((ulong)currentPlayerTurn.Value)
-            .GetComponent<Player>().nickName.ToString()
+            .GetComponent<Player>().nickName.Value.ToString()
         );
         PassTurnClientRpc(dice1 + dice2);
     }
