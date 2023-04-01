@@ -7,6 +7,7 @@ using Unity.Netcode;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : NetworkBehaviour
 {
@@ -441,6 +442,7 @@ public class Player : NetworkBehaviour
         currentPlayerTurn.Value = (currentPlayerTurn.Value + 1) % nrOfMaxPlayers;
         int dice1 = UnityEngine.Random.Range(1, 7);
         int dice2 = UnityEngine.Random.Range(1, 7);
+        ChangeCurrentPlayerDetailsColorClientRpc(currentPlayerTurn.Value);
         PassTurnClientRpc(dice1 + dice2);
     }
 
@@ -463,5 +465,11 @@ public class Player : NetworkBehaviour
         {
             GameObject.Find(card.Key.Substring(0, card.Key.IndexOf(" ")) + "Label").GetComponent<TextMeshProUGUI>().SetText("x " + card.Value.ToString());
         }
+    }
+
+    [ClientRpc]
+    private void ChangeCurrentPlayerDetailsColorClientRpc(int id)
+    {
+        GameObject.Find("ColorPanel").GetComponent<Image>().color = IdToColor((ulong)id);
     }
 }
