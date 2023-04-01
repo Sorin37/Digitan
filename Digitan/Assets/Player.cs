@@ -54,13 +54,14 @@ public class Player : NetworkBehaviour
 
     async void Start()
     {
+        InitializeResourceDict();
+        InitializePlayerHand();
+
         if (!IsOwnedByServer)
             return;
 
         //this is where you should do normal initialisations
         DontDestroyOnLoad(gameObject);
-        InitializeResourceDict();
-        InitializePlayerHand();
 
         //OnPlayersJoined += (s, a) => { PlayersConnectedClientRpc(); };
 
