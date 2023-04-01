@@ -81,8 +81,16 @@ public class Player : NetworkBehaviour
 
     private void EndTurnEvent(object sender, OnRoundEndEventArgs e)
     {
+        var player = GetMyPlayer().GetComponent<Player>();
+        var resourcesDict = player.resourcesDict;
+        var playerHand = player.playerHand;
+
+        foreach (string resource in resourcesDict[e.diceRoll.ToString()])
+        {
+            playerHand[resource]++;
+        }
+
         UpdateHand();
-        print(e.diceRoll);
     }
 
 
