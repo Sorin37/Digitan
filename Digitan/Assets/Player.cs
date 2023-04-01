@@ -336,7 +336,7 @@ public class Player : NetworkBehaviour
 
         lobby = await LobbyService.Instance.GetLobbyAsync(lobby.Id);
 
-        GetHostPlayer().GetComponent<Player>().nrOfMaxPlayers = lobby.Players.Count;
+        nrOfMaxPlayers = lobby.Players.Count;
 
         foreach (Unity.Services.Lobbies.Models.Player player in lobby.Players)
         {
