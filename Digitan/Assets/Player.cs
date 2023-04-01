@@ -62,25 +62,32 @@ public class Player : NetworkBehaviour
         if (IsOwner)
         {
             OnRoundEnd += EndTurnEvent;
-            
-            await PopInformationFromLobby();    
         }
 
-        if (!IsOwnedByServer)
-            return;
-
-        //this is where you should do normal initialisations
-        DontDestroyOnLoad(gameObject);
-
-        if (IsHost)
+        if (IsOwnedByServer)
         {
-            resourcesCode.Value = GenerateResourcesCode();
+
+
+            //this is where you should do normal initialisations
+            DontDestroyOnLoad(gameObject);
+
+            if (IsHost)
+            {
+                resourcesCode.Value = GenerateResourcesCode();
+            }
+
+            gameGrid.GetComponent<GameGrid>().CreateGrid(resourcesCode.Value.ToString());
         }
 
-        gameGrid.GetComponent<GameGrid>().CreateGrid(resourcesCode.Value.ToString());
+        if (IsOwner)
+        {
+            await PopInformationFromLobby();
+        }
 
-
-        PlayerJoinedServerRpc();
+        if (IsOwnedByServer)
+        {
+            PlayerJoinedServerRpc();
+        }
     }
 
     private void EndTurnEvent(object sender, OnRoundEndEventArgs e)
