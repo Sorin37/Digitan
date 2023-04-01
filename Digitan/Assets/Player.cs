@@ -366,12 +366,6 @@ public class Player : NetworkBehaviour
         }
     }
 
-    [ClientRpc]
-    public void PlayersJoinedClientRpc()
-    {
-        print("Da fra, ne-am conectat");
-    }
-
     private void PlayersJoinedEvent(object s, EventArgs e)
     {
         ChangeCurrentPlayerDetailsNameClientRpc(GetHostPlayer().GetComponent<Player>().nickName);
@@ -402,7 +396,7 @@ public class Player : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void PlacedServerRpc()
+    public void PlacedServerRpc(string name)
     {
         var player = GetHostPlayer().GetComponent<Player>();
 
@@ -410,7 +404,7 @@ public class Player : NetworkBehaviour
         {
             player.order.Value = -1;
             ChangeCurrentPlayerDetailsColorClientRpc(OwnerClientId);
-            ChangeCurrentPlayerDetailsNameClientRpc(GetPlayerWithId(OwnerClientId).GetComponent<Player>().nickName);
+            ChangeCurrentPlayerDetailsNameClientRpc(name);
             StartPlacingClientRpc(new ClientRpcParams
             {
                 Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { OwnerClientId } }
@@ -423,13 +417,11 @@ public class Player : NetworkBehaviour
             Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Settlement Circle"));
             settlementGrid.GetComponent<SettlementGrid>().endStartPhase = true;
             ChangeCurrentPlayerDetailsColorClientRpc(0);
-            ChangeCurrentPlayerDetailsNameClientRpc(GetHostPlayer().GetComponent<Player>().nickName);
-
-            return;
+            ChangeCurrentPlayerDetailsNameClientRpc(name);
         }
 
         ChangeCurrentPlayerDetailsColorClientRpc((ulong)((int)OwnerClientId + player.order.Value));
-        ChangeCurrentPlayerDetailsNameClientRpc(GetPlayerWithId((ulong)((int)OwnerClientId + player.order.Value)).GetComponent<Player>().nickName);
+        ChangeCurrentPlayerDetailsNameClientRpc(name);
         StartPlacingClientRpc(new ClientRpcParams
         {
             Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { (ulong)((int)OwnerClientId + player.order.Value) } }

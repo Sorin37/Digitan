@@ -61,7 +61,7 @@ public class RoadCircle : MonoBehaviour
             TurnAllStartCirclesToRoad();
             if (!settlementGrid.GetComponent<SettlementGrid>().endStartPhase)
             {
-                getMyPlayer().GetComponent<Player>().PlacedServerRpc();
+                getMyPlayer().GetComponent<Player>().PlacedServerRpc(getHostPlayer().GetComponent<Player>().nickName);
             }
             else
             {
