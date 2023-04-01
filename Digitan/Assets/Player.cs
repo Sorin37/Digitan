@@ -427,7 +427,7 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void PassTurnClientRpc()
     {
-        OnRoundEnd?.Invoke(this, EventArgs.Empty);
+        GetMyPlayer().GetComponent<Player>().OnRoundEnd?.Invoke(this, EventArgs.Empty);
     }
 
     public void UpdateHand()
