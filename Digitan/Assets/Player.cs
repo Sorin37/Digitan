@@ -81,7 +81,7 @@ public class Player : NetworkBehaviour
 
         PlayerJoinedServerRpc();
 
-        print(GetMyPlayer().GetComponent<Player>().nickName);
+        ChangeCurrentPlayerDetailsNameClientRpc(GetHostPlayer().GetComponent<Player>().nickName);
     }
 
     private void EndTurnEvent(object sender, OnRoundEndEventArgs e)
@@ -410,6 +410,7 @@ public class Player : NetworkBehaviour
         {
             player.order.Value = -1;
             ChangeCurrentPlayerDetailsColorClientRpc(OwnerClientId);
+            ChangeCurrentPlayerDetailsNameClientRpc(GetPlayerWithId(OwnerClientId).GetComponent<Player>().nickName);
             StartPlacingClientRpc(new ClientRpcParams
             {
                 Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { OwnerClientId } }
@@ -422,10 +423,13 @@ public class Player : NetworkBehaviour
             Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Settlement Circle"));
             settlementGrid.GetComponent<SettlementGrid>().endStartPhase = true;
             ChangeCurrentPlayerDetailsColorClientRpc(0);
+            ChangeCurrentPlayerDetailsNameClientRpc(GetHostPlayer().GetComponent<Player>().nickName);
+
             return;
         }
 
         ChangeCurrentPlayerDetailsColorClientRpc((ulong)((int)OwnerClientId + player.order.Value));
+        ChangeCurrentPlayerDetailsNameClientRpc(GetPlayerWithId((ulong)((int)OwnerClientId + player.order.Value)).GetComponent<Player>().nickName);
         StartPlacingClientRpc(new ClientRpcParams
         {
             Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { (ulong)((int)OwnerClientId + player.order.Value) } }
@@ -439,6 +443,19 @@ public class Player : NetworkBehaviour
         foreach (var p in players)
         {
             if (p.GetComponent<Player>().IsOwnedByServer)
+                return p;
+        }
+
+        return null;
+    }
+
+    private GameObject GetPlayerWithId(ulong id)
+    {
+        var players = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (var p in players)
+        {
+            if (p.GetComponent<Player>().OwnerClientId == id)
                 return p;
         }
 
@@ -487,5 +504,11 @@ public class Player : NetworkBehaviour
     private void ChangeCurrentPlayerDetailsColorClientRpc(ulong id)
     {
         GameObject.Find("ColorPanel").GetComponent<Image>().color = IdToColor(id);
+    }
+
+    [ClientRpc]
+    private void ChangeCurrentPlayerDetailsNameClientRpc(string name)
+    {
+        GameObject.Find("PlayerName").GetComponent<TextMeshProUGUI>().text = name;
     }
 }
