@@ -80,6 +80,8 @@ public class Player : NetworkBehaviour
         await PopInformationFromLobby();
 
         PlayerJoinedServerRpc();
+
+        print(GetMyPlayer().GetComponent<Player>().nickName);
     }
 
     private void EndTurnEvent(object sender, OnRoundEndEventArgs e)
@@ -338,7 +340,14 @@ public class Player : NetworkBehaviour
 
         nrOfMaxPlayers = lobby.Players.Count;
 
-        print(AuthenticationService.Instance.PlayerId);
+        foreach (Unity.Services.Lobbies.Models.Player player in lobby.Players)
+        {
+            if (player.Id == AuthenticationService.Instance.PlayerId)
+            {
+                GetMyPlayer().GetComponent<Player>().nickName = player.Data["PlayerName"].Value;
+                break;
+            }
+        }
 
         Destroy(lobbyGo);
     }
