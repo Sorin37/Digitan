@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using TMPro;
 using Unity.Collections;
 using Unity.Netcode;
+using Unity.Services.Authentication;
+using Unity.Services.Core;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
@@ -335,6 +337,8 @@ public class Player : NetworkBehaviour
         lobby = await LobbyService.Instance.GetLobbyAsync(lobby.Id);
 
         nrOfMaxPlayers = lobby.Players.Count;
+
+        print(AuthenticationService.Instance.PlayerId);
 
         Destroy(lobbyGo);
     }
