@@ -1426,6 +1426,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1575743612}
     m_Modifications:
+    - target: {fileID: 7527175852563989166, guid: 64668674f6d718e4da63ef63673d1e3d, type: 3}
+      propertyPath: m_Color.b
+      value: 0.78431374
+      objectReference: {fileID: 0}
+    - target: {fileID: 7527175852563989166, guid: 64668674f6d718e4da63ef63673d1e3d, type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7527175852631463047, guid: 64668674f6d718e4da63ef63673d1e3d, type: 3}
       propertyPath: m_text
       value: Sorin
