@@ -425,7 +425,9 @@ public class Player : NetworkBehaviour
     public void PassTurnServerRpc()
     {
         currentPlayerTurn.Value = (currentPlayerTurn.Value + 1) % nrOfMaxPlayers;
-        PassTurnClientRpc();
+        int dice1 = UnityEngine.Random.Range(1, 7);
+        int dice2 = UnityEngine.Random.Range(1, 7);
+        PassTurnClientRpc(dice1 + dice2);
     }
 
     public class OnRoundEndEventArgs : EventArgs
@@ -434,11 +436,9 @@ public class Player : NetworkBehaviour
     }
 
     [ClientRpc]
-    public void PassTurnClientRpc()
+    public void PassTurnClientRpc(int diceRoll)
     {
-        int dice1 = UnityEngine.Random.Range(1, 7);
-        int dice2 = UnityEngine.Random.Range(1, 7);
-        GetMyPlayer().GetComponent<Player>().OnRoundEnd?.Invoke(this, new OnRoundEndEventArgs { diceRoll = dice1 + dice2 });
+        GetMyPlayer().GetComponent<Player>().OnRoundEnd?.Invoke(this, new OnRoundEndEventArgs { diceRoll = diceRoll });
     }
 
     public void UpdateHand()
