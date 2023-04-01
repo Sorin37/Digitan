@@ -421,6 +421,12 @@ public class Player : NetworkBehaviour
     public void PassTurnServerRpc()
     {
         currentPlayerTurn.Value = (currentPlayerTurn.Value + 1) % nrOfMaxPlayers;
+        PassTurnClientRpc();
+    }
+
+    [ClientRpc]
+    public void PassTurnClientRpc()
+    {
         OnRoundEnd?.Invoke(this, EventArgs.Empty);
     }
 
