@@ -436,7 +436,9 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void PassTurnClientRpc()
     {
-        GetMyPlayer().GetComponent<Player>().OnRoundEnd?.Invoke(this, new OnRoundEndEventArgs { diceRoll = 5 });
+        int dice1 = UnityEngine.Random.Range(1, 7);
+        int dice2 = UnityEngine.Random.Range(1, 7);
+        GetMyPlayer().GetComponent<Player>().OnRoundEnd?.Invoke(this, new OnRoundEndEventArgs { diceRoll = dice1 + dice2 });
     }
 
     public void UpdateHand()

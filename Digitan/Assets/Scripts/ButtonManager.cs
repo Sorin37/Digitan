@@ -73,8 +73,6 @@ public class ButtonManager : MonoBehaviour
                 print("nu e runda mea :/");
                 return;
             }
-            int dice1 = Random.Range(1, 7);
-            int dice2 = Random.Range(1, 7);
 
             //var resourcesDict = gameGrid.GetComponent<GameGrid>().resourcesDict;
             //var playerHand = gameGrid.GetComponent<GameGrid>().playerHand;
