@@ -85,6 +85,8 @@ public class Player : NetworkBehaviour
         var resourcesDict = player.resourcesDict;
         var playerHand = player.playerHand;
 
+        print(e.diceRoll);
+
         foreach (string resource in resourcesDict[e.diceRoll.ToString()])
         {
             playerHand[resource]++;
