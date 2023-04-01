@@ -80,6 +80,8 @@ public class Player : NetworkBehaviour
 
         await PopInformationFromLobby();
 
+        print(nickName);
+
         PlayerJoinedServerRpc();
     }
 
