@@ -62,8 +62,7 @@ public class Player : NetworkBehaviour
         if (IsOwner)
         {
             OnRoundEnd += EndTurnEvent;
-            await PopInformationFromLobby();
-            GameObject.Find("PlayerName").GetComponent<TextMeshProUGUI>().text = GetHostPlayer().GetComponent<Player>().nickName;
+            
         }
 
         if (!IsOwnedByServer)
@@ -78,6 +77,8 @@ public class Player : NetworkBehaviour
         }
 
         gameGrid.GetComponent<GameGrid>().CreateGrid(resourcesCode.Value.ToString());
+
+        await PopInformationFromLobby();
 
         PlayerJoinedServerRpc();
     }
@@ -342,7 +343,7 @@ public class Player : NetworkBehaviour
         {
             if (player.Id == AuthenticationService.Instance.PlayerId)
             {
-                GetMyPlayer().GetComponent<Player>().nickName = player.Data["PlayerName"].Value;
+                nickName = player.Data["PlayerName"].Value;
                 break;
             }
         }
@@ -373,6 +374,7 @@ public class Player : NetworkBehaviour
 
     private void PlayersJoinedEvent(object s, EventArgs e)
     {
+        ChangeCurrentPlayerDetailsNameClientRpc(GetHostPlayer().GetComponent<Player>().nickName);
         StartPlacingClientRpc(new ClientRpcParams
         {
             Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { 0 } }
