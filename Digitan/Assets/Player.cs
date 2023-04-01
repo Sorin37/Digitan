@@ -475,6 +475,10 @@ public class Player : NetworkBehaviour
         int dice1 = UnityEngine.Random.Range(1, 7);
         int dice2 = UnityEngine.Random.Range(1, 7);
         ChangeCurrentPlayerDetailsColorClientRpc((ulong)currentPlayerTurn.Value);
+        ChangeCurrentPlayerDetailsNameClientRpc(
+            GetPlayerWithId((ulong)currentPlayerTurn.Value)
+            .GetComponent<Player>().nickName.ToString()
+        );
         PassTurnClientRpc(dice1 + dice2);
     }
 
