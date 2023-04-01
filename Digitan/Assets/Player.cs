@@ -27,7 +27,7 @@ public class Player : NetworkBehaviour
     public NetworkVariable<int> currentNrOfPlayers = new NetworkVariable<int>(0);
     public NetworkVariable<int> order = new NetworkVariable<int>(1);
     public NetworkVariable<int> currentPlayerTurn = new NetworkVariable<int>(-1);
-    public NetworkVariable<FixedString64Bytes> nickName = new NetworkVariable<FixedString64Bytes>("Uninitialized");
+    public NetworkVariable<FixedString64Bytes> nickName = new NetworkVariable<FixedString64Bytes>("Uninitialized", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
     public Dictionary<string, List<string>> resourcesDict;
     public Dictionary<string, int> playerHand;
