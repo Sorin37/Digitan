@@ -33,7 +33,7 @@ public class Player : NetworkBehaviour
     public Color color;
 
     public event EventHandler OnPlayersJoined;
-    public event EventHandler OnRoundEnd;
+    public event EventHandler<OnRoundEndEventArgs> OnRoundEnd;
 
     // Awake is called before all the Starts in a random order
     void Awake()
@@ -58,7 +58,7 @@ public class Player : NetworkBehaviour
 
         if (IsOwner)
         {
-            OnRoundEnd += (s, a) => { UpdateHand(); };
+            OnRoundEnd += EndTurnEvent;
         }
 
         if (!IsOwnedByServer)
@@ -66,8 +66,6 @@ public class Player : NetworkBehaviour
 
         //this is where you should do normal initialisations
         DontDestroyOnLoad(gameObject);
-
-        //OnPlayersJoined += (s, a) => { PlayersConnectedClientRpc(); };
 
         if (IsHost)
         {
@@ -79,6 +77,12 @@ public class Player : NetworkBehaviour
         await PopInformationFromLobby();
 
         PlayerJoinedServerRpc();
+    }
+
+    private void EndTurnEvent(object sender, OnRoundEndEventArgs e)
+    {
+        UpdateHand();
+        print(e.diceRoll);
     }
 
 
@@ -424,15 +428,19 @@ public class Player : NetworkBehaviour
         PassTurnClientRpc();
     }
 
+    public class OnRoundEndEventArgs : EventArgs
+    {
+        public int diceRoll;
+    }
+
     [ClientRpc]
     public void PassTurnClientRpc()
     {
-        GetMyPlayer().GetComponent<Player>().OnRoundEnd?.Invoke(this, EventArgs.Empty);
+        GetMyPlayer().GetComponent<Player>().OnRoundEnd?.Invoke(this, new OnRoundEndEventArgs { diceRoll = 5 });
     }
 
     public void UpdateHand()
     {
-        print("afisez mana");
         var playerHand = GetMyPlayer().GetComponent<Player>().playerHand;
 
         foreach (var card in playerHand)
