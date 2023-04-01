@@ -396,6 +396,7 @@ public class Player : NetworkBehaviour
         if ((int)OwnerClientId + player.order.Value == player.nrOfMaxPlayers)
         {
             player.order.Value = -1;
+            ChangeCurrentPlayerDetailsColorClientRpc(OwnerClientId);
             StartPlacingClientRpc(new ClientRpcParams
             {
                 Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { OwnerClientId } }
@@ -407,9 +408,11 @@ public class Player : NetworkBehaviour
         {
             Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Settlement Circle"));
             settlementGrid.GetComponent<SettlementGrid>().endStartPhase = true;
+            ChangeCurrentPlayerDetailsColorClientRpc(0);
             return;
         }
 
+        ChangeCurrentPlayerDetailsColorClientRpc((ulong)((int)OwnerClientId + player.order.Value));
         StartPlacingClientRpc(new ClientRpcParams
         {
             Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { (ulong)((int)OwnerClientId + player.order.Value) } }
@@ -442,7 +445,7 @@ public class Player : NetworkBehaviour
         currentPlayerTurn.Value = (currentPlayerTurn.Value + 1) % nrOfMaxPlayers;
         int dice1 = UnityEngine.Random.Range(1, 7);
         int dice2 = UnityEngine.Random.Range(1, 7);
-        ChangeCurrentPlayerDetailsColorClientRpc(currentPlayerTurn.Value);
+        ChangeCurrentPlayerDetailsColorClientRpc((ulong)currentPlayerTurn.Value);
         PassTurnClientRpc(dice1 + dice2);
     }
 
@@ -468,8 +471,8 @@ public class Player : NetworkBehaviour
     }
 
     [ClientRpc]
-    private void ChangeCurrentPlayerDetailsColorClientRpc(int id)
+    private void ChangeCurrentPlayerDetailsColorClientRpc(ulong id)
     {
-        GameObject.Find("ColorPanel").GetComponent<Image>().color = IdToColor((ulong)id);
+        GameObject.Find("ColorPanel").GetComponent<Image>().color = IdToColor(id);
     }
 }
