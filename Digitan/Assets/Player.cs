@@ -27,12 +27,12 @@ public class Player : NetworkBehaviour
     public NetworkVariable<int> currentNrOfPlayers = new NetworkVariable<int>(0);
     public NetworkVariable<int> order = new NetworkVariable<int>(1);
     public NetworkVariable<int> currentPlayerTurn = new NetworkVariable<int>(-1);
+    public NetworkVariable<FixedString64Bytes> nickName = new NetworkVariable<FixedString64Bytes>("Uninitialized");
 
     public Dictionary<string, List<string>> resourcesDict;
     public Dictionary<string, int> playerHand;
 
     public int nrOfMaxPlayers;
-    public string nickName;
     public Color color;
 
     public event EventHandler OnPlayersJoined;
@@ -63,6 +63,7 @@ public class Player : NetworkBehaviour
         {
             OnRoundEnd += EndTurnEvent;
             
+            await PopInformationFromLobby();    
         }
 
         if (!IsOwnedByServer)
@@ -78,9 +79,6 @@ public class Player : NetworkBehaviour
 
         gameGrid.GetComponent<GameGrid>().CreateGrid(resourcesCode.Value.ToString());
 
-        await PopInformationFromLobby();
-
-        print(nickName);
 
         PlayerJoinedServerRpc();
     }
@@ -345,7 +343,7 @@ public class Player : NetworkBehaviour
         {
             if (player.Id == AuthenticationService.Instance.PlayerId)
             {
-                nickName = player.Data["PlayerName"].Value;
+                nickName.Value = player.Data["PlayerName"].Value;
                 break;
             }
         }
@@ -370,7 +368,7 @@ public class Player : NetworkBehaviour
 
     private void PlayersJoinedEvent(object s, EventArgs e)
     {
-        ChangeCurrentPlayerDetailsNameClientRpc(GetHostPlayer().GetComponent<Player>().nickName);
+        ChangeCurrentPlayerDetailsNameClientRpc(GetHostPlayer().GetComponent<Player>().nickName.Value.ToString());
         StartPlacingClientRpc(new ClientRpcParams
         {
             Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { 0 } }
@@ -398,7 +396,7 @@ public class Player : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void PlacedServerRpc(string name)
+    public void PlacedServerRpc()
     {
         var player = GetHostPlayer().GetComponent<Player>();
 
@@ -406,7 +404,7 @@ public class Player : NetworkBehaviour
         {
             player.order.Value = -1;
             ChangeCurrentPlayerDetailsColorClientRpc(OwnerClientId);
-            ChangeCurrentPlayerDetailsNameClientRpc(name);
+            ChangeCurrentPlayerDetailsNameClientRpc(GetPlayerWithId(OwnerClientId).GetComponent<Player>().nickName.Value.ToString());
             StartPlacingClientRpc(new ClientRpcParams
             {
                 Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { OwnerClientId } }
@@ -419,11 +417,11 @@ public class Player : NetworkBehaviour
             Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Settlement Circle"));
             settlementGrid.GetComponent<SettlementGrid>().endStartPhase = true;
             ChangeCurrentPlayerDetailsColorClientRpc(0);
-            ChangeCurrentPlayerDetailsNameClientRpc(name);
+            ChangeCurrentPlayerDetailsNameClientRpc(GetHostPlayer().GetComponent<Player>().nickName.Value.ToString());
         }
 
         ChangeCurrentPlayerDetailsColorClientRpc((ulong)((int)OwnerClientId + player.order.Value));
-        ChangeCurrentPlayerDetailsNameClientRpc(name);
+        ChangeCurrentPlayerDetailsNameClientRpc(GetPlayerWithId((ulong)((int)OwnerClientId + player.order.Value)).GetComponent<Player>().nickName.Value.ToString());
         StartPlacingClientRpc(new ClientRpcParams
         {
             Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { (ulong)((int)OwnerClientId + player.order.Value) } }
