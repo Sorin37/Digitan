@@ -62,6 +62,8 @@ public class Player : NetworkBehaviour
         if (IsOwner)
         {
             OnRoundEnd += EndTurnEvent;
+            await PopInformationFromLobby();
+            GameObject.Find("PlayerName").GetComponent<TextMeshProUGUI>().text = GetHostPlayer().GetComponent<Player>().nickName;
         }
 
         if (!IsOwnedByServer)
@@ -77,11 +79,7 @@ public class Player : NetworkBehaviour
 
         gameGrid.GetComponent<GameGrid>().CreateGrid(resourcesCode.Value.ToString());
 
-        await PopInformationFromLobby();
-
         PlayerJoinedServerRpc();
-
-        ChangeCurrentPlayerDetailsNameClientRpc(GetHostPlayer().GetComponent<Player>().nickName);
     }
 
     private void EndTurnEvent(object sender, OnRoundEndEventArgs e)
@@ -338,7 +336,7 @@ public class Player : NetworkBehaviour
 
         lobby = await LobbyService.Instance.GetLobbyAsync(lobby.Id);
 
-        nrOfMaxPlayers = lobby.Players.Count;
+        GetHostPlayer().GetComponent<Player>().nrOfMaxPlayers = lobby.Players.Count;
 
         foreach (Unity.Services.Lobbies.Models.Player player in lobby.Players)
         {
