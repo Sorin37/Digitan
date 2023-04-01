@@ -33,6 +33,7 @@ public class Player : NetworkBehaviour
     public Color color;
 
     public event EventHandler OnPlayersJoined;
+    public event EventHandler OnRoundEnd;
 
     // Awake is called before all the Starts in a random order
     void Awake()
@@ -40,22 +41,25 @@ public class Player : NetworkBehaviour
         gameGrid = GameObject.Find("GameGrid");
         roadGrid = GameObject.Find("AvailableRoadsGrid");
         settlementGrid = GameObject.Find("AvailableSettlementGrid");
-
     }
 
-    // OnNetworkSpawn is called before Start
+    // OnNetworkSpawn is called before Start on all the clients
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
         color = IdToColor(NetworkManager.Singleton.LocalClientId);
         currentPlayerTurn.Value = -1;
-        print("m-am executat");
     }
 
     async void Start()
     {
         InitializeResourceDict();
         InitializePlayerHand();
+
+        if (IsOwner)
+        {
+            OnRoundEnd += (s, a) => { UpdateHand(); };
+        }
 
         if (!IsOwnedByServer)
             return;
@@ -109,16 +113,6 @@ public class Player : NetworkBehaviour
         playerHand["Wool Resource"] = 0;
     }
 
-    //private void initializeResourcesInfo()
-    //{
-    //    resourcesPrototype.Value = new string[5][];
-    //    resourcesPrototype.Value[0] = new string[3];
-    //    resourcesPrototype.Value[1] = new string[4];
-    //    resourcesPrototype.Value[2] = new string[5];
-    //    resourcesPrototype.Value[3] = new string[4];
-    //    resourcesPrototype.Value[4] = new string[3];
-    //}
-
     //private void printResInfo()
     //{
     //    foreach (var row in resourcesPrototype.Value)
@@ -168,12 +162,6 @@ public class Player : NetworkBehaviour
     public bool GetIsClient()
     {
         return IsClient;
-    }
-
-    [ClientRpc]
-    public void PrintClientRpc(string msg)
-    {
-        print(msg);
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -378,9 +366,7 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void StartPlacingClientRpc(ClientRpcParams clientRpcParams)
     {
-        print("let me place");
         Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Settlement Circle"));
-        //Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Start Circle"));
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -398,7 +384,7 @@ public class Player : NetworkBehaviour
             return;
         }
 
-        if ((int)OwnerClientId + player.order.Value == 0||((int)OwnerClientId + player.order.Value < 1))
+        if ((int)OwnerClientId + player.order.Value == 0 || ((int)OwnerClientId + player.order.Value < 1))
         {
             Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Settlement Circle"));
             settlementGrid.GetComponent<SettlementGrid>().endStartPhase = true;
@@ -435,10 +421,12 @@ public class Player : NetworkBehaviour
     public void PassTurnServerRpc()
     {
         currentPlayerTurn.Value = (currentPlayerTurn.Value + 1) % nrOfMaxPlayers;
+        OnRoundEnd?.Invoke(this, EventArgs.Empty);
     }
 
     public void UpdateHand()
     {
+        print("afisez mana");
         var playerHand = GetMyPlayer().GetComponent<Player>().playerHand;
 
         foreach (var card in playerHand)

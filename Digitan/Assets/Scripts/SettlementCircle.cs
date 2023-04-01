@@ -95,7 +95,6 @@ public class SettlementCircle : MonoBehaviour
 
     private void addResourcesToDict()
     {
-        print("I be adding resources");
         var colliders = Physics.OverlapSphere(
             transform.position,
             2.5f,

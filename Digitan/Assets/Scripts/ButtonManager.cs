@@ -148,7 +148,7 @@ public class ButtonManager : MonoBehaviour
                 print("nu e runda mea :/");
                 return;
             }
-            print("e runda mea hehe");
+            print("a fost runda mea hehe");
             GetHostPlayer().GetComponent<Player>().PassTurnServerRpc();
         });
     }
