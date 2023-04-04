@@ -6,17 +6,11 @@ using UnityEngine.UI;
 
 public class MenuManager : MonoBehaviour
 {
-    [SerializeField] private Button playButton;
     [SerializeField] private Button hostButton;
     [SerializeField] private Button connectButton;
 
     private void Awake()
     {
-        playButton.onClick.AddListener(() =>
-        {
-            SceneManager.LoadScene("Game");
-        });
-
         hostButton.onClick.AddListener(() =>
         {
             SceneManager.LoadScene("Host");
