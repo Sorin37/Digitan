@@ -13,12 +13,16 @@ public class ButtonManager : MonoBehaviour
     [SerializeField] private Button settlementButton;
     [SerializeField] private Button roadButton;
     [SerializeField] private Button endTurnButton;
+    [SerializeField] private Button tradeButton;
+    [SerializeField] private Button cityButton;
 
     private void Awake()
     {
         initEndTurnButton();
         initSettlementButton();
         initRoadButton();
+        initTradeButton();
+        initCityButton();
     }
 
     private void initRoadButton()
@@ -124,6 +128,22 @@ public class ButtonManager : MonoBehaviour
             }
             print("a fost runda mea hehe");
             GetHostPlayer().GetComponent<Player>().PassTurnServerRpc();
+        });
+    }
+
+    private void initTradeButton()
+    {
+        tradeButton.onClick.AddListener(() =>
+        {
+            print("se face trade");
+        });
+    }
+
+    private void initCityButton()
+    {
+        cityButton.onClick.AddListener(() =>
+        {
+            print("se fac orase");
         });
     }
 

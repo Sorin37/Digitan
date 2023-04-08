@@ -152,11 +152,10 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1975271585}
   - {fileID: 884604699}
   - {fileID: 1235336874}
   m_Father: {fileID: 2112621931}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -803,7 +802,7 @@ RectTransform:
   m_Children:
   - {fileID: 510148492}
   m_Father: {fileID: 299280426}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.09375, y: 0.15}
   m_AnchorMax: {x: 0.40625, y: 0.35}
@@ -925,7 +924,7 @@ RectTransform:
   m_Children:
   - {fileID: 313163217}
   m_Father: {fileID: 299280426}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.59375, y: 0.15}
   m_AnchorMax: {x: 0.90625, y: 0.35}
@@ -1321,18 +1320,18 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1975271584}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 299280426}
-  m_RootOrder: 0
+  m_Father: {fileID: 2112621931}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 253.75}
-  m_SizeDelta: {x: 1655, y: 1015}
+  m_AnchoredPosition: {x: 0, y: 216}
+  m_SizeDelta: {x: 1152, y: 648}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1975271586
 MonoBehaviour:
@@ -1354,7 +1353,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 2603fbd016d783340b617e77ddb60747, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3c8aaac0282a1e64a8a3b181f6ba22e6, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1522,6 +1521,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1600154941}
+  - {fileID: 1975271585}
   - {fileID: 299280426}
   m_Father: {fileID: 0}
   m_RootOrder: 4
