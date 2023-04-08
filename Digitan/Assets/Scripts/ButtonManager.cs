@@ -6,7 +6,6 @@ using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
-using Random = UnityEngine.Random;
 
 public class ButtonManager : MonoBehaviour
 {
@@ -15,6 +14,7 @@ public class ButtonManager : MonoBehaviour
     [SerializeField] private Button endTurnButton;
     [SerializeField] private Button tradeButton;
     [SerializeField] private Button cityButton;
+    [SerializeField] private Canvas tradeCanvas;
 
     private void Awake()
     {
@@ -25,24 +25,17 @@ public class ButtonManager : MonoBehaviour
         initCityButton();
     }
 
-    private void initRoadButton()
+    private void initEndTurnButton()
     {
-        roadButton.onClick.AddListener(() =>
+        endTurnButton.onClick.AddListener(() =>
         {
             if (GetHostPlayer().GetComponent<Player>().currentPlayerTurn.Value != (int)NetworkManager.Singleton.LocalClientId)
             {
                 print("nu e runda mea :/");
                 return;
             }
-
-            if (hasRoadResources())
-            {
-                Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Road Circle"));
-            }
-            else
-            {
-                print("You don't have enough resources for a road!");
-            }
+            print("a fost runda mea hehe");
+            GetHostPlayer().GetComponent<Player>().PassTurnServerRpc();
         });
     }
     private void initSettlementButton()
@@ -63,6 +56,40 @@ public class ButtonManager : MonoBehaviour
             {
                 print("You don't have enough resources for a settlement!");
             }
+        });
+    }
+    private void initRoadButton()
+    {
+        roadButton.onClick.AddListener(() =>
+        {
+            if (GetHostPlayer().GetComponent<Player>().currentPlayerTurn.Value != (int)NetworkManager.Singleton.LocalClientId)
+            {
+                print("nu e runda mea :/");
+                return;
+            }
+
+            if (hasRoadResources())
+            {
+                Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Road Circle"));
+            }
+            else
+            {
+                print("You don't have enough resources for a road!");
+            }
+        });
+    }
+    private void initTradeButton()
+    {
+        tradeButton.onClick.AddListener(() =>
+        {
+            tradeCanvas.gameObject.SetActive(true);
+        });
+    }
+    private void initCityButton()
+    {
+        cityButton.onClick.AddListener(() =>
+        {
+            print("se fac orase");
         });
     }
 
@@ -115,36 +142,6 @@ public class ButtonManager : MonoBehaviour
         }
 
         return null;
-    }
-
-    private void initEndTurnButton()
-    {
-        endTurnButton.onClick.AddListener(() =>
-        {
-            if (GetHostPlayer().GetComponent<Player>().currentPlayerTurn.Value != (int)NetworkManager.Singleton.LocalClientId)
-            {
-                print("nu e runda mea :/");
-                return;
-            }
-            print("a fost runda mea hehe");
-            GetHostPlayer().GetComponent<Player>().PassTurnServerRpc();
-        });
-    }
-
-    private void initTradeButton()
-    {
-        tradeButton.onClick.AddListener(() =>
-        {
-            print("se face trade");
-        });
-    }
-
-    private void initCityButton()
-    {
-        cityButton.onClick.AddListener(() =>
-        {
-            print("se fac orase");
-        });
     }
 
     private GameObject GetMyPlayer()
