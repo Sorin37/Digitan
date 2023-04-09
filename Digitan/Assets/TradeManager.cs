@@ -23,7 +23,26 @@ public class TradeManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI getLumberLabel;
     [SerializeField] private TextMeshProUGUI getOreLabel;
     [SerializeField] private TextMeshProUGUI getWoolLabel;
-
+    [SerializeField] private Button subtractGiveBrick;
+    [SerializeField] private Button addGiveBrick;
+    [SerializeField] private Button subtractGiveGrain;
+    [SerializeField] private Button addGiveGrain;
+    [SerializeField] private Button subtractGiveLumber;
+    [SerializeField] private Button addGiveLumber;
+    [SerializeField] private Button subtractGiveOre;
+    [SerializeField] private Button addGiveOre;
+    [SerializeField] private Button subtractGiveWool;
+    [SerializeField] private Button addGiveWool;
+    [SerializeField] private Button subtractGetBrick;
+    [SerializeField] private Button addGetBrick;
+    [SerializeField] private Button subtractGetGrain;
+    [SerializeField] private Button addGetGrain;
+    [SerializeField] private Button subtractGetLumber;
+    [SerializeField] private Button addGetLumber;
+    [SerializeField] private Button subtractGetOre;
+    [SerializeField] private Button addGetOre;
+    [SerializeField] private Button subtractGetWool;
+    [SerializeField] private Button addGetWool;
 
     public Dictionary<string, int> giveDict = new Dictionary<string, int>();
     public Dictionary<string, int> getDict = new Dictionary<string, int>();
@@ -34,6 +53,7 @@ public class TradeManager : MonoBehaviour
         InitCloseButton();
         InitTradeBankButton();
         InitTradePlayersButton();
+        InitResourcesButtons();
     }
 
     // Update is called once per frame
@@ -79,5 +99,158 @@ public class TradeManager : MonoBehaviour
         getLumberLabel.text = "x " + getDict["Lumber"].ToString();
         getOreLabel.text = "x " + getDict["Ore"].ToString();
         getWoolLabel.text = "x " + getDict["Wool"].ToString();
+    }
+
+    private void Add(string type, string resource)
+    {
+        if (type == "Give")
+        {
+            giveDict[resource]++;
+        }
+        else if (type == "Get")
+        {
+            getDict[resource]++;
+        }
+    }
+
+    private void Subtract(string type, string resource)
+    {
+        if (type == "Give")
+        {
+            if (giveDict[resource] > 0)
+                giveDict[resource]--;
+        }
+        else if (type == "Get")
+        {
+            if (getDict[resource] > 0)
+                getDict[resource]--;
+        }
+    }
+
+    private void InitResourcesButtons()
+    {
+        //give
+        addGiveBrick.onClick.AddListener(() =>
+        {
+            Add("Give", "Brick");
+            DrawDicts();
+        });
+
+        addGiveGrain.onClick.AddListener(() =>
+        {
+            Add("Give", "Grain");
+            DrawDicts();
+        });
+
+        addGiveLumber.onClick.AddListener(() =>
+        {
+            Add("Give", "Lumber");
+            DrawDicts();
+        });
+
+        addGiveOre.onClick.AddListener(() =>
+        {
+            Add("Give", "Ore");
+            DrawDicts();
+        });
+
+        addGiveWool.onClick.AddListener(() =>
+        {
+            Add("Give", "Wool");
+            DrawDicts();
+        });
+
+        //give subtract
+        subtractGiveBrick.onClick.AddListener(() =>
+        {
+            Subtract("Give", "Brick");
+            DrawDicts();
+        });
+
+        subtractGiveGrain.onClick.AddListener(() =>
+        {
+            Subtract("Give", "Grain");
+            DrawDicts();
+        });
+
+        subtractGiveLumber.onClick.AddListener(() =>
+        {
+            Subtract("Give", "Lumber");
+            DrawDicts();
+        });
+
+        subtractGiveOre.onClick.AddListener(() =>
+        {
+            Subtract("Give", "Ore");
+            DrawDicts();
+        });
+
+        subtractGiveWool.onClick.AddListener(() =>
+        {
+            Subtract("Give", "Wool");
+            DrawDicts();
+        });
+
+        //get add
+        addGetBrick.onClick.AddListener(() =>
+        {
+            Add("Get", "Brick");
+            DrawDicts();
+        });
+
+        addGetGrain.onClick.AddListener(() =>
+        {
+            Add("Get", "Grain");
+            DrawDicts();
+        });
+
+        addGetLumber.onClick.AddListener(() =>
+        {
+            Add("Get", "Lumber");
+            DrawDicts();
+        });
+
+        addGetOre.onClick.AddListener(() =>
+        {
+            Add("Get", "Ore");
+            DrawDicts();
+        });
+
+        addGetWool.onClick.AddListener(() =>
+        {
+            Add("Get", "Wool");
+            DrawDicts();
+        });
+
+        //get subtract
+        subtractGetBrick.onClick.AddListener(() =>
+        {
+            Subtract("Get", "Brick");
+            DrawDicts();
+        });
+
+        subtractGetGrain.onClick.AddListener(() =>
+        {
+            Subtract("Get", "Grain");
+            DrawDicts();
+        });
+
+        subtractGetLumber.onClick.AddListener(() =>
+        {
+            Subtract("Get", "Lumber");
+            DrawDicts();
+        });
+
+        subtractGetOre.onClick.AddListener(() =>
+        {
+            Subtract("Get", "Ore");
+            DrawDicts();
+        });
+
+        subtractGetWool.onClick.AddListener(() =>
+        {
+            Subtract("Get", "Wool");
+            DrawDicts();
+        });
     }
 }

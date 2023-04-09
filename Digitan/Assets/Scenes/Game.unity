@@ -2011,7 +2011,7 @@ GameObject:
   - component: {fileID: 360976231}
   - component: {fileID: 360976230}
   m_Layer: 5
-  m_Name: Substract
+  m_Name: Subtract
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2383,7 +2383,7 @@ GameObject:
   - component: {fileID: 463930441}
   - component: {fileID: 463930440}
   m_Layer: 5
-  m_Name: Substract
+  m_Name: Subtract
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2818,6 +2818,26 @@ MonoBehaviour:
   getLumberLabel: {fileID: 2123584744}
   getOreLabel: {fileID: 633987596}
   getWoolLabel: {fileID: 1600812348}
+  subtractGiveBrick: {fileID: 1240312900}
+  addGiveBrick: {fileID: 1510289651}
+  subtractGiveGrain: {fileID: 835606579}
+  addGiveGrain: {fileID: 1983304436}
+  subtractGiveLumber: {fileID: 1120100365}
+  addGiveLumber: {fileID: 1833444742}
+  subtractGiveOre: {fileID: 894834162}
+  addGiveOre: {fileID: 1578990923}
+  subtractGiveWool: {fileID: 1035347320}
+  addGiveWool: {fileID: 1852027429}
+  subtractGetBrick: {fileID: 360976230}
+  addGetBrick: {fileID: 302988620}
+  subtractGetGrain: {fileID: 1076467005}
+  addGetGrain: {fileID: 969610085}
+  subtractGetLumber: {fileID: 463930440}
+  addGetLumber: {fileID: 854905464}
+  subtractGetOre: {fileID: 1509881922}
+  addGetOre: {fileID: 85050637}
+  subtractGetWool: {fileID: 1114040582}
+  addGetWool: {fileID: 1728787460}
 --- !u!1 &633987594
 GameObject:
   m_ObjectHideFlags: 0
@@ -4311,7 +4331,7 @@ GameObject:
   - component: {fileID: 835606580}
   - component: {fileID: 835606579}
   m_Layer: 5
-  m_Name: Substract
+  m_Name: Subtract
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4766,7 +4786,7 @@ GameObject:
   - component: {fileID: 894834163}
   - component: {fileID: 894834162}
   m_Layer: 5
-  m_Name: Substract
+  m_Name: Subtract
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5605,7 +5625,7 @@ GameObject:
   - component: {fileID: 1035347321}
   - component: {fileID: 1035347320}
   m_Layer: 5
-  m_Name: Substract
+  m_Name: Subtract
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5727,7 +5747,7 @@ GameObject:
   - component: {fileID: 1076467006}
   - component: {fileID: 1076467005}
   m_Layer: 5
-  m_Name: Substract
+  m_Name: Subtract
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6304,7 +6324,7 @@ GameObject:
   - component: {fileID: 1120100366}
   - component: {fileID: 1120100365}
   m_Layer: 5
-  m_Name: Substract
+  m_Name: Subtract
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7293,7 +7313,7 @@ GameObject:
   - component: {fileID: 1240312901}
   - component: {fileID: 1240312900}
   m_Layer: 5
-  m_Name: Substract
+  m_Name: Subtract
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8453,7 +8473,7 @@ GameObject:
   - component: {fileID: 1509881923}
   - component: {fileID: 1509881922}
   m_Layer: 5
-  m_Name: Substract
+  m_Name: Subtract
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10345,7 +10365,7 @@ GameObject:
   - component: {fileID: 1114040583}
   - component: {fileID: 1114040582}
   m_Layer: 5
-  m_Name: Substract
+  m_Name: Subtract
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
