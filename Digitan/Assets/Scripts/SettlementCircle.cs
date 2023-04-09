@@ -5,6 +5,7 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.EventSystems;
 using UnityEngine.SocialPlatforms;
 
 public class SettlementCircle : MonoBehaviour
@@ -34,6 +35,12 @@ public class SettlementCircle : MonoBehaviour
 
     public void OnMouseDown()
     {
+        //necessary piece of code in order to prevent clicking through UI elements
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            return;
+        }
+
         var settlementGrid = transform.parent.gameObject.GetComponent<SettlementGrid>();
 
         //if (settlementGrid.is1stSettlementNext || settlementGrid.is2ndSettlementNext)

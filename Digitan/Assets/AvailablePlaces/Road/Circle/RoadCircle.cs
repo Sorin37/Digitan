@@ -5,6 +5,7 @@ using System.Linq;
 using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class RoadCircle : MonoBehaviour
 {
@@ -29,6 +30,11 @@ public class RoadCircle : MonoBehaviour
 
     public void OnMouseDown()
     {
+        //necessary piece of code in order to prevent clicking through UI elements
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            return;
+        }
 
         if (!isOccupied)
         {
