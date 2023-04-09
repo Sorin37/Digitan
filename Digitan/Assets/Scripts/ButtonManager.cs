@@ -15,6 +15,7 @@ public class ButtonManager : MonoBehaviour
     [SerializeField] private Button tradeButton;
     [SerializeField] private Button cityButton;
     [SerializeField] private Canvas tradeCanvas;
+    [SerializeField] private GameObject tradeManager;
 
     private void Awake()
     {
@@ -82,6 +83,7 @@ public class ButtonManager : MonoBehaviour
     {
         tradeButton.onClick.AddListener(() =>
         {
+            ResetTrade();
             tradeCanvas.gameObject.SetActive(true);
         });
     }
@@ -155,5 +157,26 @@ public class ButtonManager : MonoBehaviour
         }
 
         return null;
+    }
+
+    private void ResetTrade()
+    {
+        var tradeManager = this.tradeManager.GetComponent<TradeManager>();
+        var giveDict = tradeManager.giveDict;
+        var getDict = tradeManager.getDict;
+
+        giveDict["Brick"] = 0;
+        giveDict["Grain"] = 0;
+        giveDict["Lumber"] = 0;
+        giveDict["Ore"] = 0;
+        giveDict["Wool"] = 0;
+
+        getDict["Brick"] = 0;
+        getDict["Grain"] = 0;
+        getDict["Lumber"] = 0;
+        getDict["Ore"] = 0;
+        getDict["Wool"] = 0;
+
+        tradeManager.DrawDicts();
     }
 }

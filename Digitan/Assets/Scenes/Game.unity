@@ -2806,6 +2806,18 @@ MonoBehaviour:
   closeButton: {fileID: 371040953}
   tradeBankButton: {fileID: 1114040585}
   tradePlayersButton: {fileID: 1004358946}
+  give: {fileID: 445006287}
+  get: {fileID: 225398834}
+  giveBrickLabel: {fileID: 707208042}
+  giveGrainLabel: {fileID: 1433003105}
+  giveLumberLabel: {fileID: 1751470960}
+  giveOreLabel: {fileID: 1980159961}
+  giveWoolLabel: {fileID: 1186101870}
+  getBrickLabel: {fileID: 1749865026}
+  getGrainLabel: {fileID: 1207409702}
+  getLumberLabel: {fileID: 2123584744}
+  getOreLabel: {fileID: 633987596}
+  getWoolLabel: {fileID: 1600812348}
 --- !u!1 &633987594
 GameObject:
   m_ObjectHideFlags: 0
@@ -10868,6 +10880,7 @@ MonoBehaviour:
   tradeButton: {fileID: 673048864}
   cityButton: {fileID: 2045466358}
   tradeCanvas: {fileID: 2062235694}
+  tradeManager: {fileID: 553074305}
 --- !u!1 &1926444571
 GameObject:
   m_ObjectHideFlags: 0
@@ -11676,7 +11689,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &2062235692
 MonoBehaviour:
   m_ObjectHideFlags: 0
