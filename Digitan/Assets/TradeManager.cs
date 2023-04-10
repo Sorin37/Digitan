@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -83,6 +84,11 @@ public class TradeManager : MonoBehaviour
         tradePlayersButton.onClick.AddListener(() =>
         {
             print("I be tradign with the palyers");
+            GetMyPlayer().GetComponent<Player>().DisplayTradeOfferServerRpc(
+                NetworkManager.Singleton.LocalClientId,
+                giveDict["Brick"], giveDict["Grain"], giveDict["Lumber"], giveDict["Ore"], giveDict["Wool"],
+                getDict["Brick"], getDict["Grain"], getDict["Lumber"], getDict["Ore"], getDict["Wool"]
+            );
         });
     }
 
@@ -252,5 +258,18 @@ public class TradeManager : MonoBehaviour
             Subtract("Get", "Wool");
             DrawDicts();
         });
+    }
+
+    private GameObject GetMyPlayer()
+    {
+        var players = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (var p in players)
+        {
+            if (p.GetComponent<Player>().IsOwner)
+                return p;
+        }
+
+        return null;
     }
 }

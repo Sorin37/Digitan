@@ -527,14 +527,14 @@ public class Player : NetworkBehaviour
         }
 
         DisplayTradeOfferClientRpc(
-            new ClientRpcParams { Send = new ClientRpcSendParams { TargetClientIds = targetClientIds } },
             giveBrick, giveGrain, giveLumber, giveOre, giveWool,
-            getBrick, getGrain, getLumber, getOre, getWool
+            getBrick, getGrain, getLumber, getOre, getWool,
+            new ClientRpcParams { Send = new ClientRpcSendParams { TargetClientIds = targetClientIds } }
         );
     }
 
     [ClientRpc]
-    public void DisplayTradeOfferClientRpc(ClientRpcParams clientRpcParams, int giveBrick, int giveGrain, int giveLumber, int giveOre, int giveWool, int getBrick, int getGrain, int getLumber, int getOre, int getWool)
+    public void DisplayTradeOfferClientRpc(int giveBrick, int giveGrain, int giveLumber, int giveOre, int giveWool, int getBrick, int getGrain, int getLumber, int getOre, int getWool, ClientRpcParams clientRpcParams)
     {
         print("Ya boy i am ready to trade");
     }
