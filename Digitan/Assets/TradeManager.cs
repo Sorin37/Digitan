@@ -83,8 +83,6 @@ public class TradeManager : MonoBehaviour
     {
         tradePlayersButton.onClick.AddListener(() =>
         {
-            print("I be tradign with the palyers");
-            print("my id is " + NetworkManager.Singleton.LocalClientId);
             GetHostPlayer().GetComponent<Player>().DisplayTradeOfferServerRpc(
                 NetworkManager.Singleton.LocalClientId,
                 giveDict["Brick"], giveDict["Grain"], giveDict["Lumber"], giveDict["Ore"], giveDict["Wool"],

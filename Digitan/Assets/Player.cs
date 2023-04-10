@@ -539,6 +539,6 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void DisplayTradeOfferClientRpc(int giveBrick, int giveGrain, int giveLumber, int giveOre, int giveWool, int getBrick, int getGrain, int getLumber, int getOre, int getWool, ClientRpcParams clientRpcParams)
     {
-        print("Ya boy i am ready to trade");
+        GameObject.Find("TradeOfferCanvas").gameObject.SetActive(true);
     }
 }
