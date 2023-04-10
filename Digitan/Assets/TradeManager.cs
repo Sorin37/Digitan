@@ -85,7 +85,7 @@ public class TradeManager : MonoBehaviour
         {
             print("I be tradign with the palyers");
             print("my id is " + NetworkManager.Singleton.LocalClientId);
-            GetMyPlayer().GetComponent<Player>().DisplayTradeOfferServerRpc(
+            GetHostPlayer().GetComponent<Player>().DisplayTradeOfferServerRpc(
                 NetworkManager.Singleton.LocalClientId,
                 giveDict["Brick"], giveDict["Grain"], giveDict["Lumber"], giveDict["Ore"], giveDict["Wool"],
                 getDict["Brick"], getDict["Grain"], getDict["Lumber"], getDict["Ore"], getDict["Wool"]
@@ -268,6 +268,19 @@ public class TradeManager : MonoBehaviour
         foreach (var p in players)
         {
             if (p.GetComponent<Player>().IsOwner)
+                return p;
+        }
+
+        return null;
+    }
+
+    private GameObject GetHostPlayer()
+    {
+        var players = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (var p in players)
+        {
+            if (p.GetComponent<Player>().IsOwnedByServer)
                 return p;
         }
 
