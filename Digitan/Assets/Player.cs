@@ -8,6 +8,7 @@ using Unity.Services.Authentication;
 using Unity.Services.Core;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -539,6 +540,6 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void DisplayTradeOfferClientRpc(int giveBrick, int giveGrain, int giveLumber, int giveOre, int giveWool, int getBrick, int getGrain, int getLumber, int getOre, int getWool, ClientRpcParams clientRpcParams)
     {
-        GameObject.Find("TradeOfferCanvas").gameObject.SetActive(true);
+        Resources.FindObjectsOfTypeAll<TradeOfferManager>()[0].gameObject.transform.parent.gameObject.SetActive(true);
     }
 }
