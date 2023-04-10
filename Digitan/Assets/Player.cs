@@ -540,6 +540,8 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void DisplayTradeOfferClientRpc(int giveBrick, int giveGrain, int giveLumber, int giveOre, int giveWool, int getBrick, int getGrain, int getLumber, int getOre, int getWool, ClientRpcParams clientRpcParams)
     {
-        Resources.FindObjectsOfTypeAll<TradeOfferManager>()[0].gameObject.transform.parent.gameObject.SetActive(true);
+        var tradeOfferManager = Resources.FindObjectsOfTypeAll<TradeOfferManager>()[0];
+        tradeOfferManager.Draw(giveBrick, giveGrain, giveLumber, giveOre, giveWool, getBrick, getGrain, getLumber, getOre, getWool);
+        tradeOfferManager.gameObject.transform.parent.gameObject.SetActive(true);
     }
 }
