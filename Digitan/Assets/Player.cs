@@ -523,7 +523,10 @@ public class Player : NetworkBehaviour
 
         for (ulong i = 0; i < (ulong)nrOfMaxPlayers; i++)
         {
-            targetClientIds.Add(i);
+            if (i != tradeMakerId)
+            {
+                targetClientIds.Add(i);
+            }
         }
 
         DisplayTradeOfferClientRpc(
