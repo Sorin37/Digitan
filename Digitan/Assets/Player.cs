@@ -25,9 +25,10 @@ public class Player : NetworkBehaviour
     public NetworkVariable<FixedString64Bytes> resourcesCode = new NetworkVariable<FixedString64Bytes>("Uninitialized");
     public NetworkVariable<FixedString64Bytes> numbersCode = new NetworkVariable<FixedString64Bytes>("Uninitialized");
     public NetworkVariable<int> currentNrOfPlayers = new NetworkVariable<int>(0);
+    public NetworkVariable<FixedString64Bytes> nickName = new NetworkVariable<FixedString64Bytes>("Uninitialized", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public NetworkVariable<int> order = new NetworkVariable<int>(1);
     public NetworkVariable<int> currentPlayerTurn = new NetworkVariable<int>(-1);
-    public NetworkVariable<FixedString64Bytes> nickName = new NetworkVariable<FixedString64Bytes>("Uninitialized", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<int> nrOfDeclinedTrades = new NetworkVariable<int>(-1);
 
     public Dictionary<string, List<string>> resourcesDict;
     public Dictionary<string, int> playerHand;
@@ -513,5 +514,28 @@ public class Player : NetworkBehaviour
     private void ChangeCurrentPlayerDetailsNameClientRpc(string name)
     {
         GameObject.Find("PlayerName").GetComponent<TextMeshProUGUI>().text = name;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void DisplayTradeOfferServerRpc(ulong tradeMakerId, int giveBrick, int giveGrain, int giveLumber, int giveOre, int giveWool, int getBrick, int getGrain, int getLumber, int getOre, int getWool)
+    {
+        List<ulong> targetClientIds = new List<ulong>();
+
+        for (ulong i = 0; i < (ulong)nrOfMaxPlayers; i++)
+        {
+            targetClientIds.Add(i);
+        }
+
+        DisplayTradeOfferClientRpc(
+            new ClientRpcParams { Send = new ClientRpcSendParams { TargetClientIds = targetClientIds } },
+            giveBrick, giveGrain, giveLumber, giveOre, giveWool,
+            getBrick, getGrain, getLumber, getOre, getWool
+        );
+    }
+
+    [ClientRpc]
+    public void DisplayTradeOfferClientRpc(ClientRpcParams clientRpcParams, int giveBrick, int giveGrain, int giveLumber, int giveOre, int giveWool, int getBrick, int getGrain, int getLumber, int getOre, int getWool)
+    {
+        print("Ya boy i am ready to trade");
     }
 }
