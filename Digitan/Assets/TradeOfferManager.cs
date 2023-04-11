@@ -44,6 +44,7 @@ public class TradeOfferManager : MonoBehaviour
             tradeOfferCanvas.gameObject.SetActive(false);
 
             var myPlayer = GetMyPlayer().GetComponent<Player>();
+            myPlayer.AcceptTradeServerRpc(tradeMakerId);
             var playerHand = myPlayer.playerHand;
 
             playerHand["Brick Resource"] += getDict["Brick"] - giveDict["Brick"];

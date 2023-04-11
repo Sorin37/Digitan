@@ -549,17 +549,17 @@ public class Player : NetworkBehaviour
         var giveDict = tradeOfferManager.giveDict;
         var getDict = tradeOfferManager.getDict;
 
-        giveDict["Brick"] = giveBrick;
-        giveDict["Grain"] = giveGrain;
-        giveDict["Lumber"] = giveLumber;
-        giveDict["Ore"] = giveOre;
-        giveDict["Wool"] = giveWool;
+        giveDict["Brick"] = getBrick;
+        giveDict["Grain"] = getGrain;
+        giveDict["Lumber"] = getLumber;
+        giveDict["Ore"] = getOre;
+        giveDict["Wool"] = getWool;
 
-        getDict["Brick"] = getBrick;
-        getDict["Grain"] = getGrain;
-        getDict["Lumber"] = getLumber;
-        getDict["Ore"] = getOre;
-        getDict["Wool"] = getWool;
+        getDict["Brick"] = giveBrick;
+        getDict["Grain"] = giveGrain;
+        getDict["Lumber"] = giveLumber;
+        getDict["Ore"] = giveOre;
+        getDict["Wool"] = giveWool;
 
         tradeOfferManager.tradeMakerId = tradeMakerId;
         tradeOfferManager.DrawDicts();
