@@ -121,7 +121,7 @@ public class TradeManager : MonoBehaviour
         }
         else if (type == "Get")
         {
-            giveDict[resource]++;
+            getDict[resource]++;
         }
     }
 
