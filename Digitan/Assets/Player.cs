@@ -569,6 +569,7 @@ public class Player : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void AcceptTradeServerRpc(ulong tradeMakerId)
     {
+        print("tradeMakerIdServer: " + tradeMakerId);
         GetHostPlayer().GetComponent<Player>().TradeAcceptedClientRpc(
             new ClientRpcParams
             {
@@ -583,9 +584,9 @@ public class Player : NetworkBehaviour
         var myPlayer = GetMyPlayer().GetComponent<Player>();
         var playerHand = myPlayer.playerHand;
 
-        var tradeOfferManager = Resources.FindObjectsOfTypeAll<TradeOfferManager>()[0];
-        var giveDict = tradeOfferManager.giveDict;
-        var getDict = tradeOfferManager.getDict;
+        var tradeManager = Resources.FindObjectsOfTypeAll<TradeManager>()[0];
+        var giveDict = tradeManager.giveDict;
+        var getDict = tradeManager.getDict;
 
         playerHand["Brick Resource"] += getDict["Brick"] - giveDict["Brick"];
         playerHand["Grain Resource"] += getDict["Grain"] - giveDict["Grain"];
