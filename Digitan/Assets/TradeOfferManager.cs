@@ -74,9 +74,9 @@ public class TradeOfferManager : MonoBehaviour
     {
         declineTradeButton.onClick.AddListener(() =>
         {
-            //todo: implement some logic so that when all the other players
-            //have declined the trade, the tradeCanvas should close
             tradeOfferCanvas.gameObject.SetActive(false);
+
+            GetHostPlayer().GetComponent<Player>().AddTradeDeclinedCountServerRpc(tradeMakerId);
         });
     }
 
@@ -101,6 +101,19 @@ public class TradeOfferManager : MonoBehaviour
         foreach (var p in players)
         {
             if (p.GetComponent<Player>().IsOwner)
+                return p;
+        }
+
+        return null;
+    }
+
+    private GameObject GetHostPlayer()
+    {
+        var players = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (var p in players)
+        {
+            if (p.GetComponent<Player>().IsOwnedByServer)
                 return p;
         }
 

@@ -69,7 +69,6 @@ public class TradeManager : MonoBehaviour
         {
             tradeCanvas.gameObject.SetActive(false);
             GetHostPlayer().GetComponent<Player>().CancelTradeServerRpc();
-
         });
     }
 
