@@ -569,6 +569,7 @@ public class Player : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void AcceptTradeServerRpc(ulong tradeMakerId)
     {
+        GetHostPlayer().GetComponent<Player>().CancelTradeClientRpc();
         GetHostPlayer().GetComponent<Player>().TradeAcceptedClientRpc(
             new ClientRpcParams
             {
