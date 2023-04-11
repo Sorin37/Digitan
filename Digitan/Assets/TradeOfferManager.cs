@@ -20,6 +20,11 @@ public class TradeOfferManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI getOreLabel;
     [SerializeField] private TextMeshProUGUI getWoolLabel;
 
+    public Dictionary<string, int> giveDict = new Dictionary<string, int>();
+    public Dictionary<string, int> getDict = new Dictionary<string, int>();
+
+    public ulong tradeMakerId;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -30,13 +35,13 @@ public class TradeOfferManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
     void InitAcceptTradeButton()
     {
         acceptTradeButton.onClick.AddListener(() =>
         {
-            //todo: implement some logic so that you'll receive the resources
+            print("Da bro cu id: " + tradeMakerId + ", accept");
             tradeOfferCanvas.gameObject.SetActive(false);
         });
     }
@@ -51,19 +56,18 @@ public class TradeOfferManager : MonoBehaviour
         });
     }
 
-    public void Draw(int giveBrick, int giveGrain, int giveLumber, int giveOre, int giveWool, 
-                     int getBrick, int getGrain, int getLumber, int getOre, int getWool)
+    public void DrawDicts()
     {
-        giveBrickLabel.text = "x " + giveBrick.ToString();
-        giveGrainLabel.text = "x " + giveGrain.ToString();
-        giveLumberLabel.text = "x " + giveLumber.ToString();
-        giveOreLabel.text = "x " + giveOre.ToString();
-        giveWoolLabel.text = "x " + giveWool.ToString();
+        giveBrickLabel.text = "x " + giveDict["Brick"].ToString();
+        giveGrainLabel.text = "x " + giveDict["Grain"].ToString();
+        giveLumberLabel.text = "x " + giveDict["Lumber"].ToString();
+        giveOreLabel.text = "x " + giveDict["Ore"].ToString();
+        giveWoolLabel.text = "x " + giveDict["Wool"].ToString();
 
-        getBrickLabel.text = "x " + getBrick.ToString();
-        getGrainLabel.text = "x " + getGrain.ToString();
-        getLumberLabel.text = "x " + getLumber.ToString();
-        getOreLabel.text = "x " + getOre.ToString();
-        getWoolLabel.text = "x " + getWool.ToString();
+        getBrickLabel.text = "x " + getDict["Brick"].ToString();
+        getGrainLabel.text = "x " + getDict["Grain"].ToString();
+        getLumberLabel.text = "x " + getDict["Lumber"].ToString();
+        getOreLabel.text = "x " + getDict["Ore"].ToString();
+        getWoolLabel.text = "x " + getDict["Wool"].ToString();
     }
 }

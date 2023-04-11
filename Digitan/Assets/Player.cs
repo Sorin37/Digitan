@@ -531,6 +531,7 @@ public class Player : NetworkBehaviour
         }
 
         DisplayTradeOfferClientRpc(
+            tradeMakerId,
             giveBrick, giveGrain, giveLumber, giveOre, giveWool,
             getBrick, getGrain, getLumber, getOre, getWool,
             new ClientRpcParams { Send = new ClientRpcSendParams { TargetClientIds = targetClientIds } }
@@ -538,10 +539,30 @@ public class Player : NetworkBehaviour
     }
 
     [ClientRpc]
-    public void DisplayTradeOfferClientRpc(int giveBrick, int giveGrain, int giveLumber, int giveOre, int giveWool, int getBrick, int getGrain, int getLumber, int getOre, int getWool, ClientRpcParams clientRpcParams)
+    public void DisplayTradeOfferClientRpc(
+        ulong tradeMakerId,
+        int giveBrick, int giveGrain, int giveLumber, int giveOre, int giveWool, 
+        int getBrick, int getGrain, int getLumber, int getOre, int getWool, 
+        ClientRpcParams clientRpcParams)
     {
         var tradeOfferManager = Resources.FindObjectsOfTypeAll<TradeOfferManager>()[0];
-        tradeOfferManager.Draw(giveBrick, giveGrain, giveLumber, giveOre, giveWool, getBrick, getGrain, getLumber, getOre, getWool);
+        var giveDict = tradeOfferManager.giveDict;
+        var getDict = tradeOfferManager.getDict;
+
+        giveDict["Brick"] = giveBrick;
+        giveDict["Grain"] = giveGrain;
+        giveDict["Lumber"] = giveLumber;
+        giveDict["Ore"] = giveOre;
+        giveDict["Wool"] = giveWool;
+
+        getDict["Brick"] = getBrick;
+        getDict["Grain"] = getGrain;
+        getDict["Lumber"] = getLumber;
+        getDict["Ore"] = getOre;
+        getDict["Wool"] = getWool;
+
+        tradeOfferManager.tradeMakerId = tradeMakerId;
+        tradeOfferManager.DrawDicts();
         tradeOfferManager.gameObject.transform.parent.gameObject.SetActive(true);
     }
 }
