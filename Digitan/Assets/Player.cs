@@ -630,19 +630,12 @@ public class Player : NetworkBehaviour
     public void AddTradeDeclinedCountClientRpc(ClientRpcParams clientRpcParams)
     {
         var hostPlayer = GetHostPlayer().GetComponent<Player>();
-        print("i happened");
 
-
-        if (hostPlayer.nrOfMaxPlayers - 1 == hostPlayer.nrOfDeclinedTrades)
+        if (hostPlayer.nrOfMaxPlayers - 1 == ++hostPlayer.nrOfDeclinedTrades)
         {
-            print("it should close now");
             var tradeManager = Resources.FindObjectsOfTypeAll<TradeManager>()[0];
 
             tradeManager.gameObject.transform.parent.gameObject.SetActive(false);
-        }
-        else
-        {
-            hostPlayer.nrOfDeclinedTrades += 1;
         }
     }
 }
