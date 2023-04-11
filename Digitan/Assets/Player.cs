@@ -29,12 +29,12 @@ public class Player : NetworkBehaviour
     public NetworkVariable<FixedString64Bytes> nickName = new NetworkVariable<FixedString64Bytes>("Uninitialized", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public NetworkVariable<int> order = new NetworkVariable<int>(1);
     public NetworkVariable<int> currentPlayerTurn = new NetworkVariable<int>(-1);
-    public NetworkVariable<int> nrOfDeclinedTrades = new NetworkVariable<int>(-1);
 
     public Dictionary<string, List<string>> resourcesDict;
     public Dictionary<string, int> playerHand;
 
     public int nrOfMaxPlayers;
+    public int nrOfDeclinedTrades = 0;
     public Color color;
 
     public event EventHandler OnPlayersJoined;
@@ -584,7 +584,7 @@ public class Player : NetworkBehaviour
         var playerHand = myPlayer.playerHand;
 
         var tradeManager = Resources.FindObjectsOfTypeAll<TradeManager>()[0];
-        
+
         tradeManager.gameObject.transform.parent.gameObject.SetActive(false);
 
         var giveDict = tradeManager.giveDict;
@@ -610,5 +610,37 @@ public class Player : NetworkBehaviour
     {
         var tradeOfferManager = Resources.FindObjectsOfTypeAll<TradeOfferManager>()[0];
         tradeOfferManager.gameObject.transform.parent.gameObject.SetActive(false);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void AddTradeDeclinedCountServerRpc(ulong tradeMakerId)
+    {
+        GetHostPlayer().GetComponent<Player>().AddTradeDeclinedCountClientRpc(
+            new ClientRpcParams
+            {
+                Send = new ClientRpcSendParams
+                {
+                    TargetClientIds = new List<ulong> { tradeMakerId }
+                }
+            }
+        );
+    }
+
+    [ClientRpc]
+    public void AddTradeDeclinedCountClientRpc(ClientRpcParams clientRpcParams)
+    {
+        var hostPlayer = GetHostPlayer().GetComponent<Player>();
+
+        if (hostPlayer.nrOfMaxPlayers - 1 == nrOfDeclinedTrades)
+        {
+            print("it should close now");
+            var tradeManager = Resources.FindObjectsOfTypeAll<TradeManager>()[0];
+
+            tradeManager.gameObject.transform.parent.gameObject.SetActive(false);
+        }
+        else
+        {
+            hostPlayer.nrOfDeclinedTrades += 1;
+        }
     }
 }

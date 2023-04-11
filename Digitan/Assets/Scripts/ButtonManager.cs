@@ -177,6 +177,8 @@ public class ButtonManager : MonoBehaviour
         getDict["Ore"] = 0;
         getDict["Wool"] = 0;
 
+        GetHostPlayer().GetComponent<Player>().nrOfDeclinedTrades = 0;
+
         tradeManager.DrawDicts();
     }
 }
