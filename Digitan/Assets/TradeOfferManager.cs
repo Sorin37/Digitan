@@ -41,11 +41,24 @@ public class TradeOfferManager : MonoBehaviour
     {
         acceptTradeButton.onClick.AddListener(() =>
         {
+            var myPlayer = GetMyPlayer().GetComponent<Player>();
+            var playerHand = myPlayer.playerHand;
+
+            if (playerHand["Brick Resource"] < giveDict["Brick"] ||
+                playerHand["Grain Resource"] < giveDict["Grain"] ||
+                playerHand["Lumber Resource"] < giveDict["Lumber"] ||
+                playerHand["Ore Resource"] < giveDict["Ore"] ||
+                playerHand["Wool Resource"] < giveDict["Wool"]
+                )
+            {
+                //todo implement a popup or smth to display that the player does not have the necessary resources
+                Debug.LogError("You do not have the necessary resources");
+                return;
+            }
+
             tradeOfferCanvas.gameObject.SetActive(false);
 
-            var myPlayer = GetMyPlayer().GetComponent<Player>();
             myPlayer.AcceptTradeServerRpc(tradeMakerId);
-            var playerHand = myPlayer.playerHand;
 
             playerHand["Brick Resource"] += getDict["Brick"] - giveDict["Brick"];
             playerHand["Grain Resource"] += getDict["Grain"] - giveDict["Grain"];
