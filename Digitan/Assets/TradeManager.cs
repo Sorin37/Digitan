@@ -121,10 +121,7 @@ public class TradeManager : MonoBehaviour
         }
         else if (type == "Get")
         {
-            if (playerHand[resource + " Resource"] > giveDict[resource])
-            {
-                giveDict[resource]++;
-            }
+            giveDict[resource]++;
         }
     }
 
