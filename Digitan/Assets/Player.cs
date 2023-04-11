@@ -608,6 +608,6 @@ public class Player : NetworkBehaviour
     public void CancelTradeClientRpc()
     {
         var tradeOfferManager = Resources.FindObjectsOfTypeAll<TradeOfferManager>()[0];
-        tradeOfferManager.gameObject.transform.parent.gameObject.SetActive(true);
+        tradeOfferManager.gameObject.transform.parent.gameObject.SetActive(false);
     }
 }
