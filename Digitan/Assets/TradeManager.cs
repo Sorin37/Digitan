@@ -108,13 +108,21 @@ public class TradeManager : MonoBehaviour
 
     private void Add(string type, string resource)
     {
+        var playerHand = GetMyPlayer().GetComponent<Player>().playerHand;
+
         if (type == "Give")
         {
-            giveDict[resource]++;
+            if (playerHand[resource + " Resource"] > giveDict[resource])
+            {
+                giveDict[resource]++;
+            }
         }
         else if (type == "Get")
         {
-            getDict[resource]++;
+            if (playerHand[resource + " Resource"] > giveDict[resource])
+            {
+                giveDict[resource]++;
+            }
         }
     }
 

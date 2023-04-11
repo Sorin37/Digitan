@@ -51,7 +51,7 @@ public class TradeOfferManager : MonoBehaviour
                 playerHand["Wool Resource"] < giveDict["Wool"]
                 )
             {
-                //todo implement a popup or smth to display that the player does not have the necessary resources
+                //todo implement a pop-up to display that the player does not have the necessary resources
                 Debug.LogError("You do not have the necessary resources");
                 return;
             }
