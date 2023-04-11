@@ -68,6 +68,8 @@ public class TradeManager : MonoBehaviour
         closeButton.onClick.AddListener(() =>
         {
             tradeCanvas.gameObject.SetActive(false);
+            GetHostPlayer().GetComponent<Player>().CancelTradeServerRpc();
+
         });
     }
 

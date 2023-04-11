@@ -596,6 +596,18 @@ public class Player : NetworkBehaviour
         playerHand["Wool Resource"] += getDict["Wool"] - giveDict["Wool"];
 
         myPlayer.UpdateHand();
+    }
 
+    [ServerRpc(RequireOwnership = false)]
+    public void CancelTradeServerRpc()
+    {
+        GetHostPlayer().GetComponent<Player>().CancelTradeClientRpc();
+    }
+
+    [ClientRpc]
+    public void CancelTradeClientRpc()
+    {
+        var tradeOfferManager = Resources.FindObjectsOfTypeAll<TradeOfferManager>()[0];
+        tradeOfferManager.gameObject.transform.parent.gameObject.SetActive(true);
     }
 }
