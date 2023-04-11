@@ -631,6 +631,8 @@ public class Player : NetworkBehaviour
     {
         var hostPlayer = GetHostPlayer().GetComponent<Player>();
 
+        print("I happened max :" + hostPlayer.nrOfMaxPlayers + " nrOfDeclinedTrades: " + hostPlayer.nrOfDeclinedTrades);
+
         if (hostPlayer.nrOfMaxPlayers - 1 == ++hostPlayer.nrOfDeclinedTrades)
         {
             var tradeManager = Resources.FindObjectsOfTypeAll<TradeManager>()[0];
