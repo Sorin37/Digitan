@@ -41,8 +41,18 @@ public class TradeOfferManager : MonoBehaviour
     {
         acceptTradeButton.onClick.AddListener(() =>
         {
-            print("Da bro cu id: " + tradeMakerId + ", accept");
             tradeOfferCanvas.gameObject.SetActive(false);
+
+            var myPlayer = GetMyPlayer().GetComponent<Player>();
+            var playerHand = myPlayer.playerHand;
+
+            playerHand["Brick Resource"] += getDict["Brick"] - giveDict["Brick"];
+            playerHand["Grain Resource"] += getDict["Grain"] - giveDict["Grain"];
+            playerHand["Lumber Resource"] += getDict["Lumber"] - giveDict["Lumber"];
+            playerHand["Ore Resource"] += getDict["Ore"] - giveDict["Ore"];
+            playerHand["Wool Resource"] += getDict["Wool"] - giveDict["Wool"];
+
+            myPlayer.UpdateHand();
         });
     }
 
@@ -69,5 +79,17 @@ public class TradeOfferManager : MonoBehaviour
         getLumberLabel.text = "x " + getDict["Lumber"].ToString();
         getOreLabel.text = "x " + getDict["Ore"].ToString();
         getWoolLabel.text = "x " + getDict["Wool"].ToString();
+    }
+    private GameObject GetMyPlayer()
+    {
+        var players = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (var p in players)
+        {
+            if (p.GetComponent<Player>().IsOwner)
+                return p;
+        }
+
+        return null;
     }
 }

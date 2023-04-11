@@ -541,8 +541,8 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void DisplayTradeOfferClientRpc(
         ulong tradeMakerId,
-        int giveBrick, int giveGrain, int giveLumber, int giveOre, int giveWool, 
-        int getBrick, int getGrain, int getLumber, int getOre, int getWool, 
+        int giveBrick, int giveGrain, int giveLumber, int giveOre, int giveWool,
+        int getBrick, int getGrain, int getLumber, int getOre, int getWool,
         ClientRpcParams clientRpcParams)
     {
         var tradeOfferManager = Resources.FindObjectsOfTypeAll<TradeOfferManager>()[0];
@@ -564,5 +564,34 @@ public class Player : NetworkBehaviour
         tradeOfferManager.tradeMakerId = tradeMakerId;
         tradeOfferManager.DrawDicts();
         tradeOfferManager.gameObject.transform.parent.gameObject.SetActive(true);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void AcceptTradeServerRpc(ulong tradeMakerId)
+    {
+        TradeAcceptedClientRpc(
+            new ClientRpcParams
+            {
+                Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { tradeMakerId } }
+            });
+    }
+
+    [ClientRpc]
+    public void TradeAcceptedClientRpc(ClientRpcParams clientRpcParams)
+    {
+        var myPlayer = GetMyPlayer().GetComponent<Player>();
+        var playerHand = myPlayer.playerHand;
+
+        var tradeOfferManager = Resources.FindObjectsOfTypeAll<TradeOfferManager>()[0];
+        var giveDict = tradeOfferManager.giveDict;
+        var getDict = tradeOfferManager.getDict;
+
+        playerHand["Brick Resource"] += getDict["Brick"] - giveDict["Brick"];
+        playerHand["Grain Resource"] += getDict["Grain"] - giveDict["Grain"];
+        playerHand["Lumber Resource"] += getDict["Lumber"] - giveDict["Lumber"];
+        playerHand["Ore Resource"] += getDict["Ore"] - giveDict["Ore"];
+        playerHand["Wool Resource"] += getDict["Wool"] - giveDict["Wool"];
+
+        myPlayer.UpdateHand();
     }
 }
