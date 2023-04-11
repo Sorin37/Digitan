@@ -579,6 +579,7 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void TradeAcceptedClientRpc(ClientRpcParams clientRpcParams)
     {
+        print("am crapat la rpc acceptat");
         var myPlayer = GetMyPlayer().GetComponent<Player>();
         var playerHand = myPlayer.playerHand;
 
