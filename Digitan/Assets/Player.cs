@@ -32,6 +32,7 @@ public class Player : NetworkBehaviour
 
     public Dictionary<string, List<string>> resourcesDict;
     public Dictionary<string, int> playerHand;
+    public Dictionary<string, bool> tradeDict;
 
     public int nrOfMaxPlayers;
     public int nrOfDeclinedTrades = 0;
@@ -60,6 +61,7 @@ public class Player : NetworkBehaviour
     {
         InitializeResourceDict();
         InitializePlayerHand();
+        InitializeTradeDict();
 
         if (IsOwner)
         {
@@ -90,6 +92,17 @@ public class Player : NetworkBehaviour
         {
             PlayerJoinedServerRpc();
         }
+    }
+
+    private void InitializeTradeDict()
+    {
+        tradeDict = new Dictionary<string, bool>();
+        tradeDict["Brick"] = false;
+        tradeDict["Grain"] = false;
+        tradeDict["Lumber"] = false;
+        tradeDict["Ore"] = false;
+        tradeDict["Wool"] = false;
+        tradeDict["3to1"] = false;
     }
 
     private void EndTurnEvent(object sender, OnRoundEndEventArgs e)

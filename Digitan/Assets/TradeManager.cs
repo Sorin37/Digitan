@@ -76,7 +76,52 @@ public class TradeManager : MonoBehaviour
     {
         tradeBankButton.onClick.AddListener(() =>
         {
-            print("I be tradign with the bank");
+            var player = GetMyPlayer().GetComponent<Player>();
+            var playerHand = player.playerHand;
+            var tradeDict = player.tradeDict;
+
+            int maxYouCanGet = 0;
+            int playerRequest = 0;
+
+            //find out how many resources can the player request
+            foreach (var key in giveDict.Keys)
+            {
+                if (tradeDict[key])
+                {
+                    maxYouCanGet += giveDict[key] / 2;
+                }
+                else if (tradeDict["3to1"])
+                {
+                    maxYouCanGet += giveDict[key] / 3;
+                }
+                else
+                {
+                    maxYouCanGet += giveDict[key] / 4;
+                }
+            }
+
+            //find out how much he actually requested
+            foreach (var value in getDict.Values)
+            {
+                playerRequest += value;
+            }
+
+            //if those two match, do the trade
+            if(maxYouCanGet == playerRequest)
+            {
+                foreach (var key in giveDict.Keys)
+                {
+                    playerHand[key + " Resource"] -= giveDict[key];
+                }
+
+                foreach (var key in getDict.Keys)
+                {
+                    playerHand[key + " Resource"] += getDict[key];
+                }
+            }
+
+            player.UpdateHand();
+            tradeCanvas.gameObject.SetActive(false);
         });
     }
 
