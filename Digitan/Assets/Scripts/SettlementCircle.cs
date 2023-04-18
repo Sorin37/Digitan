@@ -56,6 +56,8 @@ public class SettlementCircle : MonoBehaviour
 
         if (!isOccupied)
         {
+            GiveTradePort();
+
             TurnCloseRoadsAvailable();
 
             var indexes = getIndexesOfElem(gameObject, settlementGrid.settlementGrid);
@@ -209,6 +211,22 @@ public class SettlementCircle : MonoBehaviour
         for (int i = 0; i < colliders.Length; i++)
         {
             colliders[i].gameObject.layer = LayerMask.NameToLayer("Road Circle");
+        }
+    }
+
+    private void GiveTradePort()
+    {
+        var tradeDict = GetMyPlayer().GetComponent<Player>().tradeDict;
+
+        var colliders = Physics.OverlapSphere(
+            transform.position,
+            1,
+           (int)Mathf.Pow(2, LayerMask.NameToLayer("Port"))
+        );
+
+        foreach(var collider in colliders)
+        {
+            tradeDict[collider.gameObject.GetComponent<Port>().type] = true;
         }
     }
 }
