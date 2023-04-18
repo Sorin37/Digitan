@@ -3,7 +3,9 @@ guid: 7884a49c019e3d04e83bdac43e05569c
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - cityPlace: {fileID: 3284964366993330494, guid: b4332675f76496e4eac0722383362571, type: 3}
+  - gameGrid: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

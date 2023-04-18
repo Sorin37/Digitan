@@ -7,10 +7,11 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.EventSystems;
 using UnityEngine.SocialPlatforms;
+using UnityEngine.UIElements;
 
 public class SettlementCircle : MonoBehaviour
 {
-    [SerializeField] private GameObject settlement;
+    [SerializeField] private GameObject cityPlace;
     public bool isOccupied = false;
     public bool isTooClose = false;
     public GameObject gameGrid;
@@ -20,7 +21,7 @@ public class SettlementCircle : MonoBehaviour
     {
         gameGrid = GameObject.Find("GameGrid");
 
-        if (settlement == null || gameGrid == null)
+        if (cityPlace == null || gameGrid == null)
         {
             Debug.LogError("Error: One of the prefabs is not assigned");
             return;
@@ -80,6 +81,8 @@ public class SettlementCircle : MonoBehaviour
                     myPlayer.color
                 );
             }
+
+            InstantiateCityPlace();
 
             addResourcesToDict();
             GetMyPlayer().GetComponent<Player>().UpdateHand();
@@ -228,5 +231,14 @@ public class SettlementCircle : MonoBehaviour
         {
             tradeDict[collider.gameObject.GetComponent<Port>().type] = true;
         }
+    }
+
+    private void InstantiateCityPlace()
+    {
+        var city = Instantiate(
+                    cityPlace,
+                    transform.position,
+                    Quaternion.Euler(0, 0, 0)
+                );
     }
 }

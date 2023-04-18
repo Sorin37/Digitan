@@ -95,6 +95,7 @@ public class ButtonManager : MonoBehaviour
             //if (HasCityResources())
             //{
             Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("City Place"));
+            Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("Settlement"));
             //}
             //else
             //{

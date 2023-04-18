@@ -98,8 +98,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7884a49c019e3d04e83bdac43e05569c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  settlement: {fileID: 4748187627253956761, guid: a0ab8d06dc4f50e449063604a25218bd, type: 3}
-  isCube: 0
+  cityPlace: {fileID: 3284964366993330494, guid: b4332675f76496e4eac0722383362571, type: 3}
+  isOccupied: 0
+  isTooClose: 0
+  gameGrid: {fileID: 0}
 --- !u!65 &5405873717098311462
 BoxCollider:
   m_ObjectHideFlags: 0

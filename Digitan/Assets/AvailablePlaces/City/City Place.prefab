@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2800492414471785348}
   - component: {fileID: 1257210827531568161}
   - component: {fileID: 3933460928495595755}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: City Place
   m_TagString: Untagged
   m_Icon: {fileID: 0}
