@@ -673,11 +673,13 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void PlaceCityClientRpc(float x, float y, float z, Color color)
     {
-        DestroyNearbySetllements();
+        var position = new Vector3 (x, y, z);
+
+        DestroyNearbySetllements(position);
 
         var city = Instantiate(
-            cityPrefab, 
-            new Vector3(x, y, z), 
+            cityPrefab,
+            position, 
             Quaternion.Euler(0, 0, 0)
         );
 
@@ -688,10 +690,10 @@ public class Player : NetworkBehaviour
         }
     }
 
-    private void DestroyNearbySetllements()
+    private void DestroyNearbySetllements(Vector3 position)
     {
         var colliders = Physics.OverlapSphere(
-            transform.position,
+            position,
             1,
            (int)Mathf.Pow(2, LayerMask.NameToLayer("Settlement")) +
            (int)Mathf.Pow(2, LayerMask.NameToLayer("My Settlement"))
