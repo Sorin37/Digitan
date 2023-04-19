@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 2800492414471785348}
   - component: {fileID: 1257210827531568161}
   - component: {fileID: 3933460928495595755}
+  - component: {fileID: 8404919957359310958}
+  - component: {fileID: -7506226161661537209}
   m_Layer: 13
   m_Name: City Place
   m_TagString: Untagged
@@ -84,3 +86,28 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &8404919957359310958
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3284964366993330494}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.0192975, y: 0.013590836, z: 0.019297503}
+  m_Center: {x: 9.313226e-10, y: 0.006795418, z: -0.0000000018626451}
+--- !u!114 &-7506226161661537209
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3284964366993330494}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9404a82de43adfc458f95e7b86bd49a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

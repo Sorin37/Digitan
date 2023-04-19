@@ -227,7 +227,7 @@ public class SettlementCircle : MonoBehaviour
            (int)Mathf.Pow(2, LayerMask.NameToLayer("Port"))
         );
 
-        foreach(var collider in colliders)
+        foreach (var collider in colliders)
         {
             tradeDict[collider.gameObject.GetComponent<Port>().type] = true;
         }
@@ -235,10 +235,10 @@ public class SettlementCircle : MonoBehaviour
 
     private void InstantiateCityPlace()
     {
-        var city = Instantiate(
-                    cityPlace,
-                    transform.position,
-                    Quaternion.Euler(0, 0, 0)
-                );
+        Instantiate(
+            cityPlace,
+            transform.position,
+            Quaternion.Euler(0, 0, 0)
+        );
     }
 }

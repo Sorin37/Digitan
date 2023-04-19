@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1536
     height: 780.8
   m_ShowMode: 4
-  m_Title: Hierarchy
+  m_Title: Game
   m_RootView: {fileID: 2}
   m_MinSize: {x: 875, y: 421}
   m_MaxSize: {x: 10000, y: 10000}
@@ -119,7 +119,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 200}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 88
+  controlID: 57
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -144,7 +144,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 94
+  controlID: 63
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -169,7 +169,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 100}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 95
+  controlID: 64
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -215,8 +215,8 @@ MonoBehaviour:
     y: 0
     width: 787.99994
     height: 440
-  m_MinSize: {x: 200, y: 200}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 202, y: 221}
+  m_MaxSize: {x: 4002, y: 4021}
   m_ActualView: {fileID: 12}
   m_Panes:
   - {fileID: 12}
@@ -269,8 +269,8 @@ MonoBehaviour:
     y: 0
     width: 456.80005
     height: 730.8
-  m_MinSize: {x: 275, y: 50}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 276, y: 71}
+  m_MaxSize: {x: 4001, y: 4021}
   m_ActualView: {fileID: 17}
   m_Panes:
   - {fileID: 17}
@@ -534,9 +534,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -3.6716936, y: 4.861079, z: -2.8207488}
+    m_Target: {x: -3.4344993, y: 3.9068208, z: -6.0967937}
     speed: 2
-    m_Value: {x: -3.6716936, y: 4.861079, z: -2.8207488}
+    m_Value: {x: -3.4344993, y: 3.9068208, z: -6.0967937}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -585,11 +585,11 @@ MonoBehaviour:
   m_Rotation:
     m_Target: {x: -0.29869893, y: -0.53552204, z: 0.2100614, w: -0.7614991}
     speed: 2
-    m_Value: {x: -0.29952246, y: -0.5363442, z: 0.21131274, w: -0.7602421}
+    m_Value: {x: -0.29869717, y: -0.53551894, z: 0.21006018, w: -0.76149464}
   m_Size:
-    m_Target: 8.113143
+    m_Target: 0.14918214
     speed: 2
-    m_Value: 8.113143
+    m_Value: 0.14918214
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -645,9 +645,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 
+      m_SelectedIDs: d4290100
       m_LastClickedID: 0
-      m_ExpandedIDs: e6aeffff00b0ffffd4b8ffff34fbffff36fbffff9a960000
+      m_ExpandedIDs: 4cb6feff96c2feff4c27fffffe4bfffff257ffffc26fffff34fbffff36fbffff5e670000be6700003c8f0000c4d800003a6d0100
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -804,22 +804,22 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Resources/Ports/Model
+    - Assets/AvailablePlaces/City
     m_Globs: []
     m_OriginalText: 
   m_ViewMode: 1
   m_StartGridSize: 66
   m_LastFolders:
-  - Assets/Resources/Ports/Model
+  - Assets/AvailablePlaces/City
   m_LastFoldersGridSize: 66
   m_LastProjectPath: C:\Users\User\Desktop\Catan\Digitan\Digitan
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 230.20001}
-    m_SelectedIDs: 38b50000
-    m_LastClickedID: 46392
-    m_ExpandedIDs: 000000005e700000727800007e780000c4780000c6780000969500009895000000ca9a3bffffff7f
+    scrollPos: {x: 0, y: 79}
+    m_SelectedIDs: d6ca0000
+    m_LastClickedID: 51926
+    m_ExpandedIDs: 00000000ac700000c8700000d67000001e710000d6ca0000dcca0000deca000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -847,7 +847,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: a40a0000
     m_LastClickedID: 2724
-    m_ExpandedIDs: 000000005e700000
+    m_ExpandedIDs: 00000000ac700000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
