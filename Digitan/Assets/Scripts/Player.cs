@@ -300,8 +300,16 @@ public class Player : NetworkBehaviour
             Quaternion.Euler(90, 0, 0)
         );
 
+
         //so that the settlements do not disappear when other players want to place a city
-        settlementObject.layer = LayerMask.NameToLayer("Default");
+        if (IsOwner)
+        {
+            settlementObject.layer = LayerMask.NameToLayer("Default");
+        }
+        else
+        {
+            settlementObject.layer = LayerMask.NameToLayer("Settlement");
+        }
 
         //change the color of the settlement
         settlementObject.GetComponent<Renderer>().material.color = color;
