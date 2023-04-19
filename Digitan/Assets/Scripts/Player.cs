@@ -680,7 +680,7 @@ public class Player : NetworkBehaviour
         var city = Instantiate(
             cityPrefab, 
             new Vector3(x, y, z), 
-            Quaternion.Euler(0, UnityEngine.Random.Range(0, 360), 0)
+            Quaternion.Euler(0, 0, 0)
         );
 
         //change the color
