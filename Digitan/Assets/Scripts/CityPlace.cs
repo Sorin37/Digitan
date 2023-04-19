@@ -44,6 +44,7 @@ public class CityPlace : MonoBehaviour
 
         foreach (var collider in colliders)
         {
+            print(collider.gameObject.name);
             Destroy(collider.gameObject);
         }
     }
