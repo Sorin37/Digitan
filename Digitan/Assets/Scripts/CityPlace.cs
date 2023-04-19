@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Services.Lobbies.Models;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -27,33 +28,17 @@ public class CityPlace : MonoBehaviour
 
         AddToResourcesDict();
 
-        DestroyNearbySetllements();
-
         Destroy(gameObject);
 
         GetHostPlayer().GetComponent<Player>().PlaceCityServerRpc(
             transform.position.x,
             transform.position.y,
-            transform.position.z
+            transform.position.z,
+            GetMyPlayer().GetComponent<Player>().color
         );
 
         Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("City Place"));
         Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Settlement"));
-    }
-
-    private void DestroyNearbySetllements()
-    {
-        var colliders = Physics.OverlapSphere(
-            transform.position,
-            1,
-           (int)Mathf.Pow(2, LayerMask.NameToLayer("Settlement"))
-        );
-
-        foreach (var collider in colliders)
-        {
-            print(collider.gameObject.name);
-            Destroy(collider.gameObject);
-        }
     }
 
     private void AddToResourcesDict()

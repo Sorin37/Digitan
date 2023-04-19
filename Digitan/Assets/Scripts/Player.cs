@@ -304,7 +304,7 @@ public class Player : NetworkBehaviour
         //so that the settlements do not disappear when other players want to place a city
         if (color != this.color)
         {
-            settlementObject.layer = LayerMask.NameToLayer("Default");
+            settlementObject.layer = LayerMask.NameToLayer("My Settlement");
         }
         else
         {
@@ -667,18 +667,39 @@ public class Player : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership =false)]
-    public void PlaceCityServerRpc(float x, float y, float z)
+    public void PlaceCityServerRpc(float x, float y, float z, Color color)
     {
-        PlaceCityClientRpc(x, y, z);
+        PlaceCityClientRpc(x, y, z, color);
     }
 
     [ClientRpc]
-    public void PlaceCityClientRpc(float x, float y, float z)
+    public void PlaceCityClientRpc(float x, float y, float z, Color color)
     {
-        Instantiate(
+        DestroyNearbySetllements();
+
+        var city = Instantiate(
             cityPrefab, 
             new Vector3(x, y, z), 
             Quaternion.Euler(0, 0, 0)
         );
+
+        //change the color
+        city.GetComponent<Renderer>().material.color = color;
     }
+
+    private void DestroyNearbySetllements()
+    {
+        var colliders = Physics.OverlapSphere(
+            transform.position,
+            1,
+           (int)Mathf.Pow(2, LayerMask.NameToLayer("Settlement")) +
+           (int)Mathf.Pow(2, LayerMask.NameToLayer("My Settlement"))
+        );
+
+        foreach (var collider in colliders)
+        {
+            Destroy(collider.gameObject);
+        }
+    }
+
 }
