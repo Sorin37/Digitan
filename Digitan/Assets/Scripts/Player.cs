@@ -680,11 +680,14 @@ public class Player : NetworkBehaviour
         var city = Instantiate(
             cityPrefab, 
             new Vector3(x, y, z), 
-            Quaternion.Euler(0, 0, 0)
+            Quaternion.Euler(0, UnityEngine.Random.Range(0, 360), 0)
         );
 
         //change the color
-        city.GetComponent<Renderer>().material.color = color;
+        foreach(var material in city.GetComponent<Renderer>().materials)
+        {
+            material.color = color;
+        }
     }
 
     private void DestroyNearbySetllements()
