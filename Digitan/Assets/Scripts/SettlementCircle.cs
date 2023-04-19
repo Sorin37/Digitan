@@ -67,7 +67,7 @@ public class SettlementCircle : MonoBehaviour
 
             if (GetMyPlayer().GetComponent<Player>().GetIsHost())
             {
-                getHostPlayer().GetComponent<Player>().placeSettlementClientRpc(
+                getHostPlayer().GetComponent<Player>().PlaceSettlementClientRpc(
                     indexes.x,
                     indexes.y,
                     myPlayer.color
@@ -75,7 +75,7 @@ public class SettlementCircle : MonoBehaviour
             }
             else
             {
-                getHostPlayer().GetComponent<Player>().placeSettlementServerRpc(
+                getHostPlayer().GetComponent<Player>().PlaceSettlementServerRpc(
                     indexes.x,
                     indexes.y,
                     myPlayer.color

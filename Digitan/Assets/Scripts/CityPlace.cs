@@ -28,7 +28,7 @@ public class CityPlace : MonoBehaviour
         AddResourcesToDict();
         DestroyNearbySetllements();
 
-        Destroy(this.gameObject);
+        Destroy(gameObject);
 
         Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("City Place"));
         Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Settlement"));

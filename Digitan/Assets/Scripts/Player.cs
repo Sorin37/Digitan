@@ -265,13 +265,13 @@ public class Player : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void placeSettlementServerRpc(int x, int y, Color color)
+    public void PlaceSettlementServerRpc(int x, int y, Color color)
     {
-        placeSettlementClientRpc(x, y, color);
+        PlaceSettlementClientRpc(x, y, color);
     }
 
     [ClientRpc]
-    public void placeSettlementClientRpc(int x, int y, Color color)
+    public void PlaceSettlementClientRpc(int x, int y, Color color)
     {
         GameObject pressedCircle = settlementGrid.GetComponent<SettlementGrid>().settlementGrid[x][y].gameObject;
 
@@ -292,6 +292,9 @@ public class Player : NetworkBehaviour
                 colliders[i].gameObject.layer = LayerMask.NameToLayer("Unvisible Circle");
             }
         }
+
+        //so that the settlements do not disappear when other players want to place a city
+        settlementPrefab.layer = LayerMask.NameToLayer("Default");
 
         //create the model
         GameObject settlementObject = Instantiate(
