@@ -302,7 +302,7 @@ public class Player : NetworkBehaviour
 
 
         //so that the settlements do not disappear when other players want to place a city
-        if (color == this.color)
+        if (color != this.color)
         {
             settlementObject.layer = LayerMask.NameToLayer("Default");
         }
