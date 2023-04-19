@@ -293,15 +293,15 @@ public class Player : NetworkBehaviour
             }
         }
 
-        //so that the settlements do not disappear when other players want to place a city
-        settlementPrefab.layer = LayerMask.NameToLayer("Default");
-
         //create the model
         GameObject settlementObject = Instantiate(
             settlementPrefab,
             pressedCircle.transform.position,
             Quaternion.Euler(90, 0, 0)
         );
+
+        //so that the settlements do not disappear when other players want to place a city
+        settlementObject.layer = LayerMask.NameToLayer("Default");
 
         //change the color of the settlement
         settlementObject.GetComponent<Renderer>().material.color = color;

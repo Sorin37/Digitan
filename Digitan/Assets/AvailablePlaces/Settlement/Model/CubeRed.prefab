@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4748187627253956763}
   - component: {fileID: 4999944400370001027}
   - component: {fileID: 6651524476387004235}
-  m_Layer: 12
+  m_Layer: 0
   m_Name: CubeRed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
