@@ -91,16 +91,16 @@ public class ButtonManager : MonoBehaviour
     {
         cityButton.onClick.AddListener(() =>
         {
-            if (HasCityResources())
-            {
-                Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("City Place"));
-                Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("My Settlement"));
-            }
-            else
-            {
-                //todo: implement an error message or smth
-                print("You don't have enough resources for a road!");
-            }
+            print("se fac orase");
+            //if (HasCityResources())
+            //{
+            Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("City Place"));
+            Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("Settlement"));
+            //}
+            //else
+            //{
+            //    print("You don't have enough resources for a road!");
+            //}
         });
     }
 

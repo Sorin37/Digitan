@@ -302,7 +302,7 @@ public class Player : NetworkBehaviour
         );
 
         //so that the settlements do not disappear when other players want to place a city
-        if (color == this.color)
+        if (color != this.color)
         {
             settlementObject.layer = LayerMask.NameToLayer("My Settlement");
         }
@@ -655,6 +655,8 @@ public class Player : NetworkBehaviour
     {
         var hostPlayer = GetHostPlayer().GetComponent<Player>();
         var myPlayer = GetMyPlayer().GetComponent<Player>();
+
+        print("I happened max :" + myPlayer.nrOfMaxPlayers + " nrOfDeclinedTrades: " + hostPlayer.nrOfDeclinedTrades);
 
         if (myPlayer.nrOfMaxPlayers - 1 == ++hostPlayer.nrOfDeclinedTrades)
         {
