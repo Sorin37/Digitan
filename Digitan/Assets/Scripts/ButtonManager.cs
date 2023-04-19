@@ -91,6 +91,11 @@ public class ButtonManager : MonoBehaviour
     {
         cityButton.onClick.AddListener(() =>
         {
+            if (!IsMyTurn())
+            {
+                return;
+            }
+
             if (HasCityResources())
             {
                 Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("City Place"));
