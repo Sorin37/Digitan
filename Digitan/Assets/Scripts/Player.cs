@@ -18,6 +18,7 @@ public class Player : NetworkBehaviour
     [SerializeField] private GameObject numbersGridPrefab;
     [SerializeField] private GameObject roadPrefab;
     [SerializeField] private GameObject settlementPrefab;
+    [SerializeField] private GameObject cityPrefab;
 
     private GameObject gameGrid;
     private GameObject roadGrid;
@@ -299,7 +300,6 @@ public class Player : NetworkBehaviour
             pressedCircle.transform.position,
             Quaternion.Euler(90, 0, 0)
         );
-
 
         //so that the settlements do not disappear when other players want to place a city
         if (color != this.color)
@@ -664,5 +664,21 @@ public class Player : NetworkBehaviour
 
             tradeManager.gameObject.transform.parent.gameObject.SetActive(false);
         }
+    }
+
+    [ServerRpc(RequireOwnership =false)]
+    public void PlaceCityServerRpc(float x, float y, float z)
+    {
+        PlaceCityClientRpc(x, y, z);
+    }
+
+    [ClientRpc]
+    public void PlaceCityClientRpc(float x, float y, float z)
+    {
+        Instantiate(
+            cityPrefab, 
+            new Vector3(x, y, z), 
+            Quaternion.Euler(0, 0, 0)
+        );
     }
 }
