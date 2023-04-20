@@ -6,8 +6,6 @@ public class FirstPersonCamera : MonoBehaviour
 {
     private float cameraVerticalRotation = 82f;
     private float cameraHorizontalRotation = 0f;
-    private float playerVerticalInput = 0f;
-    private float playerHorizontalInput = 0f;
 
     // Start is called before the first frame update
     void Start()
@@ -49,6 +47,13 @@ public class FirstPersonCamera : MonoBehaviour
         {
             if (gameObject.transform.position.y > 1f)
                 inputDir.y = -1f;
+        }
+        else if (Input.GetKey(KeyCode.R))
+        {
+            gameObject.transform.position = new Vector3(4, 22, -11);
+            gameObject.transform.rotation = new Quaternion(0, 0, 0, 0);
+            cameraVerticalRotation = 82f;
+            cameraHorizontalRotation = 0f;
         }
 
         //rotate up down, left right
