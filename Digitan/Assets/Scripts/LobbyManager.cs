@@ -37,6 +37,8 @@ public class LobbyManager : MonoBehaviour
             await UpdateLobbyRelayCode(joinCode);
             SceneManager.LoadScene("Game");
         });
+        tag = "Lobby";
+        DontDestroyOnLoad(transform.parent.gameObject);
     }
 
     // Start is called before the first frame update
@@ -51,7 +53,9 @@ public class LobbyManager : MonoBehaviour
         }
         else
         {
-            lobby = GameObject.FindGameObjectsWithTag("Lobby")[0].GetComponent<LobbyDetails>().lobby;
+            var toDestroy = GameObject.FindGameObjectsWithTag("Lobby")[0];
+            lobby = toDestroy.GetComponent<LobbyDetails>().lobby;
+            Destroy(toDestroy);
         }
 
         LobbyName.GetComponent<TextMeshProUGUI>().text = lobby.Name;
@@ -75,29 +79,30 @@ public class LobbyManager : MonoBehaviour
 
     private async void PollLobby()
     {
-        if (lobby != null)
+        try
         {
-            updateTimer -= Time.deltaTime;
-            if (updateTimer < 0f)
+            if (lobby != null)
             {
-                float updateTimerMax = 5;
-                updateTimer = updateTimerMax;
-
-                try
+                updateTimer -= Time.deltaTime;
+                if (updateTimer < 0f)
                 {
+                    float updateTimerMax = 5;
+                    updateTimer = updateTimerMax;
+
                     lobby = await LobbyService.Instance.GetLobbyAsync(lobby.Id);
-                }
-                catch (Exception ex)
-                {
-                    Debug.LogError(ex.Message);
-                }
 
-                if (lobby.Players.Count != currentNumberOfPlayers)
-                {
-                    drawPlayers();
-                    currentNumberOfPlayers = lobby.Players.Count;
+                    if (lobby.Players.Count != currentNumberOfPlayers)
+                    {
+                        drawPlayers();
+                        currentNumberOfPlayers = lobby.Players.Count;
+                    }
                 }
             }
+        }
+        catch (LobbyServiceException)
+        {
+
+            Debug.LogWarning("LSE in PollLobby (GetLobbyAsync) in LobbyManager");
         }
     }
 
@@ -173,21 +178,28 @@ public class LobbyManager : MonoBehaviour
     private async void CheckStartLobby()
     {
 
-        if (lobby == null)
-            return;
-
-        checkStartTimer -= Time.deltaTime;
-
-        if (checkStartTimer < 0f)
+        try
         {
-            float checkStartTimerMax = 5;
-            checkStartTimer = checkStartTimerMax;
+            if (lobby == null)
+                return;
 
-            if (lobby.Data["RelayCode"].Value != "None")
+            checkStartTimer -= Time.deltaTime;
+
+            if (checkStartTimer < 0f)
             {
-                await JoinRelay(lobby.Data["RelayCode"].Value);
-                SceneManager.LoadScene("Game");
+                float checkStartTimerMax = 5;
+                checkStartTimer = checkStartTimerMax;
+
+                if (lobby.Data["RelayCode"].Value != "None")
+                {
+                    await JoinRelay(lobby.Data["RelayCode"].Value);
+                    SceneManager.LoadScene("Game");
+                }
             }
+        }
+        catch (LobbyServiceException)
+        {
+            Debug.LogWarning("Lobby Service Error in CheckStartLobby (JoinStartLobby) in Lobby Manager");
         }
     }
 
@@ -200,12 +212,12 @@ public class LobbyManager : MonoBehaviour
                 Data = new Dictionary<string, DataObject>
                 {
                     {"RelayCode", new DataObject(DataObject.VisibilityOptions.Public, relayCode) },
-                }   
+                }
             });
         }
-        catch (LobbyServiceException ex)
+        catch (LobbyServiceException)
         {
-            Debug.LogError(ex.Message);
+            Debug.LogWarning("Lobby Service Error in UpdateLobbyRelayCode (UpdateLobbyAsync) in LobbyManager");
         }
     }
 

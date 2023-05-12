@@ -365,7 +365,7 @@ public class Player : NetworkBehaviour
         }
         else
         {
-            lobby = GameObject.FindGameObjectsWithTag("Lobby")[0].GetComponent<LobbyDetails>().lobby;
+            lobby = GameObject.FindGameObjectsWithTag("Lobby")[0].GetComponent<LobbyManager>().lobby;
         }
 
         lobby = await LobbyService.Instance.GetLobbyAsync(lobby.Id);
@@ -380,8 +380,14 @@ public class Player : NetworkBehaviour
                 break;
             }
         }
-
-        Destroy(lobbyGo);
+        if (lobbyGo.GetComponent<LobbyManager>())
+        {
+            Destroy(lobbyGo.transform.parent.gameObject);
+        }
+        else
+        {
+            Destroy(lobbyGo);
+        }
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -664,7 +670,7 @@ public class Player : NetworkBehaviour
         }
     }
 
-    [ServerRpc(RequireOwnership =false)]
+    [ServerRpc(RequireOwnership = false)]
     public void PlaceCityServerRpc(float x, float y, float z, Color color)
     {
         PlaceCityClientRpc(x, y, z, color);
@@ -673,18 +679,18 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void PlaceCityClientRpc(float x, float y, float z, Color color)
     {
-        var position = new Vector3 (x, y, z);
+        var position = new Vector3(x, y, z);
 
         DestroyNearbySetllements(position);
 
         var city = Instantiate(
             cityPrefab,
-            position, 
+            position,
             Quaternion.Euler(0, 0, 0)
         );
 
         //change the color
-        foreach(var material in city.GetComponent<Renderer>().materials)
+        foreach (var material in city.GetComponent<Renderer>().materials)
         {
             material.color = color;
         }

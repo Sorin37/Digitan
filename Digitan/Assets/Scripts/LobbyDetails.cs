@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Services.Lobbies;
@@ -32,7 +33,13 @@ public class LobbyDetails : MonoBehaviour
                 float pollTimerMax = 1.1f;
                 pollTimer = pollTimerMax;
 
-                lobby = await LobbyService.Instance.GetLobbyAsync(lobby.Id);
+                try
+                {
+                    lobby = await LobbyService.Instance.GetLobbyAsync(lobby.Id);
+                }catch(LobbyServiceException)
+                {
+                    Debug.LogWarning("Lobby Service Error when pooling (GetLobbyAsync) in LobbyDetails");
+                }
             }
         }
     }
