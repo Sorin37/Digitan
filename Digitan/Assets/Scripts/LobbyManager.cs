@@ -28,6 +28,7 @@ public class LobbyManager : MonoBehaviour
     private int currentNumberOfPlayers = 0;
     private float updateTimer = 5;
     private float checkStartTimer = 5;
+    private bool joined = false;
 
     private void Awake()
     {
@@ -158,8 +159,11 @@ public class LobbyManager : MonoBehaviour
 
     private async Task JoinRelay(string relayCode)
     {
+        if (joined)
+            return;
         try
-        {
+        {   
+            joined = true;
             Debug.Log("Joining Relay with " + relayCode);
             var joinAllocation = await RelayService.Instance.JoinAllocationAsync(relayCode);
             var relayServerData = new RelayServerData(joinAllocation, "dtls");

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TMPro;
 using Unity.Collections;
@@ -355,17 +356,33 @@ public class Player : NetworkBehaviour
 
     private async Task PopInformationFromLobby()
     {
-        var lobbyGo = GameObject.FindGameObjectsWithTag("Lobby")[0];
+        var lobbies = GameObject.FindGameObjectsWithTag("Lobby");
 
-        Lobby lobby;
+        GameObject lobbyManager = null;
+        GameObject hostLobby = null;
 
-        if (lobbyGo.GetComponent<HostLobby>())
+        Lobby lobby = null;
+
+        if (lobbies.Count() == 1)
         {
-            lobby = GameObject.FindGameObjectsWithTag("Lobby")[0].GetComponent<HostLobby>().lobby;
+            lobbyManager = lobbies[0];
+            lobby = lobbyManager.GetComponent<LobbyManager>().lobby;
         }
         else
         {
-            lobby = GameObject.FindGameObjectsWithTag("Lobby")[0].GetComponent<LobbyManager>().lobby;
+            foreach(var lob in lobbies)
+            {
+                if (lob.GetComponent<HostLobby>())
+                {
+                    hostLobby = lob;
+                    lobby = hostLobby.GetComponent<HostLobby>().lobby;
+                }
+                else
+                {
+                    lobbyManager = lob;
+                }
+            }
+
         }
 
         lobby = await LobbyService.Instance.GetLobbyAsync(lobby.Id);
@@ -380,14 +397,9 @@ public class Player : NetworkBehaviour
                 break;
             }
         }
-        if (lobbyGo.GetComponent<LobbyManager>())
-        {
-            Destroy(lobbyGo.transform.parent.gameObject);
-        }
-        else
-        {
-            Destroy(lobbyGo);
-        }
+
+        Destroy(lobbyManager.gameObject.transform.parent.gameObject);
+        Destroy(hostLobby.gameObject);
     }
 
     [ServerRpc(RequireOwnership = false)]
