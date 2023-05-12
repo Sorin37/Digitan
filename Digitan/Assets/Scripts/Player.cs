@@ -370,7 +370,7 @@ public class Player : NetworkBehaviour
         }
         else
         {
-            foreach(var lob in lobbies)
+            foreach (var lob in lobbies)
             {
                 if (lob.GetComponent<HostLobby>())
                 {
@@ -399,7 +399,8 @@ public class Player : NetworkBehaviour
         }
 
         Destroy(lobbyManager.gameObject.transform.parent.gameObject);
-        Destroy(hostLobby.gameObject);
+        if (hostLobby != null)
+            Destroy(hostLobby.gameObject);
     }
 
     [ServerRpc(RequireOwnership = false)]
