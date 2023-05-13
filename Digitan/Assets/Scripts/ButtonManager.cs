@@ -17,6 +17,7 @@ public class ButtonManager : MonoBehaviour
     [SerializeField] private Button cityButton;
     [SerializeField] private Canvas tradeCanvas;
     [SerializeField] private GameObject tradeManager;
+    private bool hasRolledDice = false;
 
     private void Awake()
     {
@@ -32,10 +33,13 @@ public class ButtonManager : MonoBehaviour
     {
         rollDiceButton.onClick.AddListener(() =>
         {
-            if (!IsMyTurn())
+            if (!IsMyTurn() || hasRolledDice)
             {
                 return;
             }
+
+            hasRolledDice = true;
+
             GetHostPlayer().GetComponent<Player>().RollDiceServerRpc();
         });
     }
@@ -44,10 +48,11 @@ public class ButtonManager : MonoBehaviour
     {
         endTurnButton.onClick.AddListener(() =>
         {
-            if (!IsMyTurn())
-            {
+            if (!IsMyTurn() || !hasRolledDice)
                 return;
-            }
+
+            hasRolledDice = false;
+
             GetHostPlayer().GetComponent<Player>().PassTurnServerRpc();
         });
     }

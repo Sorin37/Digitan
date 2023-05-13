@@ -41,7 +41,6 @@ public class Player : NetworkBehaviour
     public Color color;
 
     public event EventHandler OnPlayersJoined;
-    public event EventHandler OnRoundEnd;
 
     // Awake is called before all the Starts in a random order
     void Awake()
@@ -496,11 +495,6 @@ public class Player : NetworkBehaviour
             GetPlayerWithId((ulong)currentPlayerTurn.Value)
             .GetComponent<Player>().nickName.Value.ToString()
         );
-    }
-
-    public class OnRoundEndEventArgs : EventArgs
-    {
-        public int diceRoll;
     }
     public void UpdateHand()
     {
