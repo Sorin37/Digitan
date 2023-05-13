@@ -12,28 +12,47 @@ public class ButtonManager : MonoBehaviour
     [SerializeField] private Button settlementButton;
     [SerializeField] private Button roadButton;
     [SerializeField] private Button endTurnButton;
+    [SerializeField] private Button rollDiceButton;
     [SerializeField] private Button tradeButton;
     [SerializeField] private Button cityButton;
     [SerializeField] private Canvas tradeCanvas;
     [SerializeField] private GameObject tradeManager;
+    private bool hasRolledDice = false;
 
     private void Awake()
     {
         initEndTurnButton();
+        initRollDiceButton();
         initSettlementButton();
         initRoadButton();
         initTradeButton();
         initCityButton();
     }
 
+    private void initRollDiceButton()
+    {
+        rollDiceButton.onClick.AddListener(() =>
+        {
+            if (!IsMyTurn() || hasRolledDice)
+            {
+                return;
+            }
+
+            hasRolledDice = true;
+
+            GetHostPlayer().GetComponent<Player>().RollDiceServerRpc();
+        });
+    }
+
     private void initEndTurnButton()
     {
         endTurnButton.onClick.AddListener(() =>
         {
-            if (!IsMyTurn())
-            {
+            if (!IsMyTurn() || !hasRolledDice)
                 return;
-            }
+
+            hasRolledDice = false;
+
             GetHostPlayer().GetComponent<Player>().PassTurnServerRpc();
         });
     }
