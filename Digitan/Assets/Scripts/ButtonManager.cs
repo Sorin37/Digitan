@@ -36,7 +36,7 @@ public class ButtonManager : MonoBehaviour
             {
                 return;
             }
-            GetHostPlayer().GetComponent<Player>().PassTurnServerRpc();
+            GetHostPlayer().GetComponent<Player>().RollDiceServerRpc();
         });
     }
 
