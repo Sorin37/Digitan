@@ -12,6 +12,7 @@ public class ButtonManager : MonoBehaviour
     [SerializeField] private Button settlementButton;
     [SerializeField] private Button roadButton;
     [SerializeField] private Button endTurnButton;
+    [SerializeField] private Button rollDiceButton;
     [SerializeField] private Button tradeButton;
     [SerializeField] private Button cityButton;
     [SerializeField] private Canvas tradeCanvas;
@@ -20,10 +21,23 @@ public class ButtonManager : MonoBehaviour
     private void Awake()
     {
         initEndTurnButton();
+        initRollDiceButton();
         initSettlementButton();
         initRoadButton();
         initTradeButton();
         initCityButton();
+    }
+
+    private void initRollDiceButton()
+    {
+        rollDiceButton.onClick.AddListener(() =>
+        {
+            if (!IsMyTurn())
+            {
+                return;
+            }
+            GetHostPlayer().GetComponent<Player>().PassTurnServerRpc();
+        });
     }
 
     private void initEndTurnButton()

@@ -41,7 +41,7 @@ public class Player : NetworkBehaviour
     public Color color;
 
     public event EventHandler OnPlayersJoined;
-    public event EventHandler<OnRoundEndEventArgs> OnRoundEnd;
+    public event EventHandler OnRoundEnd;
 
     // Awake is called before all the Starts in a random order
     void Awake()
@@ -64,11 +64,6 @@ public class Player : NetworkBehaviour
         InitializeResourceDict();
         InitializePlayerHand();
         InitializeTradeDict();
-
-        if (IsOwner)
-        {
-            OnRoundEnd += EndTurnEvent;
-        }
 
         if (IsOwnedByServer)
         {
@@ -106,27 +101,6 @@ public class Player : NetworkBehaviour
         tradeDict["Wool"] = false;
         tradeDict["3to1"] = false;
     }
-
-    private void EndTurnEvent(object sender, OnRoundEndEventArgs e)
-    {
-        print(e.diceRoll);
-
-        if (e.diceRoll == 7)
-            return;
-
-        var player = GetMyPlayer().GetComponent<Player>();
-        var resourcesDict = player.resourcesDict;
-        var playerHand = player.playerHand;
-
-
-        foreach (string resource in resourcesDict[e.diceRoll.ToString()])
-        {
-            playerHand[resource]++;
-        }
-
-        UpdateHand();
-    }
-
 
     // Update is called once per frame
     void Update()
@@ -517,27 +491,17 @@ public class Player : NetworkBehaviour
     public void PassTurnServerRpc()
     {
         currentPlayerTurn.Value = (currentPlayerTurn.Value + 1) % nrOfMaxPlayers;
-        int dice1 = UnityEngine.Random.Range(1, 7);
-        int dice2 = UnityEngine.Random.Range(1, 7);
         ChangeCurrentPlayerDetailsColorClientRpc((ulong)currentPlayerTurn.Value);
         ChangeCurrentPlayerDetailsNameClientRpc(
             GetPlayerWithId((ulong)currentPlayerTurn.Value)
             .GetComponent<Player>().nickName.Value.ToString()
         );
-        PassTurnClientRpc(dice1 + dice2);
     }
 
     public class OnRoundEndEventArgs : EventArgs
     {
         public int diceRoll;
     }
-
-    [ClientRpc]
-    public void PassTurnClientRpc(int diceRoll)
-    {
-        GetMyPlayer().GetComponent<Player>().OnRoundEnd?.Invoke(this, new OnRoundEndEventArgs { diceRoll = diceRoll });
-    }
-
     public void UpdateHand()
     {
         var playerHand = GetMyPlayer().GetComponent<Player>().playerHand;
@@ -724,4 +688,34 @@ public class Player : NetworkBehaviour
         }
     }
 
+    [ServerRpc(RequireOwnership = false)]
+    public void RollDiceServerRpc()
+    {
+        int dice1 = UnityEngine.Random.Range(1, 7);
+        int dice2 = UnityEngine.Random.Range(1, 7);
+
+        GetHostPlayer().GetComponent<Player>().RollDiceClientRpc(dice1 + dice2);
+
+    }
+
+    [ClientRpc]
+    public void RollDiceClientRpc(int diceRoll)
+    {
+        print(diceRoll);
+
+        if (diceRoll == 7)
+            return;
+
+        var player = GetMyPlayer().GetComponent<Player>();
+        var resourcesDict = player.resourcesDict;
+        var playerHand = player.playerHand;
+
+
+        foreach (string resource in resourcesDict[diceRoll.ToString()])
+        {
+            playerHand[resource]++;
+        }
+
+        UpdateHand();
+    }
 }
