@@ -66,6 +66,7 @@ MonoBehaviour:
   roadPrefab: {fileID: 6736439349771075845, guid: 02679582dec926d4d8240c367004d820, type: 3}
   settlementPrefab: {fileID: 4748187627253956761, guid: a0ab8d06dc4f50e449063604a25218bd, type: 3}
   cityPrefab: {fileID: 1114969853857197570, guid: c6391f64d5a181e4495ed46752d4eabd, type: 3}
+  thiefPrefab: {fileID: 2344186312042310433, guid: 55d0565b14f7dbc4c89ac69b16fbe2a5, type: 3}
   resourcesCode:
     m_InternalValue:
       utf8LengthInBytes: 13

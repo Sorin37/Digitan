@@ -20,6 +20,7 @@ public class Player : NetworkBehaviour
     [SerializeField] private GameObject roadPrefab;
     [SerializeField] private GameObject settlementPrefab;
     [SerializeField] private GameObject cityPrefab;
+    [SerializeField] private GameObject thiefPrefab;
 
     private GameObject gameGrid;
     private GameObject roadGrid;
@@ -711,5 +712,66 @@ public class Player : NetworkBehaviour
         }
 
         UpdateHand();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void MoveThiefServerRpc(Vector3 newPosition)
+    {
+        MoveThiefClientRpc(newPosition);
+    }
+
+    [ClientRpc]
+    public void MoveThiefClientRpc(Vector3 newPosition)
+    {
+        var thiefPiece = GameObject.Find("Thief");
+
+        if (thiefPiece != null)
+        {
+            //dispaly the circle the thief is taken from
+            var colliders = Physics.OverlapSphere(
+                thiefPiece.transform.position,
+                1f,
+                (int)Mathf.Pow(2, LayerMask.NameToLayer("Unvisible Thief Circle")));
+
+            foreach (var collider in colliders)
+            {
+                collider.gameObject.layer = LayerMask.NameToLayer("Thief Circle");
+            }
+
+            thiefPiece.transform.position = new Vector3(newPosition.x, 0.75f, newPosition.z);
+
+            //hide the circle the thief is placed on
+            colliders = Physics.OverlapSphere(
+                thiefPiece.transform.position,
+                1f,
+                (int)Mathf.Pow(2, LayerMask.NameToLayer("Thief Circle")));
+
+            foreach (var collider in colliders)
+            {
+                collider.gameObject.layer = LayerMask.NameToLayer("Unvisible Thief Circle");
+            }
+
+        }
+        else
+        {
+            var newThief = Instantiate(
+                thiefPrefab,
+                new Vector3(newPosition.x, 0.75f, newPosition.z),
+                Quaternion.Euler(0, 0, 0));
+
+            newThief.name = "Thief";
+
+
+            //hide the circle the thief is placed on
+            var colliders = Physics.OverlapSphere(
+                thiefPiece.transform.position,
+                1f,
+                (int)Mathf.Pow(2, LayerMask.NameToLayer("Thief Circle")));
+
+            foreach (var collider in colliders)
+            {
+                collider.gameObject.layer = LayerMask.NameToLayer("Unvisible Thief Circle");
+            }
+        }
     }
 }
