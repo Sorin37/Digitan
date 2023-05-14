@@ -36,7 +36,7 @@ public class ThiefGrid : MonoBehaviour
             for (int y = 0; y < thiefGrid[x].Length; y++)
             {
                 Vector3 position = new Vector3(y * hexSize - x * hexSize / 2,
-                                               0.1f,
+                                               0.25f,
                                                -x * hexSize * 3 / 4);
 
                 thiefGrid[x][y] = Instantiate(
@@ -45,7 +45,7 @@ public class ThiefGrid : MonoBehaviour
                     Quaternion.Euler(-90, -90, 90)
                     );
 
-                thiefGrid[x][y].gameObject.name = "Thief Circle";
+                thiefGrid[x][y].gameObject.name = "Thief Circle (" + x.ToString() + ", " + y.ToString() + ")";
                 thiefGrid[x][y].gameObject.transform.parent = transform;
             }
         }
@@ -56,7 +56,7 @@ public class ThiefGrid : MonoBehaviour
             for (int y = 0; y < thiefGrid[x].Length; y++)
             {
                 Vector3 position = new Vector3(y * hexSize + x * hexSize / 2 - hexSize * 2,
-                                0.1f,
+                                0.25f,
                                 -x * hexSize * 3 / 4);
 
                 thiefGrid[x][y] = Instantiate(
@@ -65,7 +65,7 @@ public class ThiefGrid : MonoBehaviour
                     Quaternion.Euler(-90, -90, 90)
                 );
 
-                thiefGrid[x][y].gameObject.name = thiefCircle.name;
+                thiefGrid[x][y].gameObject.name = "Thief Circle (" + x.ToString() + ", " + y.ToString() + ")";
                 thiefGrid[x][y].gameObject.transform.parent = transform;
             }
         }
