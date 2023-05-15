@@ -32,24 +32,31 @@ public class StealManager : MonoBehaviour
 
     public void DisplayPlayersToStealFrom(List<PlayerDetails> players)
     {
-        GameObject playerDetails = Instantiate(
-                PlayerDetailsPrefab,
-                new Vector3(0, 0 * -150 + 225, 0),
-                StealBoard.transform.rotation
-            );
+        int i = 0;
+        foreach (PlayerDetails player in players)
+        {
+            GameObject playerDetails = Instantiate(
+                    PlayerDetailsPrefab,
+                    new Vector3(0, i * -150 + 225, 0),
+                    StealBoard.transform.rotation
+                );
 
-        playerDetails.transform.Find("PlayerName")
-        .gameObject.GetComponent<TextMeshProUGUI>()
-                .text = "xdddddddddd";
+            playerDetails.transform.Find("PlayerName")
+            .gameObject.GetComponent<TextMeshProUGUI>()
+                    .text = player.name;
 
-        playerDetails.transform.Find("Button")
-                     .gameObject.GetComponent<Button>()
-                     .onClick.AddListener(() =>
-                     {
-                         print("less go");
-                     });
+            playerDetails.transform.Find("ColorPanel")
+            .gameObject.GetComponent<Image>().color = player.color;
 
-        playerDetails.transform.SetParent(StealBoard.transform, false);
+            playerDetails.transform.Find("Button")
+                         .gameObject.GetComponent<Button>()
+                         .onClick.AddListener(() =>
+                         {
+                             print(player.id);
+                         });
+
+            playerDetails.transform.SetParent(StealBoard.transform, false);
+        }
 
     }
 }

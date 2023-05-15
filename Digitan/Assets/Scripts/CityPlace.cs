@@ -34,7 +34,8 @@ public class CityPlace : MonoBehaviour
             transform.position.x,
             transform.position.y,
             transform.position.z,
-            GetMyPlayer().GetComponent<Player>().color
+            GetMyPlayer().GetComponent<Player>().color,
+            new Unity.Netcode.ServerRpcParams()
         );
 
         Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("City Place"));

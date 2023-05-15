@@ -645,13 +645,13 @@ public class Player : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void PlaceCityServerRpc(float x, float y, float z, Color color)
+    public void PlaceCityServerRpc(float x, float y, float z, Color color, ServerRpcParams serverRpcParams)
     {
-        PlaceCityClientRpc(x, y, z, color);
+        PlaceCityClientRpc(x, y, z, color, serverRpcParams.Receive.SenderClientId);
     }
 
     [ClientRpc]
-    public void PlaceCityClientRpc(float x, float y, float z, Color color)
+    public void PlaceCityClientRpc(float x, float y, float z, Color color, ulong playerId)
     {
         var position = new Vector3(x, y, z);
 
@@ -662,6 +662,8 @@ public class Player : NetworkBehaviour
             position,
             Quaternion.Euler(0, 0, 0)
         );
+        
+        city.GetComponent<CityPiece>().playerId = playerId;
 
         //change the color
         foreach (var material in city.GetComponent<Renderer>().materials)
