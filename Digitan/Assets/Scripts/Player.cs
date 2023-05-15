@@ -241,13 +241,13 @@ public class Player : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void PlaceSettlementServerRpc(int x, int y, Color color)
+    public void PlaceSettlementServerRpc(int x, int y, Color color, ServerRpcParams serverRpcParams)
     {
-        PlaceSettlementClientRpc(x, y, color);
+        PlaceSettlementClientRpc(x, y, color, serverRpcParams.Receive.SenderClientId);
     }
 
     [ClientRpc]
-    public void PlaceSettlementClientRpc(int x, int y, Color color)
+    public void PlaceSettlementClientRpc(int x, int y, Color color, ulong playerId)
     {
         GameObject pressedCircle = settlementGrid.GetComponent<SettlementGrid>().settlementGrid[x][y].gameObject;
 
@@ -276,6 +276,8 @@ public class Player : NetworkBehaviour
             Quaternion.Euler(90, 0, 0)
         );
 
+        settlementObject.GetComponent<SettlementPiece>().playerId = playerId;
+
         //so that the settlements do not disappear when other players want to place a city
         if (color == this.color)
         {
@@ -298,7 +300,7 @@ public class Player : NetworkBehaviour
         Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("Settlement Circle"));
     }
 
-    private Color IdToColor(ulong id)
+    public Color IdToColor(ulong id)
     {
         switch (id)
         {

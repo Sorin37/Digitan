@@ -11,10 +11,17 @@ public class StealManager : MonoBehaviour
     [SerializeField] private GameObject StealBoard;
     [SerializeField] private GameObject PlayerDetailsPrefab;
 
+    public class PlayerDetails
+    {
+        public ulong id;
+        public string name;
+        public Color color;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        DisplayPlayersToStealFrom();
+
     }
 
     // Update is called once per frame
@@ -23,7 +30,7 @@ public class StealManager : MonoBehaviour
 
     }
 
-    public void DisplayPlayersToStealFrom()
+    public void DisplayPlayersToStealFrom(List<PlayerDetails> players)
     {
         GameObject playerDetails = Instantiate(
                 PlayerDetailsPrefab,
