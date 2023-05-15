@@ -25,9 +25,26 @@ public class ThiefCircle : MonoBehaviour
             return;
         }
 
-        Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("Thief Circle"));
+        //Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("Thief Circle"));
 
         GetHostPlayer().GetComponent<Player>().MoveThiefServerRpc(transform.position);
+
+        var colliders = Physics.OverlapSphere(
+            transform.position,
+            50f,
+            (int)(Mathf.Pow(2, LayerMask.NameToLayer("City")) + 
+            Mathf.Pow(2, LayerMask.NameToLayer("Settlement")))
+        );
+
+
+        foreach (var collider in colliders)
+        {
+            print(collider.gameObject.name);
+        }
+
+        print("Number of nearby cities of settlements" + colliders.Length);
+
+        //DisplayStealBoard();
     }
 
     private GameObject GetHostPlayer()
@@ -41,5 +58,11 @@ public class ThiefCircle : MonoBehaviour
         }
 
         return null;
+    }
+
+    private void DisplayStealBoard()
+    {
+        var stealManager = Resources.FindObjectsOfTypeAll<StealManager>()[0];
+        stealManager.gameObject.transform.parent.gameObject.SetActive(true);
     }
 }

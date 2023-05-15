@@ -764,7 +764,7 @@ public class Player : NetworkBehaviour
 
             //hide the circle the thief is placed on
             var colliders = Physics.OverlapSphere(
-                thiefPiece.transform.position,
+                newThief.transform.position,
                 1f,
                 (int)Mathf.Pow(2, LayerMask.NameToLayer("Thief Circle")));
 
