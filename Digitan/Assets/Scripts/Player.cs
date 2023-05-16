@@ -811,6 +811,7 @@ public class Player : NetworkBehaviour
         var resource = resources[randomIndex];
 
         hand[resource]--;
+        print("am scazut1");
 
         player.UpdateHand();
 
