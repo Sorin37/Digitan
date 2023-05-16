@@ -815,14 +815,23 @@ public class Player : NetworkBehaviour
 
         player.UpdateHand();
 
-        //GetHostPlayer().GetComponent<Player>().AddResourceClientRpc(
-        //    resource,
-        //    new ClientRpcParams
-        //    {
-        //        Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { sender } }
-        //    }
-        //);
-            
+        GetHostPlayer().GetComponent<Player>().AddResourceServerRpc(
+            resource,
+            sender
+        );
+
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void AddResourceServerRpc(string resource, ulong sender)
+    {
+        GetHostPlayer().GetComponent<Player>().AddResourceClientRpc(
+            resource, 
+            new ClientRpcParams
+            {
+                Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { sender } }
+            }
+        );
     }
 
     [ClientRpc]
