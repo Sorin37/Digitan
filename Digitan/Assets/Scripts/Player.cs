@@ -703,19 +703,24 @@ public class Player : NetworkBehaviour
         print(diceRoll);
 
         if (diceRoll == 7)
-            return;
-
-        var player = GetMyPlayer().GetComponent<Player>();
-        var resourcesDict = player.resourcesDict;
-        var playerHand = player.playerHand;
-
-
-        foreach (string resource in resourcesDict[diceRoll.ToString()])
         {
-            playerHand[resource]++;
+            var player = GetHostPlayer().GetComponent<Player>();
+            player.DiscardHandServerRpc();
+            player.DisplayThiefCirclesServerRpc();
         }
+        else
+        {
+            var player = GetMyPlayer().GetComponent<Player>();
+            var resourcesDict = player.resourcesDict;
+            var playerHand = player.playerHand;
 
-        UpdateHand();
+            foreach (string resource in resourcesDict[diceRoll.ToString()])
+            {
+                playerHand[resource]++;
+            }
+
+            UpdateHand();
+        }
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -807,11 +812,13 @@ public class Player : NetworkBehaviour
             }
         }
 
+        if (resources.Count == 0)
+            return;
+
         int randomIndex = UnityEngine.Random.Range(0, resources.Count);
         var resource = resources[randomIndex];
 
         hand[resource]--;
-        print("am scazut1");
 
         player.UpdateHand();
 
@@ -819,14 +826,13 @@ public class Player : NetworkBehaviour
             resource,
             sender
         );
-
     }
 
     [ServerRpc(RequireOwnership = false)]
     public void AddResourceServerRpc(string resource, ulong sender)
     {
         GetHostPlayer().GetComponent<Player>().AddResourceClientRpc(
-            resource, 
+            resource,
             new ClientRpcParams
             {
                 Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { sender } }
@@ -837,10 +843,49 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void AddResourceClientRpc(string resource, ClientRpcParams clientRpcParams)
     {
-        print(resource + "xd");
         var player = GetMyPlayer().GetComponent<Player>();
         player.playerHand[resource]++;
-        print(player.playerHand[resource]);
         player.UpdateHand();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void DiscardHandServerRpc()
+    {
+        GetHostPlayer().GetComponent<Player>().DiscardHandClientRpc();
+    }
+
+    [ClientRpc]
+    public void DiscardHandClientRpc()
+    {
+        int handSize = 0;
+        var myPlayer = GetMyPlayer().GetComponent<Player>();
+
+        foreach (var count in myPlayer.playerHand.Values)
+        {
+            handSize += count;
+        }
+
+        if (handSize > 7)
+        {
+            Resources.FindObjectsOfTypeAll<DiscardManager>()[0].transform.parent.gameObject.SetActive(true);
+        }
+    }
+
+    [ServerRpc]
+    public void DisplayThiefCirclesServerRpc()
+    {
+        var player = GetHostPlayer().GetComponent<Player>();
+
+        player.DisplayThiefCirclesClientRpc(new ClientRpcParams
+        {
+            Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { (ulong)player.currentPlayerTurn.Value } }
+        });
+
+    }
+
+    [ClientRpc]
+    public void DisplayThiefCirclesClientRpc(ClientRpcParams clientRpcParams)
+    {
+        Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Thief Circle"));
     }
 }
