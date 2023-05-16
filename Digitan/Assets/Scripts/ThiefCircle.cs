@@ -76,7 +76,7 @@ public class ThiefCircle : MonoBehaviour
             DisplayStealBoard(players);
         }
 
-        if (players.Count == 0)
+        if (players.Count == 1)
         {
             GetHostPlayer().GetComponent<Player>().StealServerRpc(players[0].id, new Unity.Netcode.ServerRpcParams());
         }

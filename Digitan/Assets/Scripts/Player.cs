@@ -812,20 +812,21 @@ public class Player : NetworkBehaviour
 
         hand[resource]--;
 
-        player.AddResourceClientRpc(
+        GetHostPlayer().GetComponent<Player>().AddResourceClientRpc(
             resource,
             new ClientRpcParams
             {
                 Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { sender } }
             }
         );
-
+            
         player.UpdateHand();
     }
 
     [ClientRpc]
     public void AddResourceClientRpc(string resource, ClientRpcParams clientRpcParams)
     {
+        print(resource + "xd");
         var player = GetMyPlayer().GetComponent<Player>();
         player.playerHand[resource]++;
         player.UpdateHand();
