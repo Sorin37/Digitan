@@ -52,11 +52,27 @@ public class StealManager : MonoBehaviour
                          .gameObject.GetComponent<Button>()
                          .onClick.AddListener(() =>
                          {
-                             print(player.id);
+                             GetHostPlayer().GetComponent<Player>().StealServerRpc(player.id, new Unity.Netcode.ServerRpcParams());
+                             transform.parent.gameObject.SetActive(false);
                          });
 
             playerDetails.transform.SetParent(StealBoard.transform, false);
+
+            i++;
         }
 
+    }
+
+    private GameObject GetHostPlayer()
+    {
+        var players = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (var p in players)
+        {
+            if (p.GetComponent<Player>().IsOwnedByServer)
+                return p;
+        }
+
+        return null;
     }
 }

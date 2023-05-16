@@ -662,7 +662,7 @@ public class Player : NetworkBehaviour
             position,
             Quaternion.Euler(0, 0, 0)
         );
-        
+
         city.GetComponent<CityPiece>().playerId = playerId;
 
         //change the color
@@ -777,5 +777,57 @@ public class Player : NetworkBehaviour
                 collider.gameObject.layer = LayerMask.NameToLayer("Unvisible Thief Circle");
             }
         }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void StealServerRpc(ulong targetId, ServerRpcParams serverRpcParams)
+    {
+        StealClientRpc(
+            serverRpcParams.Receive.SenderClientId,
+            new ClientRpcParams
+            {
+                Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { targetId } }
+            }
+        );
+    }
+
+    [ClientRpc]
+    public void StealClientRpc(ulong sender, ClientRpcParams clientRpcParams)
+    {
+        var player = GetMyPlayer().GetComponent<Player>();
+        var hand = player.playerHand;
+
+        List<string> resources = new List<string>();
+
+        foreach (var key in hand.Keys)
+        {
+            for (int i = 0; i < hand[key]; i++)
+            {
+                resources.Add(key);
+            }
+        }
+
+        int randomIndex = UnityEngine.Random.Range(0, resources.Count);
+        var resource = resources[randomIndex];
+
+        hand[resource]--;
+
+        player.AddResourceClientRpc(
+            resource,
+            new ClientRpcParams
+            {
+                Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { sender } }
+            }
+        );
+
+        player.UpdateHand();
+    }
+
+    [ClientRpc]
+    public void AddResourceClientRpc(string resource, ClientRpcParams clientRpcParams)
+    {
+        var player = GetMyPlayer().GetComponent<Player>();
+        player.playerHand[resource]++;
+        player.UpdateHand();
     }
 }
