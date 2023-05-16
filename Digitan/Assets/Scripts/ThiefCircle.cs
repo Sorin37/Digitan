@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Services.Lobbies.Models;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -74,9 +75,10 @@ public class ThiefCircle : MonoBehaviour
         {
             DisplayStealBoard(players);
         }
-        else
+
+        if (players.Count == 0)
         {
-            print("Se fura automat");
+            GetHostPlayer().GetComponent<Player>().StealServerRpc(players[0].id, new Unity.Netcode.ServerRpcParams());
         }
     }
 
