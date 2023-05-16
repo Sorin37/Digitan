@@ -812,6 +812,8 @@ public class Player : NetworkBehaviour
 
         hand[resource]--;
 
+        player.UpdateHand();
+
         GetHostPlayer().GetComponent<Player>().AddResourceClientRpc(
             resource,
             new ClientRpcParams
@@ -820,7 +822,6 @@ public class Player : NetworkBehaviour
             }
         );
             
-        player.UpdateHand();
     }
 
     [ClientRpc]
@@ -829,6 +830,7 @@ public class Player : NetworkBehaviour
         print(resource + "xd");
         var player = GetMyPlayer().GetComponent<Player>();
         player.playerHand[resource]++;
+        print(player.playerHand[resource]);
         player.UpdateHand();
     }
 }
