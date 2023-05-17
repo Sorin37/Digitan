@@ -890,10 +890,11 @@ public class Player : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void ModifyResourceDictServerRpc(string action, string resource, ulong playerId)
+    public void ModifyResourceDictServerRpc(string action, string number, string resource, ulong playerId)
     {
         GetHostPlayer().GetComponent<Player>().ModifyResourceDictClientRpc(
             action,
+            number,
             resource,
             new ClientRpcParams
             {
@@ -902,19 +903,18 @@ public class Player : NetworkBehaviour
     }
 
     [ClientRpc]
-    public void ModifyResourceDictClientRpc(string action, string resource, ClientRpcParams clientRpcParams)
+    public void ModifyResourceDictClientRpc(string action, string number, string resource, ClientRpcParams clientRpcParams)
     {
-        var hand = GetMyPlayer().GetComponent<Player>().playerHand;
+        var resourceDict = GetMyPlayer().GetComponent<Player>().resourcesDict;
 
         if(action == "Block")
         {
-            print("I lost a " + resource);
-            hand[resource]--;
+            resourceDict[number].Remove(resource);
         }
 
         if (action == "Free")
         {
-            hand[resource]++;
+            resourceDict[resource].Add(resource);
         }
     }
 }
