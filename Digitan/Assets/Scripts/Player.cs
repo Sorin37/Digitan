@@ -908,6 +908,7 @@ public class Player : NetworkBehaviour
 
         if(action == "Block")
         {
+            print("I lost a " + resource);
             hand[resource]--;
         }
 
