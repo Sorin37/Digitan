@@ -85,7 +85,7 @@ public class DiscardManager : MonoBehaviour
             DrawDiscardDict();
         });
 
-        AddGrain.onClick.AddListener(() =>
+        AddLumber.onClick.AddListener(() =>
         {
             Add("Lumber");
             DrawDiscardDict();
