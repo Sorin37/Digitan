@@ -167,9 +167,10 @@ public class DiscardManager : MonoBehaviour
                 {
                     hand[key] -= discardDict[key];
                 }
-            }
 
-            GetMyPlayer().GetComponent<Player>().UpdateHand();
+                transform.parent.gameObject.SetActive(false);
+                GetMyPlayer().GetComponent<Player>().UpdateHand();
+            }
         });
     }
 

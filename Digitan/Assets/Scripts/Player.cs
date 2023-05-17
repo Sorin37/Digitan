@@ -888,4 +888,32 @@ public class Player : NetworkBehaviour
     {
         Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Thief Circle"));
     }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void ModifyResourceDictServerRpc(string action, string resource, ulong playerId)
+    {
+        GetHostPlayer().GetComponent<Player>().ModifyResourceDictClientRpc(
+            action,
+            resource,
+            new ClientRpcParams
+            {
+                Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { playerId } }
+            });
+    }
+
+    [ClientRpc]
+    public void ModifyResourceDictClientRpc(string action, string resource, ClientRpcParams clientRpcParams)
+    {
+        var hand = GetMyPlayer().GetComponent<Player>().playerHand;
+
+        if(action == "Block")
+        {
+            hand[resource]--;
+        }
+
+        if (action == "Free")
+        {
+            hand[resource]++;
+        }
+    }
 }
