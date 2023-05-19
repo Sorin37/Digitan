@@ -40,6 +40,7 @@ public class Player : NetworkBehaviour
     public int nrOfMaxPlayers;
     public int nrOfDeclinedTrades = 0;
     public Color color;
+    public int nrOfFinishedDiscards = 0;
 
     public event EventHandler OnPlayersJoined;
 
@@ -317,14 +318,14 @@ public class Player : NetworkBehaviour
         }
     }
 
-    private GameObject GetMyPlayer()
+    private Player GetMyPlayer()
     {
         var players = GameObject.FindGameObjectsWithTag("Player");
 
         foreach (var p in players)
         {
             if (p.GetComponent<Player>().IsOwner)
-                return p;
+                return p.GetComponent<Player>();
         }
 
         return null;
@@ -396,7 +397,7 @@ public class Player : NetworkBehaviour
 
     private void PlayersJoinedEvent(object s, EventArgs e)
     {
-        ChangeCurrentPlayerDetailsNameClientRpc(GetHostPlayer().GetComponent<Player>().nickName.Value.ToString());
+        ChangeCurrentPlayerDetailsNameClientRpc(GetHostPlayer().nickName.Value.ToString());
         StartPlacingClientRpc(new ClientRpcParams
         {
             Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { 0 } }
@@ -426,13 +427,13 @@ public class Player : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void PlacedServerRpc()
     {
-        var player = GetHostPlayer().GetComponent<Player>();
+        var player = GetHostPlayer();
 
         if ((int)OwnerClientId + player.order.Value == player.nrOfMaxPlayers)
         {
             player.order.Value = -1;
             ChangeCurrentPlayerDetailsColorClientRpc(OwnerClientId);
-            ChangeCurrentPlayerDetailsNameClientRpc(GetPlayerWithId(OwnerClientId).GetComponent<Player>().nickName.Value.ToString());
+            ChangeCurrentPlayerDetailsNameClientRpc(GetPlayerWithId(OwnerClientId).nickName.Value.ToString());
             StartPlacingClientRpc(new ClientRpcParams
             {
                 Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { OwnerClientId } }
@@ -445,38 +446,38 @@ public class Player : NetworkBehaviour
             Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Settlement Circle"));
             settlementGrid.GetComponent<SettlementGrid>().endStartPhase = true;
             ChangeCurrentPlayerDetailsColorClientRpc(0);
-            ChangeCurrentPlayerDetailsNameClientRpc(GetHostPlayer().GetComponent<Player>().nickName.Value.ToString());
+            ChangeCurrentPlayerDetailsNameClientRpc(GetHostPlayer().nickName.Value.ToString());
         }
 
         ChangeCurrentPlayerDetailsColorClientRpc((ulong)((int)OwnerClientId + player.order.Value));
-        ChangeCurrentPlayerDetailsNameClientRpc(GetPlayerWithId((ulong)((int)OwnerClientId + player.order.Value)).GetComponent<Player>().nickName.Value.ToString());
+        ChangeCurrentPlayerDetailsNameClientRpc(GetPlayerWithId((ulong)((int)OwnerClientId + player.order.Value)).nickName.Value.ToString());
         StartPlacingClientRpc(new ClientRpcParams
         {
             Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { (ulong)((int)OwnerClientId + player.order.Value) } }
         });
     }
 
-    private GameObject GetHostPlayer()
+    private Player GetHostPlayer()
     {
         var players = GameObject.FindGameObjectsWithTag("Player");
 
         foreach (var p in players)
         {
             if (p.GetComponent<Player>().IsOwnedByServer)
-                return p;
+                return p.GetComponent<Player>();
         }
 
         return null;
     }
 
-    private GameObject GetPlayerWithId(ulong id)
+    private Player GetPlayerWithId(ulong id)
     {
         var players = GameObject.FindGameObjectsWithTag("Player");
 
         foreach (var p in players)
         {
             if (p.GetComponent<Player>().OwnerClientId == id)
-                return p;
+                return p.GetComponent<Player>();
         }
 
         return null;
@@ -485,8 +486,8 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void EndStartPhaseClientRpc()
     {
-        GetHostPlayer().GetComponent<Player>().settlementGrid.GetComponent<SettlementGrid>().isStartPhase = false;
-        GetHostPlayer().GetComponent<Player>().settlementGrid.GetComponent<SettlementGrid>().TurnSettlementsInvisible();
+        GetHostPlayer().settlementGrid.GetComponent<SettlementGrid>().isStartPhase = false;
+        GetHostPlayer().settlementGrid.GetComponent<SettlementGrid>().TurnSettlementsInvisible();
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -495,13 +496,12 @@ public class Player : NetworkBehaviour
         currentPlayerTurn.Value = (currentPlayerTurn.Value + 1) % nrOfMaxPlayers;
         ChangeCurrentPlayerDetailsColorClientRpc((ulong)currentPlayerTurn.Value);
         ChangeCurrentPlayerDetailsNameClientRpc(
-            GetPlayerWithId((ulong)currentPlayerTurn.Value)
-            .GetComponent<Player>().nickName.Value.ToString()
+            GetPlayerWithId((ulong)currentPlayerTurn.Value).nickName.Value.ToString()
         );
     }
     public void UpdateHand()
     {
-        var playerHand = GetMyPlayer().GetComponent<Player>().playerHand;
+        var playerHand = GetMyPlayer().playerHand;
 
         foreach (var card in playerHand)
         {
@@ -573,8 +573,8 @@ public class Player : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void AcceptTradeServerRpc(ulong tradeMakerId)
     {
-        GetHostPlayer().GetComponent<Player>().CancelTradeClientRpc();
-        GetHostPlayer().GetComponent<Player>().TradeAcceptedClientRpc(
+        GetHostPlayer().CancelTradeClientRpc();
+        GetHostPlayer().TradeAcceptedClientRpc(
             new ClientRpcParams
             {
                 Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { tradeMakerId } }
@@ -584,7 +584,7 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void TradeAcceptedClientRpc(ClientRpcParams clientRpcParams)
     {
-        var myPlayer = GetMyPlayer().GetComponent<Player>();
+        var myPlayer = GetMyPlayer();
         var playerHand = myPlayer.playerHand;
 
         var tradeManager = Resources.FindObjectsOfTypeAll<TradeManager>()[0];
@@ -606,7 +606,7 @@ public class Player : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void CancelTradeServerRpc()
     {
-        GetHostPlayer().GetComponent<Player>().CancelTradeClientRpc();
+        GetHostPlayer().CancelTradeClientRpc();
     }
 
     [ClientRpc]
@@ -619,7 +619,7 @@ public class Player : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void AddTradeDeclinedCountServerRpc(ulong tradeMakerId)
     {
-        GetHostPlayer().GetComponent<Player>().AddTradeDeclinedCountClientRpc(
+        GetHostPlayer().AddTradeDeclinedCountClientRpc(
             new ClientRpcParams
             {
                 Send = new ClientRpcSendParams
@@ -633,8 +633,8 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void AddTradeDeclinedCountClientRpc(ClientRpcParams clientRpcParams)
     {
-        var hostPlayer = GetHostPlayer().GetComponent<Player>();
-        var myPlayer = GetMyPlayer().GetComponent<Player>();
+        var hostPlayer = GetHostPlayer();
+        var myPlayer = GetMyPlayer();
 
         if (myPlayer.nrOfMaxPlayers - 1 == ++hostPlayer.nrOfDeclinedTrades)
         {
@@ -693,7 +693,7 @@ public class Player : NetworkBehaviour
         int dice1 = UnityEngine.Random.Range(1, 7);
         int dice2 = UnityEngine.Random.Range(1, 7);
 
-        GetHostPlayer().GetComponent<Player>().RollDiceClientRpc(dice1 + dice2);
+        GetHostPlayer().RollDiceClientRpc(dice1 + dice2);
 
     }
 
@@ -704,13 +704,13 @@ public class Player : NetworkBehaviour
 
         if (diceRoll == 7)
         {
-            var player = GetHostPlayer().GetComponent<Player>();
+            var player = GetHostPlayer();
             player.DiscardHandServerRpc();
             player.DisplayThiefCirclesServerRpc();
         }
         else
         {
-            var player = GetMyPlayer().GetComponent<Player>();
+            var player = GetMyPlayer();
             var resourcesDict = player.resourcesDict;
             var playerHand = player.playerHand;
 
@@ -799,7 +799,7 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void StealClientRpc(ulong sender, ClientRpcParams clientRpcParams)
     {
-        var player = GetMyPlayer().GetComponent<Player>();
+        var player = GetMyPlayer();
         var hand = player.playerHand;
 
         List<string> resources = new List<string>();
@@ -822,7 +822,7 @@ public class Player : NetworkBehaviour
 
         player.UpdateHand();
 
-        GetHostPlayer().GetComponent<Player>().AddResourceServerRpc(
+        GetHostPlayer().AddResourceServerRpc(
             resource,
             sender
         );
@@ -831,7 +831,7 @@ public class Player : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void AddResourceServerRpc(string resource, ulong sender)
     {
-        GetHostPlayer().GetComponent<Player>().AddResourceClientRpc(
+        GetHostPlayer().AddResourceClientRpc(
             resource,
             new ClientRpcParams
             {
@@ -843,7 +843,7 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void AddResourceClientRpc(string resource, ClientRpcParams clientRpcParams)
     {
-        var player = GetMyPlayer().GetComponent<Player>();
+        var player = GetMyPlayer();
         player.playerHand[resource]++;
         player.UpdateHand();
     }
@@ -851,14 +851,17 @@ public class Player : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void DiscardHandServerRpc()
     {
-        GetHostPlayer().GetComponent<Player>().DiscardHandClientRpc();
+        GetHostPlayer().DiscardHandClientRpc();
     }
 
     [ClientRpc]
     public void DiscardHandClientRpc()
     {
         int handSize = 0;
-        var myPlayer = GetMyPlayer().GetComponent<Player>();
+        var myPlayer = GetMyPlayer();
+        var hostPlayer = GetHostPlayer();
+
+        hostPlayer.ResetFinishedDiscardsServerRpc();
 
         foreach (var count in myPlayer.playerHand.Values)
         {
@@ -869,12 +872,16 @@ public class Player : NetworkBehaviour
         {
             Resources.FindObjectsOfTypeAll<DiscardManager>()[0].transform.parent.gameObject.SetActive(true);
         }
+        else
+        {
+            hostPlayer.FinishedDiscardingServerRpc();
+        }
     }
 
     [ServerRpc]
     public void DisplayThiefCirclesServerRpc()
     {
-        var player = GetHostPlayer().GetComponent<Player>();
+        var player = GetHostPlayer();
 
         player.DisplayThiefCirclesClientRpc(new ClientRpcParams
         {
@@ -892,7 +899,7 @@ public class Player : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void ModifyResourceDictServerRpc(string action, string number, string resource, ulong playerId)
     {
-        GetHostPlayer().GetComponent<Player>().ModifyResourceDictClientRpc(
+        GetHostPlayer().ModifyResourceDictClientRpc(
             action,
             number,
             resource,
@@ -905,9 +912,9 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void ModifyResourceDictClientRpc(string action, string number, string resource, ClientRpcParams clientRpcParams)
     {
-        var resourceDict = GetMyPlayer().GetComponent<Player>().resourcesDict;
+        var resourceDict = GetMyPlayer().resourcesDict;
 
-        if(action == "Block")
+        if (action == "Block")
         {
             resourceDict[number].Remove(resource);
         }
@@ -915,6 +922,38 @@ public class Player : NetworkBehaviour
         if (action == "Free")
         {
             resourceDict[resource].Add(resource);
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void ResetFinishedDiscardsServerRpc()
+    {
+        GetHostPlayer().ResetFinishedDiscardsClientRpc();
+    }
+
+    [ClientRpc]
+    public void ResetFinishedDiscardsClientRpc()
+    {
+        GetHostPlayer().nrOfFinishedDiscards = 0;
+
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void FinishedDiscardingServerRpc()
+    {
+        GetHostPlayer().FinishedDiscardingClientRpc();
+    }
+
+    [ClientRpc]
+    public void FinishedDiscardingClientRpc()
+    {
+        var nrOfFinishedDiscards = GetMyPlayer().nrOfFinishedDiscards;
+
+        nrOfFinishedDiscards++;
+
+        if(nrOfFinishedDiscards == GetMyPlayer().nrOfMaxPlayers)
+        {
+            print("Au terminat toti de discardat");
         }
     }
 }
