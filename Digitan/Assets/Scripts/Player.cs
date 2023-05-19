@@ -71,7 +71,7 @@ public class Player : NetworkBehaviour
     private void FinishedDiscarding(object sender, EventArgs e)
     {
         var player = GetHostPlayer();
-        print(player.nrOfFinishedDiscards.Value);
+        print("teh nubmer is: " + player.nrOfFinishedDiscards.Value);
 
         if (player.nrOfFinishedDiscards.Value == 0)
         {
@@ -982,5 +982,6 @@ public class Player : NetworkBehaviour
         {
             canvas.SetActive(false);
         }
+        print("Acum ascund");
     }
 }
