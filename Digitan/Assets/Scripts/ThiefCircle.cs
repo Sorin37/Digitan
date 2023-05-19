@@ -1,6 +1,7 @@
 using Mono.Cecil;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -42,7 +43,7 @@ public class ThiefCircle : MonoBehaviour
         string number;
         string resource;
 
-        if (numberObject == null)
+        if (numberObject.Count() == 0)
         {
             number = null;
             resource = null;

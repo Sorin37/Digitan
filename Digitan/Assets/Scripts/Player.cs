@@ -861,7 +861,8 @@ public class Player : NetworkBehaviour
         var myPlayer = GetMyPlayer();
         var hostPlayer = GetHostPlayer();
 
-        hostPlayer.ResetFinishedDiscardsServerRpc();
+        print("Reset nr of finished discards");
+        myPlayer.nrOfFinishedDiscards = 0;
 
         foreach (var count in myPlayer.playerHand.Values)
         {
@@ -926,20 +927,6 @@ public class Player : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void ResetFinishedDiscardsServerRpc()
-    {
-        GetHostPlayer().ResetFinishedDiscardsClientRpc();
-    }
-
-    [ClientRpc]
-    public void ResetFinishedDiscardsClientRpc()
-    {
-        if (!IsOwner)
-            return;
-        GetMyPlayer().nrOfFinishedDiscards = 0;
-    }
-
-    [ServerRpc(RequireOwnership = false)]
     public void FinishedDiscardingServerRpc()
     {
         GetHostPlayer().FinishedDiscardingClientRpc();
@@ -954,6 +941,7 @@ public class Player : NetworkBehaviour
         var nrOfFinishedDiscards = GetMyPlayer().nrOfFinishedDiscards;
 
         nrOfFinishedDiscards++;
+
         print("Am adaugat 1 la nr of finished discards si am: " + nrOfFinishedDiscards);
 
         if(nrOfFinishedDiscards == GetMyPlayer().nrOfMaxPlayers)
