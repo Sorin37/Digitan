@@ -867,9 +867,9 @@ public class Player : NetworkBehaviour
         var myPlayer = GetMyPlayer();
         var hostPlayer = GetHostPlayer();
 
-        if (IsOwnedByServer)
+        if (OwnerClientId == 0)
         {
-            hostPlayer.nrOfFinishedDiscards.Value = 0;
+            hostPlayer.ResetFinishedDiscardsServerRpc();
         }
 
         foreach (var count in myPlayer.playerHand.Values)
@@ -884,11 +884,6 @@ public class Player : NetworkBehaviour
         else
         {
             hostPlayer.FinishedDiscardingServerRpc();
-        }
-
-        if (hostPlayer.nrOfFinishedDiscards.Value == hostPlayer.nrOfMaxPlayers)
-        {
-            print("Au decartat toti");
         }
     }
 
@@ -943,5 +938,11 @@ public class Player : NetworkBehaviour
     public void FinishedDiscardingServerRpc()
     {
         GetHostPlayer().nrOfFinishedDiscards.Value++;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void ResetFinishedDiscardsServerRpc()
+    {
+        GetHostPlayer().nrOfFinishedDiscards.Value = 0;
     }
 }
