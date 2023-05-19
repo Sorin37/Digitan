@@ -60,7 +60,7 @@ public class Player : NetworkBehaviour
         base.OnNetworkSpawn();
         color = IdToColor(NetworkManager.Singleton.LocalClientId);
         currentPlayerTurn.Value = -1;
-        if (NetworkManager.Singleton.LocalClientId == 0 && IsOwner)
+        if (NetworkManager.Singleton.LocalClientId == 0 && NetworkObjectId == 1)
         {
             OnFinishDiscardChanged -= FinishedDiscarding;
             OnFinishDiscardChanged += FinishedDiscarding;
