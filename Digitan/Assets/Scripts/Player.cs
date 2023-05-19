@@ -32,6 +32,8 @@ public class Player : NetworkBehaviour
     public NetworkVariable<FixedString64Bytes> nickName = new NetworkVariable<FixedString64Bytes>("Uninitialized", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public NetworkVariable<int> order = new NetworkVariable<int>(1);
     public NetworkVariable<int> currentPlayerTurn = new NetworkVariable<int>(-1);
+    public NetworkVariable<int> nrOfFinishedDiscards = new NetworkVariable<int>(0);
+
 
     public Dictionary<string, List<string>> resourcesDict;
     public Dictionary<string, int> playerHand;
@@ -40,7 +42,6 @@ public class Player : NetworkBehaviour
     public int nrOfMaxPlayers;
     public int nrOfDeclinedTrades = 0;
     public Color color;
-    public int nrOfFinishedDiscards = 0;
 
     public event EventHandler OnPlayersJoined;
 
@@ -861,8 +862,10 @@ public class Player : NetworkBehaviour
         var myPlayer = GetMyPlayer();
         var hostPlayer = GetHostPlayer();
 
-        print("Reset nr of finished discards");
-        myPlayer.nrOfFinishedDiscards = 0;
+        if (IsServer)
+        {
+            hostPlayer.nrOfFinishedDiscards.Value = 0;
+        }
 
         foreach (var count in myPlayer.playerHand.Values)
         {
@@ -875,7 +878,12 @@ public class Player : NetworkBehaviour
         }
         else
         {
-            hostPlayer.FinishedDiscardingServerRpc();
+            hostPlayer.nrOfFinishedDiscards.Value++;
+        }
+
+        if(hostPlayer.nrOfFinishedDiscards.Value == hostPlayer.nrOfMaxPlayers)
+        {
+            print("Au decartat toti");
         }
     }
 
@@ -923,30 +931,6 @@ public class Player : NetworkBehaviour
         if (action == "Free")
         {
             resourceDict[resource].Add(resource);
-        }
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    public void FinishedDiscardingServerRpc()
-    {
-        GetHostPlayer().FinishedDiscardingClientRpc();
-    }
-
-    [ClientRpc]
-    public void FinishedDiscardingClientRpc()
-    {
-        if(OwnerClientId != NetworkManager.Singleton.LocalClientId) 
-            return;
-
-        var nrOfFinishedDiscards = GetMyPlayer().nrOfFinishedDiscards;
-
-        nrOfFinishedDiscards++;
-
-        print("Am adaugat 1 la nr of finished discards si am: " + nrOfFinishedDiscards);
-
-        if(nrOfFinishedDiscards == GetMyPlayer().nrOfMaxPlayers)
-        {
-            print("Au terminat toti de discardat");
         }
     }
 }
