@@ -69,10 +69,11 @@ public class Player : NetworkBehaviour
     private void FinishedDiscarding(int previousValue, int newValue)
     {
         var player = GetHostPlayer();
-        if (player.nrOfFinishedDiscards.Value == player.nrOfMaxPlayers)
+        if (newValue == player.nrOfMaxPlayers)
         {
             print("We have all discarded");
         }
+        print("M-am schimbat si am :" + newValue);
     }
 
     async void Start()
