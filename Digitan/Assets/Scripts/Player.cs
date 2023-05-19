@@ -884,6 +884,7 @@ public class Player : NetworkBehaviour
         }
         else
         {
+            if(IsOwner)
             hostPlayer.FinishedDiscardingServerRpc();
         }
     }
