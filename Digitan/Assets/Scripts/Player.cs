@@ -61,7 +61,7 @@ public class Player : NetworkBehaviour
         currentPlayerTurn.Value = -1;
         if (IsServer)
         {
-            nrOfFinishedDiscards.OnValueChanged += (s, e) => { print("M-am schimbat"); };
+            nrOfFinishedDiscards.OnValueChanged += (s, e) => { print("M-am schimbat " + nrOfFinishedDiscards.Value); };
         }
     }
 
