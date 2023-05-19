@@ -59,7 +59,7 @@ public class Player : NetworkBehaviour
         base.OnNetworkSpawn();
         color = IdToColor(NetworkManager.Singleton.LocalClientId);
         currentPlayerTurn.Value = -1;
-        if (IsOwnedByServer)
+        if (NetworkManager.Singleton.LocalClientId == 0)
         {
             nrOfFinishedDiscards.OnValueChanged -= (s, e) => { print("M-am schimbat " + nrOfFinishedDiscards.Value); };
             nrOfFinishedDiscards.OnValueChanged += (s, e) => { print("M-am schimbat " + nrOfFinishedDiscards.Value); };
@@ -74,8 +74,6 @@ public class Player : NetworkBehaviour
 
         if (IsOwnedByServer)
         {
-
-
             //this is where you should do normal initialisations
             DontDestroyOnLoad(gameObject);
 
