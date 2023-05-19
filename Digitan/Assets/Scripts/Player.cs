@@ -934,8 +934,9 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void ResetFinishedDiscardsClientRpc()
     {
-        GetHostPlayer().nrOfFinishedDiscards = 0;
-        print("nrOfFinishedDiscards is now 0");
+        if (!IsOwner)
+            return;
+        GetMyPlayer().nrOfFinishedDiscards = 0;
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -947,6 +948,9 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void FinishedDiscardingClientRpc()
     {
+        if(!IsOwner) 
+            return;
+
         var nrOfFinishedDiscards = GetMyPlayer().nrOfFinishedDiscards;
 
         nrOfFinishedDiscards++;
