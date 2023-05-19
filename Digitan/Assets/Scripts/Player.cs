@@ -59,7 +59,7 @@ public class Player : NetworkBehaviour
         base.OnNetworkSpawn();
         color = IdToColor(NetworkManager.Singleton.LocalClientId);
         currentPlayerTurn.Value = -1;
-        if (NetworkManager.Singleton.LocalClientId == 0)
+        if (IsOwnedByServer)
         {
             nrOfFinishedDiscards.OnValueChanged -= (s, e) => { print("M-am schimbat " + nrOfFinishedDiscards.Value); };
             nrOfFinishedDiscards.OnValueChanged += (s, e) => { print("M-am schimbat " + nrOfFinishedDiscards.Value); };
@@ -855,7 +855,9 @@ public class Player : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void DiscardHandServerRpc()
     {
-        GetHostPlayer().DiscardHandClientRpc();
+        var player = GetHostPlayer();
+        player.ResetFinishedDiscardsServerRpc();
+        player.DiscardHandClientRpc();
     }
 
     [ClientRpc]
@@ -865,11 +867,6 @@ public class Player : NetworkBehaviour
         int handSize = 0;
         var myPlayer = GetMyPlayer();
         var hostPlayer = GetHostPlayer();
-
-        if (NetworkManager.Singleton.LocalClientId == 0)
-        {
-            hostPlayer.ResetFinishedDiscardsServerRpc();
-        }
 
         foreach (var count in myPlayer.playerHand.Values)
         {
@@ -882,8 +879,8 @@ public class Player : NetworkBehaviour
         }
         else
         {
-            if(IsOwner)
-            hostPlayer.FinishedDiscardingServerRpc();
+            if (IsOwner)
+                hostPlayer.FinishedDiscardingServerRpc();
         }
     }
 
