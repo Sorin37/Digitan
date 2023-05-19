@@ -169,19 +169,33 @@ public class DiscardManager : MonoBehaviour
                 }
 
                 transform.parent.gameObject.SetActive(false);
-                GetMyPlayer().GetComponent<Player>().UpdateHand();
+                GetMyPlayer().UpdateHand();
+                GetHostPlayer().FinishedDiscardingServerRpc();
             }
         });
     }
 
-    private GameObject GetMyPlayer()
+    private Player GetMyPlayer()
     {
         var players = GameObject.FindGameObjectsWithTag("Player");
 
         foreach (var p in players)
         {
             if (p.GetComponent<Player>().IsOwner)
-                return p;
+                return p.GetComponent<Player>();
+        }
+
+        return null;
+    }
+
+    private Player GetHostPlayer()
+    {
+        var players = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (var p in players)
+        {
+            if (p.GetComponent<Player>().IsOwnedByServer)
+                return p.GetComponent<Player>();
         }
 
         return null;
