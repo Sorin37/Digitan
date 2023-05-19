@@ -60,7 +60,7 @@ public class ButtonManager : MonoBehaviour
     {
         settlementButton.onClick.AddListener(() =>
         {
-            if (!IsMyTurn())
+            if (!IsMyTurn() || !hasRolledDice)
             {
                 return;
             }
@@ -79,7 +79,7 @@ public class ButtonManager : MonoBehaviour
     {
         roadButton.onClick.AddListener(() =>
         {
-            if (!IsMyTurn())
+            if (!IsMyTurn() || !hasRolledDice)
             {
                 return;
             }
@@ -98,7 +98,7 @@ public class ButtonManager : MonoBehaviour
     {
         tradeButton.onClick.AddListener(() =>
         {
-            if (!IsMyTurn())
+            if (!IsMyTurn() || !hasRolledDice)
             {
                 return;
             }
@@ -110,7 +110,7 @@ public class ButtonManager : MonoBehaviour
     {
         cityButton.onClick.AddListener(() =>
         {
-            if (!IsMyTurn())
+            if (!IsMyTurn() || !hasRolledDice)
             {
                 return;
             }

@@ -20,6 +20,7 @@ public class Player : NetworkBehaviour
     [SerializeField] private GameObject roadPrefab;
     [SerializeField] private GameObject settlementPrefab;
     [SerializeField] private GameObject cityPrefab;
+    [SerializeField] private GameObject thiefPrefab;
 
     private GameObject gameGrid;
     private GameObject roadGrid;
@@ -31,6 +32,8 @@ public class Player : NetworkBehaviour
     public NetworkVariable<FixedString64Bytes> nickName = new NetworkVariable<FixedString64Bytes>("Uninitialized", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public NetworkVariable<int> order = new NetworkVariable<int>(1);
     public NetworkVariable<int> currentPlayerTurn = new NetworkVariable<int>(-1);
+    public NetworkVariable<int> nrOfFinishedDiscards = new NetworkVariable<int>(-1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+
 
     public Dictionary<string, List<string>> resourcesDict;
     public Dictionary<string, int> playerHand;
@@ -41,6 +44,7 @@ public class Player : NetworkBehaviour
     public Color color;
 
     public event EventHandler OnPlayersJoined;
+    public event EventHandler OnFinishDiscardChanged;
 
     // Awake is called before all the Starts in a random order
     void Awake()
@@ -56,6 +60,28 @@ public class Player : NetworkBehaviour
         base.OnNetworkSpawn();
         color = IdToColor(NetworkManager.Singleton.LocalClientId);
         currentPlayerTurn.Value = -1;
+
+        if (NetworkManager.Singleton.LocalClientId == 0)
+        {
+            OnFinishDiscardChanged -= FinishedDiscarding;
+            OnFinishDiscardChanged += FinishedDiscarding;
+        }
+    }
+
+    private void FinishedDiscarding(object sender, EventArgs e)
+    {
+        var player = GetHostPlayer();
+        print("teh nubmer is: " + player.nrOfFinishedDiscards.Value);
+
+        if (player.nrOfFinishedDiscards.Value == 0)
+        {
+            player.DiscardHandServerRpc();
+        }
+
+        if (player.nrOfFinishedDiscards.Value == player.nrOfMaxPlayers)
+        {
+            player.HideDiscardWaitingCanvasServerRpc();
+        }
     }
 
     async void Start()
@@ -66,8 +92,6 @@ public class Player : NetworkBehaviour
 
         if (IsOwnedByServer)
         {
-
-
             //this is where you should do normal initialisations
             DontDestroyOnLoad(gameObject);
 
@@ -240,13 +264,13 @@ public class Player : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void PlaceSettlementServerRpc(int x, int y, Color color)
+    public void PlaceSettlementServerRpc(int x, int y, Color color, ServerRpcParams serverRpcParams)
     {
-        PlaceSettlementClientRpc(x, y, color);
+        PlaceSettlementClientRpc(x, y, color, serverRpcParams.Receive.SenderClientId);
     }
 
     [ClientRpc]
-    public void PlaceSettlementClientRpc(int x, int y, Color color)
+    public void PlaceSettlementClientRpc(int x, int y, Color color, ulong playerId)
     {
         GameObject pressedCircle = settlementGrid.GetComponent<SettlementGrid>().settlementGrid[x][y].gameObject;
 
@@ -275,6 +299,8 @@ public class Player : NetworkBehaviour
             Quaternion.Euler(90, 0, 0)
         );
 
+        settlementObject.GetComponent<SettlementPiece>().playerId = playerId;
+
         //so that the settlements do not disappear when other players want to place a city
         if (color == this.color)
         {
@@ -297,7 +323,7 @@ public class Player : NetworkBehaviour
         Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("Settlement Circle"));
     }
 
-    private Color IdToColor(ulong id)
+    public Color IdToColor(ulong id)
     {
         switch (id)
         {
@@ -314,14 +340,14 @@ public class Player : NetworkBehaviour
         }
     }
 
-    private GameObject GetMyPlayer()
+    private Player GetMyPlayer()
     {
         var players = GameObject.FindGameObjectsWithTag("Player");
 
         foreach (var p in players)
         {
             if (p.GetComponent<Player>().IsOwner)
-                return p;
+                return p.GetComponent<Player>();
         }
 
         return null;
@@ -393,7 +419,7 @@ public class Player : NetworkBehaviour
 
     private void PlayersJoinedEvent(object s, EventArgs e)
     {
-        ChangeCurrentPlayerDetailsNameClientRpc(GetHostPlayer().GetComponent<Player>().nickName.Value.ToString());
+        ChangeCurrentPlayerDetailsNameClientRpc(GetHostPlayer().nickName.Value.ToString());
         StartPlacingClientRpc(new ClientRpcParams
         {
             Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { 0 } }
@@ -423,13 +449,13 @@ public class Player : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void PlacedServerRpc()
     {
-        var player = GetHostPlayer().GetComponent<Player>();
+        var player = GetHostPlayer();
 
         if ((int)OwnerClientId + player.order.Value == player.nrOfMaxPlayers)
         {
             player.order.Value = -1;
             ChangeCurrentPlayerDetailsColorClientRpc(OwnerClientId);
-            ChangeCurrentPlayerDetailsNameClientRpc(GetPlayerWithId(OwnerClientId).GetComponent<Player>().nickName.Value.ToString());
+            ChangeCurrentPlayerDetailsNameClientRpc(GetPlayerWithId(OwnerClientId).nickName.Value.ToString());
             StartPlacingClientRpc(new ClientRpcParams
             {
                 Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { OwnerClientId } }
@@ -442,38 +468,38 @@ public class Player : NetworkBehaviour
             Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Settlement Circle"));
             settlementGrid.GetComponent<SettlementGrid>().endStartPhase = true;
             ChangeCurrentPlayerDetailsColorClientRpc(0);
-            ChangeCurrentPlayerDetailsNameClientRpc(GetHostPlayer().GetComponent<Player>().nickName.Value.ToString());
+            ChangeCurrentPlayerDetailsNameClientRpc(GetHostPlayer().nickName.Value.ToString());
         }
 
         ChangeCurrentPlayerDetailsColorClientRpc((ulong)((int)OwnerClientId + player.order.Value));
-        ChangeCurrentPlayerDetailsNameClientRpc(GetPlayerWithId((ulong)((int)OwnerClientId + player.order.Value)).GetComponent<Player>().nickName.Value.ToString());
+        ChangeCurrentPlayerDetailsNameClientRpc(GetPlayerWithId((ulong)((int)OwnerClientId + player.order.Value)).nickName.Value.ToString());
         StartPlacingClientRpc(new ClientRpcParams
         {
             Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { (ulong)((int)OwnerClientId + player.order.Value) } }
         });
     }
 
-    private GameObject GetHostPlayer()
+    private Player GetHostPlayer()
     {
         var players = GameObject.FindGameObjectsWithTag("Player");
 
         foreach (var p in players)
         {
             if (p.GetComponent<Player>().IsOwnedByServer)
-                return p;
+                return p.GetComponent<Player>();
         }
 
         return null;
     }
 
-    private GameObject GetPlayerWithId(ulong id)
+    private Player GetPlayerWithId(ulong id)
     {
         var players = GameObject.FindGameObjectsWithTag("Player");
 
         foreach (var p in players)
         {
             if (p.GetComponent<Player>().OwnerClientId == id)
-                return p;
+                return p.GetComponent<Player>();
         }
 
         return null;
@@ -482,8 +508,8 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void EndStartPhaseClientRpc()
     {
-        GetHostPlayer().GetComponent<Player>().settlementGrid.GetComponent<SettlementGrid>().isStartPhase = false;
-        GetHostPlayer().GetComponent<Player>().settlementGrid.GetComponent<SettlementGrid>().TurnSettlementsInvisible();
+        GetHostPlayer().settlementGrid.GetComponent<SettlementGrid>().isStartPhase = false;
+        GetHostPlayer().settlementGrid.GetComponent<SettlementGrid>().TurnSettlementsInvisible();
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -492,13 +518,12 @@ public class Player : NetworkBehaviour
         currentPlayerTurn.Value = (currentPlayerTurn.Value + 1) % nrOfMaxPlayers;
         ChangeCurrentPlayerDetailsColorClientRpc((ulong)currentPlayerTurn.Value);
         ChangeCurrentPlayerDetailsNameClientRpc(
-            GetPlayerWithId((ulong)currentPlayerTurn.Value)
-            .GetComponent<Player>().nickName.Value.ToString()
+            GetPlayerWithId((ulong)currentPlayerTurn.Value).nickName.Value.ToString()
         );
     }
     public void UpdateHand()
     {
-        var playerHand = GetMyPlayer().GetComponent<Player>().playerHand;
+        var playerHand = GetMyPlayer().playerHand;
 
         foreach (var card in playerHand)
         {
@@ -570,8 +595,8 @@ public class Player : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void AcceptTradeServerRpc(ulong tradeMakerId)
     {
-        GetHostPlayer().GetComponent<Player>().CancelTradeClientRpc();
-        GetHostPlayer().GetComponent<Player>().TradeAcceptedClientRpc(
+        GetHostPlayer().CancelTradeClientRpc();
+        GetHostPlayer().TradeAcceptedClientRpc(
             new ClientRpcParams
             {
                 Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { tradeMakerId } }
@@ -581,7 +606,7 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void TradeAcceptedClientRpc(ClientRpcParams clientRpcParams)
     {
-        var myPlayer = GetMyPlayer().GetComponent<Player>();
+        var myPlayer = GetMyPlayer();
         var playerHand = myPlayer.playerHand;
 
         var tradeManager = Resources.FindObjectsOfTypeAll<TradeManager>()[0];
@@ -603,7 +628,7 @@ public class Player : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void CancelTradeServerRpc()
     {
-        GetHostPlayer().GetComponent<Player>().CancelTradeClientRpc();
+        GetHostPlayer().CancelTradeClientRpc();
     }
 
     [ClientRpc]
@@ -616,7 +641,7 @@ public class Player : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void AddTradeDeclinedCountServerRpc(ulong tradeMakerId)
     {
-        GetHostPlayer().GetComponent<Player>().AddTradeDeclinedCountClientRpc(
+        GetHostPlayer().AddTradeDeclinedCountClientRpc(
             new ClientRpcParams
             {
                 Send = new ClientRpcSendParams
@@ -630,8 +655,8 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void AddTradeDeclinedCountClientRpc(ClientRpcParams clientRpcParams)
     {
-        var hostPlayer = GetHostPlayer().GetComponent<Player>();
-        var myPlayer = GetMyPlayer().GetComponent<Player>();
+        var hostPlayer = GetHostPlayer();
+        var myPlayer = GetMyPlayer();
 
         if (myPlayer.nrOfMaxPlayers - 1 == ++hostPlayer.nrOfDeclinedTrades)
         {
@@ -642,13 +667,13 @@ public class Player : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void PlaceCityServerRpc(float x, float y, float z, Color color)
+    public void PlaceCityServerRpc(float x, float y, float z, Color color, ServerRpcParams serverRpcParams)
     {
-        PlaceCityClientRpc(x, y, z, color);
+        PlaceCityClientRpc(x, y, z, color, serverRpcParams.Receive.SenderClientId);
     }
 
     [ClientRpc]
-    public void PlaceCityClientRpc(float x, float y, float z, Color color)
+    public void PlaceCityClientRpc(float x, float y, float z, Color color, ulong playerId)
     {
         var position = new Vector3(x, y, z);
 
@@ -659,6 +684,8 @@ public class Player : NetworkBehaviour
             position,
             Quaternion.Euler(0, 0, 0)
         );
+
+        city.GetComponent<CityPiece>().playerId = playerId;
 
         //change the color
         foreach (var material in city.GetComponent<Renderer>().materials)
@@ -688,7 +715,7 @@ public class Player : NetworkBehaviour
         int dice1 = UnityEngine.Random.Range(1, 7);
         int dice2 = UnityEngine.Random.Range(1, 7);
 
-        GetHostPlayer().GetComponent<Player>().RollDiceClientRpc(dice1 + dice2);
+        GetHostPlayer().RollDiceClientRpc(dice1 + dice2);
 
     }
 
@@ -698,18 +725,263 @@ public class Player : NetworkBehaviour
         print(diceRoll);
 
         if (diceRoll == 7)
-            return;
-
-        var player = GetMyPlayer().GetComponent<Player>();
-        var resourcesDict = player.resourcesDict;
-        var playerHand = player.playerHand;
-
-
-        foreach (string resource in resourcesDict[diceRoll.ToString()])
         {
-            playerHand[resource]++;
+            var player = GetHostPlayer();
+            if (IsServer)
+            {
+                player.ResetFinishedDiscardsServerRpc();
+            }
+            player.DisplayThiefCirclesServerRpc();
+        }
+        else
+        {
+            var player = GetMyPlayer();
+            var resourcesDict = player.resourcesDict;
+            var playerHand = player.playerHand;
+
+            foreach (string resource in resourcesDict[diceRoll.ToString()])
+            {
+                playerHand[resource]++;
+            }
+
+            UpdateHand();
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void MoveThiefServerRpc(Vector3 newPosition)
+    {
+        MoveThiefClientRpc(newPosition);
+    }
+
+    [ClientRpc]
+    public void MoveThiefClientRpc(Vector3 newPosition)
+    {
+        var thiefPiece = GameObject.Find("Thief");
+
+        if (thiefPiece != null)
+        {
+            //dispaly the circle the thief is taken from
+            var colliders = Physics.OverlapSphere(
+                thiefPiece.transform.position,
+                1f,
+                (int)Mathf.Pow(2, LayerMask.NameToLayer("Unvisible Thief Circle")));
+
+            foreach (var collider in colliders)
+            {
+                collider.gameObject.layer = LayerMask.NameToLayer("Thief Circle");
+            }
+
+            thiefPiece.transform.position = new Vector3(newPosition.x, 0.75f, newPosition.z);
+
+            //hide the circle the thief is placed on
+            colliders = Physics.OverlapSphere(
+                thiefPiece.transform.position,
+                1f,
+                (int)Mathf.Pow(2, LayerMask.NameToLayer("Thief Circle")));
+
+            foreach (var collider in colliders)
+            {
+                collider.gameObject.layer = LayerMask.NameToLayer("Unvisible Thief Circle");
+            }
+
+        }
+        else
+        {
+            var newThief = Instantiate(
+                thiefPrefab,
+                new Vector3(newPosition.x, 0.75f, newPosition.z),
+                Quaternion.Euler(0, 0, 0));
+
+            newThief.name = "Thief";
+
+
+            //hide the circle the thief is placed on
+            var colliders = Physics.OverlapSphere(
+                newThief.transform.position,
+                1f,
+                (int)Mathf.Pow(2, LayerMask.NameToLayer("Thief Circle")));
+
+            foreach (var collider in colliders)
+            {
+                collider.gameObject.layer = LayerMask.NameToLayer("Unvisible Thief Circle");
+            }
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void StealServerRpc(ulong targetId, ServerRpcParams serverRpcParams)
+    {
+        StealClientRpc(
+            serverRpcParams.Receive.SenderClientId,
+            new ClientRpcParams
+            {
+                Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { targetId } }
+            }
+        );
+    }
+
+    [ClientRpc]
+    public void StealClientRpc(ulong sender, ClientRpcParams clientRpcParams)
+    {
+        var player = GetMyPlayer();
+        var hand = player.playerHand;
+
+        List<string> resources = new List<string>();
+
+        foreach (var key in hand.Keys)
+        {
+            for (int i = 0; i < hand[key]; i++)
+            {
+                resources.Add(key);
+            }
         }
 
-        UpdateHand();
+        if (resources.Count == 0)
+            return;
+
+        int randomIndex = UnityEngine.Random.Range(0, resources.Count);
+        var resource = resources[randomIndex];
+
+        hand[resource]--;
+
+        player.UpdateHand();
+
+        GetHostPlayer().AddResourceServerRpc(
+            resource,
+            sender
+        );
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void AddResourceServerRpc(string resource, ulong sender)
+    {
+        GetHostPlayer().AddResourceClientRpc(
+            resource,
+            new ClientRpcParams
+            {
+                Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { sender } }
+            }
+        );
+    }
+
+    [ClientRpc]
+    public void AddResourceClientRpc(string resource, ClientRpcParams clientRpcParams)
+    {
+        var player = GetMyPlayer();
+        player.playerHand[resource]++;
+        player.UpdateHand();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void DiscardHandServerRpc()
+    {
+        var player = GetHostPlayer();
+        player.DiscardHandClientRpc();
+    }
+
+    [ClientRpc]
+    public void DiscardHandClientRpc()
+    {
+
+        int handSize = 0;
+        var myPlayer = GetMyPlayer();
+        var hostPlayer = GetHostPlayer();
+
+        foreach (var count in myPlayer.playerHand.Values)
+        {
+            handSize += count;
+        }
+
+        if (handSize > 7)
+        {
+            Resources.FindObjectsOfTypeAll<DiscardManager>()[0].transform.parent.gameObject.SetActive(true);
+        }
+        else
+        {
+            if (IsOwnedByServer)
+            {
+                Resources.FindObjectsOfTypeAll<DiscardWaitingManager>()[0].transform.parent.gameObject.SetActive(true);
+                hostPlayer.FinishedDiscardingServerRpc();
+            }
+        }
+    }
+
+    [ServerRpc]
+    public void DisplayThiefCirclesServerRpc()
+    {
+        var player = GetHostPlayer();
+
+        player.DisplayThiefCirclesClientRpc(new ClientRpcParams
+        {
+            Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { (ulong)player.currentPlayerTurn.Value } }
+        });
+
+    }
+
+    [ClientRpc]
+    public void DisplayThiefCirclesClientRpc(ClientRpcParams clientRpcParams)
+    {
+        Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Thief Circle"));
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void ModifyResourceDictServerRpc(string action, string number, string resource, ulong playerId)
+    {
+        GetHostPlayer().ModifyResourceDictClientRpc(
+            action,
+            number,
+            resource,
+            new ClientRpcParams
+            {
+                Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { playerId } }
+            });
+    }
+
+    [ClientRpc]
+    public void ModifyResourceDictClientRpc(string action, string number, string resource, ClientRpcParams clientRpcParams)
+    {
+        var resourceDict = GetMyPlayer().resourcesDict;
+
+        if (action == "Block")
+        {
+            resourceDict[number].Remove(resource);
+        }
+
+        if (action == "Free")
+        {
+            resourceDict[resource].Add(resource);
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void FinishedDiscardingServerRpc()
+    {
+        GetHostPlayer().nrOfFinishedDiscards.Value++;
+        OnFinishDiscardChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void ResetFinishedDiscardsServerRpc()
+    {
+        GetHostPlayer().nrOfFinishedDiscards.Value = 0;
+        OnFinishDiscardChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void HideDiscardWaitingCanvasServerRpc()
+    {
+        GetHostPlayer().HideDiscardWaitingCanvasClientRpc();
+    }
+
+    [ClientRpc]
+    public void HideDiscardWaitingCanvasClientRpc()
+    {
+        var canvas = GameObject.Find("DiscardWaitingCanvas");
+        if (canvas != null)
+        {
+            canvas.SetActive(false);
+        }
+        print("Acum ascund");
     }
 }

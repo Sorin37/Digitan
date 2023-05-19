@@ -61,7 +61,7 @@ public class LobbyManager : MonoBehaviour
 
         LobbyName.GetComponent<TextMeshProUGUI>().text = lobby.Name;
 
-        drawPlayers();
+        DrawPlayers();
         currentNumberOfPlayers = lobby.Players.Count;
 
         if (currentNumberOfPlayers > 1)
@@ -94,7 +94,7 @@ public class LobbyManager : MonoBehaviour
 
                     if (lobby.Players.Count != currentNumberOfPlayers)
                     {
-                        drawPlayers();
+                        DrawPlayers();
                         currentNumberOfPlayers = lobby.Players.Count;
                     }
                 }
@@ -107,7 +107,7 @@ public class LobbyManager : MonoBehaviour
         }
     }
 
-    private void drawPlayers()
+    private void DrawPlayers()
     {
         foreach (Transform child in ListPanel.transform)
         {

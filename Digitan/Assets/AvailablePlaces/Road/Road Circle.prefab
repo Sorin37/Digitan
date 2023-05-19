@@ -99,7 +99,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Road: {fileID: 6736439349771075845, guid: 02679582dec926d4d8240c367004d820, type: 3}
-  RoadCircleGrid: {fileID: 188050, guid: b06f0e6c1dfa4356ac918da1bb32c603, type: 3}
   isOccupied: 0
 --- !u!65 &-4101960994820899120
 BoxCollider:

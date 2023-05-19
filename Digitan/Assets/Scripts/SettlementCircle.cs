@@ -70,7 +70,8 @@ public class SettlementCircle : MonoBehaviour
                 getHostPlayer().GetComponent<Player>().PlaceSettlementClientRpc(
                     indexes.x,
                     indexes.y,
-                    myPlayer.color
+                    myPlayer.color,
+                    GetMyPlayer().GetComponent<Player>().OwnerClientId
                 );
             }
             else
@@ -78,7 +79,8 @@ public class SettlementCircle : MonoBehaviour
                 getHostPlayer().GetComponent<Player>().PlaceSettlementServerRpc(
                     indexes.x,
                     indexes.y,
-                    myPlayer.color
+                    myPlayer.color,
+                    new Unity.Netcode.ServerRpcParams()
                 );
             }
 
