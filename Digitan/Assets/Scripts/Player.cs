@@ -75,7 +75,7 @@ public class Player : NetworkBehaviour
         if (player.nrOfFinishedDiscards.Value == 0)
         {
             print("Time to discard");
-            player.DiscardHandServerRpc();
+            //player.DiscardHandServerRpc();
         }
 
         if (player.nrOfFinishedDiscards.Value == player.nrOfMaxPlayers)
