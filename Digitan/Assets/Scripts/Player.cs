@@ -60,6 +60,7 @@ public class Player : NetworkBehaviour
         base.OnNetworkSpawn();
         color = IdToColor(NetworkManager.Singleton.LocalClientId);
         currentPlayerTurn.Value = -1;
+
         if (NetworkManager.Singleton.LocalClientId == 0)
         {
             OnFinishDiscardChanged -= FinishedDiscarding;
@@ -70,17 +71,15 @@ public class Player : NetworkBehaviour
     private void FinishedDiscarding(object sender, EventArgs e)
     {
         var player = GetHostPlayer();
-        print("M-am schimbat : " + player.nrOfFinishedDiscards.Value);
 
         if (player.nrOfFinishedDiscards.Value == 0)
         {
-            print("Time to discard");
             player.DiscardHandServerRpc();
         }
 
         if (player.nrOfFinishedDiscards.Value == player.nrOfMaxPlayers)
         {
-            print("We have all discarded");
+            player.HideDiscardWaitingCanvasServerRpc();
         }
     }
 
@@ -963,5 +962,21 @@ public class Player : NetworkBehaviour
     {
         GetHostPlayer().nrOfFinishedDiscards.Value = 0;
         OnFinishDiscardChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void HideDiscardWaitingCanvasServerRpc()
+    {
+        GetHostPlayer().HideDiscardWaitingCanvasClientRpc();
+    }
+
+    [ClientRpc]
+    public void HideDiscardWaitingCanvasClientRpc()
+    {
+        var canvas = GameObject.Find("DiscardWaitingCanvas");
+        if(canvas != null)
+        {
+            canvas.SetActive(false);
+        }
     }
 }
