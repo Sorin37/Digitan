@@ -935,7 +935,7 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void FinishedDiscardingClientRpc()
     {
-        if(!IsOwner) 
+        if(OwnerClientId != NetworkManager.Singleton.LocalClientId) 
             return;
 
         var nrOfFinishedDiscards = GetMyPlayer().nrOfFinishedDiscards;
