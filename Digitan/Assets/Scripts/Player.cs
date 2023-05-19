@@ -61,6 +61,7 @@ public class Player : NetworkBehaviour
         currentPlayerTurn.Value = -1;
         if (IsOwnedByServer)
         {
+            nrOfFinishedDiscards.OnValueChanged -= (s, e) => { print("M-am schimbat " + nrOfFinishedDiscards.Value); };
             nrOfFinishedDiscards.OnValueChanged += (s, e) => { print("M-am schimbat " + nrOfFinishedDiscards.Value); };
         }
     }
@@ -867,7 +868,7 @@ public class Player : NetworkBehaviour
         var myPlayer = GetMyPlayer();
         var hostPlayer = GetHostPlayer();
 
-        if (OwnerClientId == 0)
+        if (NetworkManager.Singleton.LocalClientId == 0)
         {
             hostPlayer.ResetFinishedDiscardsServerRpc();
         }
