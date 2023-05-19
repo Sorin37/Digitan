@@ -61,19 +61,9 @@ public class Player : NetworkBehaviour
         currentPlayerTurn.Value = -1;
         if (IsOwnedByServer)
         {
-            nrOfFinishedDiscards.OnValueChanged -= FinishedDiscarding;
-            nrOfFinishedDiscards.OnValueChanged += FinishedDiscarding;
+            nrOfFinishedDiscards.OnValueChanged -= (s, e) => { print("M-am schimbat " + nrOfFinishedDiscards.Value); };
+            nrOfFinishedDiscards.OnValueChanged += (s, e) => { print("M-am schimbat " + nrOfFinishedDiscards.Value); };
         }
-    }
-
-    private void FinishedDiscarding(int previousValue, int newValue)
-    {
-        var player = GetHostPlayer();
-        if (newValue == player.nrOfMaxPlayers)
-        {
-            print("We have all discarded");
-        }
-        print("M-am schimbat si am :" + newValue);
     }
 
     async void Start()
