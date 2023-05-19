@@ -61,37 +61,25 @@ public class Player : NetworkBehaviour
         currentPlayerTurn.Value = -1;
         if (NetworkManager.Singleton.LocalClientId == 0)
         {
-            nrOfFinishedDiscards.OnValueChanged -= (s, e) => {
-                print("M-am schimbat : " + nrOfFinishedDiscards.Value);
-                var player = GetHostPlayer();
+            nrOfFinishedDiscards.OnValueChanged -= FinishedDiscarding;
+            nrOfFinishedDiscards.OnValueChanged += FinishedDiscarding;
+        }
+    }
 
-                if (nrOfFinishedDiscards.Value == 0)
-                {
-                    print("Time to discard");
-                    player.DiscardHandServerRpc();
-                }
+    private void FinishedDiscarding(int previousValue, int newValue)
+    {
+        print("M-am schimbat : " + nrOfFinishedDiscards.Value);
+        var player = GetHostPlayer();
 
-                if (nrOfFinishedDiscards.Value == player.nrOfMaxPlayers)
-                {
-                    print("We have all discarded");
-                }
-            };
+        if (nrOfFinishedDiscards.Value == 0)
+        {
+            print("Time to discard");
+            player.DiscardHandServerRpc();
+        }
 
-            nrOfFinishedDiscards.OnValueChanged += (s, e) => {
-                print("M-am schimbat : " + nrOfFinishedDiscards.Value);
-                var player = GetHostPlayer();
-
-                if (nrOfFinishedDiscards.Value == 0)
-                {
-                    print("Time to discard");
-                    player.DiscardHandServerRpc();
-                }
-
-                if (nrOfFinishedDiscards.Value == player.nrOfMaxPlayers)
-                {
-                    print("We have all discarded");
-                }
-            };
+        if (nrOfFinishedDiscards.Value == player.nrOfMaxPlayers)
+        {
+            print("We have all discarded");
         }
     }
 
