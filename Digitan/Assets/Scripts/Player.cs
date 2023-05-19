@@ -44,6 +44,7 @@ public class Player : NetworkBehaviour
     public Color color;
 
     public event EventHandler OnPlayersJoined;
+    public event EventHandler OnFinishDiscardChanged;
 
     // Awake is called before all the Starts in a random order
     void Awake()
@@ -61,23 +62,23 @@ public class Player : NetworkBehaviour
         currentPlayerTurn.Value = -1;
         if (NetworkManager.Singleton.LocalClientId == 0)
         {
-            nrOfFinishedDiscards.OnValueChanged -= FinishedDiscarding;
-            nrOfFinishedDiscards.OnValueChanged += FinishedDiscarding;
+            OnFinishDiscardChanged -= FinishedDiscarding;
+            OnFinishDiscardChanged += FinishedDiscarding;
         }
     }
 
-    private void FinishedDiscarding(int previousValue, int newValue)
+    private void FinishedDiscarding(object sender, EventArgs e)
     {
-        print("M-am schimbat : " + nrOfFinishedDiscards.Value);
         var player = GetHostPlayer();
+        print("M-am schimbat : " + player.nrOfFinishedDiscards.Value);
 
-        if (nrOfFinishedDiscards.Value == 0)
+        if (player.nrOfFinishedDiscards.Value == 0)
         {
             print("Time to discard");
             player.DiscardHandServerRpc();
         }
 
-        if (nrOfFinishedDiscards.Value == player.nrOfMaxPlayers)
+        if (player.nrOfFinishedDiscards.Value == player.nrOfMaxPlayers)
         {
             print("We have all discarded");
         }
@@ -951,12 +952,13 @@ public class Player : NetworkBehaviour
     public void FinishedDiscardingServerRpc()
     {
         GetHostPlayer().nrOfFinishedDiscards.Value++;
+        OnFinishDiscardChanged?.Invoke(this, EventArgs.Empty);
     }
 
     [ServerRpc(RequireOwnership = false)]
     public void ResetFinishedDiscardsServerRpc()
     {
         GetHostPlayer().nrOfFinishedDiscards.Value = 0;
-
+        OnFinishDiscardChanged?.Invoke(this, EventArgs.Empty);
     }
 }
