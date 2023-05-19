@@ -38,8 +38,20 @@ public class ThiefCircle : MonoBehaviour
             (int)Mathf.Pow(2, LayerMask.NameToLayer("Number"))
         );
 
-        string number = numberObject[0].gameObject.name;
-        string resource = numberObject[0].GetComponent<Number>().resource;
+
+        string number;
+        string resource;
+
+        if (numberObject == null)
+        {
+            number = null;
+            resource = null;
+        }
+        else
+        {
+            number = numberObject[0].gameObject.name;
+            resource = numberObject[0].GetComponent<Number>().resource;
+        }
 
         FreeResource(hostPlayer, number, resource);
 
@@ -137,9 +149,13 @@ public class ThiefCircle : MonoBehaviour
 
     private void FreeResource(Player hostPlayer, string number, string resource)
     {
+        if(number == null) 
+            return;
+
         var thief = GameObject.Find("Thief");
 
-        if(thief == null) {
+        if (thief == null)
+        {
             return;
         }
 
@@ -170,6 +186,9 @@ public class ThiefCircle : MonoBehaviour
 
     private void BlockResource(Player hostPlayer, string number, string resource)
     {
+        if (number == null)
+            return;
+
         var settlements = Physics.OverlapSphere(
             transform.position,
             2.5f,

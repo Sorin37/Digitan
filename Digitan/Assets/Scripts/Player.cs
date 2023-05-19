@@ -935,7 +935,7 @@ public class Player : NetworkBehaviour
     public void ResetFinishedDiscardsClientRpc()
     {
         GetHostPlayer().nrOfFinishedDiscards = 0;
-
+        print("nrOfFinishedDiscards is now 0");
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -950,6 +950,7 @@ public class Player : NetworkBehaviour
         var nrOfFinishedDiscards = GetMyPlayer().nrOfFinishedDiscards;
 
         nrOfFinishedDiscards++;
+        print("Am adaugat 1 la nr of finished discards si am: " + nrOfFinishedDiscards);
 
         if(nrOfFinishedDiscards == GetMyPlayer().nrOfMaxPlayers)
         {
