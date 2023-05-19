@@ -60,7 +60,7 @@ public class Player : NetworkBehaviour
         base.OnNetworkSpawn();
         color = IdToColor(NetworkManager.Singleton.LocalClientId);
         currentPlayerTurn.Value = -1;
-        if (NetworkManager.Singleton.LocalClientId == 0 && NetworkObjectId == 1)
+        if (NetworkManager.Singleton.LocalClientId == 0)
         {
             OnFinishDiscardChanged -= FinishedDiscarding;
             OnFinishDiscardChanged += FinishedDiscarding;
@@ -727,7 +727,10 @@ public class Player : NetworkBehaviour
         if (diceRoll == 7)
         {
             var player = GetHostPlayer();
-            player.ResetFinishedDiscardsServerRpc();
+            if (IsServer)
+            {
+                player.ResetFinishedDiscardsServerRpc();
+            }
             player.DisplayThiefCirclesServerRpc();
         }
         else
