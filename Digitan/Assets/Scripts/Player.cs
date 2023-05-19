@@ -59,11 +59,29 @@ public class Player : NetworkBehaviour
         base.OnNetworkSpawn();
         color = IdToColor(NetworkManager.Singleton.LocalClientId);
         currentPlayerTurn.Value = -1;
-        if (IsOwnedByServer)
+        if (NetworkManager.Singleton.LocalClientId == 0)
         {
-            nrOfFinishedDiscards.OnValueChanged -= (s, e) => { print("M-am schimbat " + nrOfFinishedDiscards.Value); };
-            nrOfFinishedDiscards.OnValueChanged += (s, e) => { print("M-am schimbat " + nrOfFinishedDiscards.Value); };
+            nrOfFinishedDiscards.OnValueChanged -= FinishedDiscarding;
+            nrOfFinishedDiscards.OnValueChanged += FinishedDiscarding;
         }
+    }
+
+    private void FinishedDiscarding(int previousValue, int newValue)
+    {
+        print("M-am schimbat : " + nrOfFinishedDiscards.Value);
+        var player = GetHostPlayer();
+
+        if (nrOfFinishedDiscards.Value == 0)
+        {
+            print("Time to discard");
+            player.DiscardHandServerRpc();
+        }
+
+        if (nrOfFinishedDiscards.Value == player.nrOfMaxPlayers)
+        {
+            print("We have all discarded");
+        }
+
     }
 
     async void Start()
@@ -709,7 +727,7 @@ public class Player : NetworkBehaviour
         if (diceRoll == 7)
         {
             var player = GetHostPlayer();
-            player.DiscardHandServerRpc();
+            player.ResetFinishedDiscardsServerRpc();
             player.DisplayThiefCirclesServerRpc();
         }
         else
@@ -856,7 +874,6 @@ public class Player : NetworkBehaviour
     public void DiscardHandServerRpc()
     {
         var player = GetHostPlayer();
-        player.ResetFinishedDiscardsServerRpc();
         player.DiscardHandClientRpc();
     }
 
@@ -941,5 +958,6 @@ public class Player : NetworkBehaviour
     public void ResetFinishedDiscardsServerRpc()
     {
         GetHostPlayer().nrOfFinishedDiscards.Value = 0;
+
     }
 }
