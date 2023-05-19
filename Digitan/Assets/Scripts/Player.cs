@@ -59,7 +59,7 @@ public class Player : NetworkBehaviour
         base.OnNetworkSpawn();
         color = IdToColor(NetworkManager.Singleton.LocalClientId);
         currentPlayerTurn.Value = -1;
-        if (IsServer)
+        if (IsOwnedByServer)
         {
             nrOfFinishedDiscards.OnValueChanged += (s, e) => { print("M-am schimbat " + nrOfFinishedDiscards.Value); };
         }
@@ -867,7 +867,7 @@ public class Player : NetworkBehaviour
         var myPlayer = GetMyPlayer();
         var hostPlayer = GetHostPlayer();
 
-        if (IsServer)
+        if (IsOwnedByServer)
         {
             hostPlayer.nrOfFinishedDiscards.Value = 0;
         }
