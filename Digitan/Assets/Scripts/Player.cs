@@ -898,6 +898,7 @@ public class Player : NetworkBehaviour
         }
         else
         {
+            Resources.FindObjectsOfTypeAll<DiscardWaitingManager>()[0].transform.parent.gameObject.SetActive(true);
             if (IsOwner)
                 hostPlayer.FinishedDiscardingServerRpc();
         }
