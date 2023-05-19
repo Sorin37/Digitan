@@ -883,7 +883,7 @@ public class Player : NetworkBehaviour
         }
         else
         {
-            hostPlayer.nrOfFinishedDiscards.Value++;
+            hostPlayer.FinishedDiscardingServerRpc();
         }
 
         if (hostPlayer.nrOfFinishedDiscards.Value == hostPlayer.nrOfMaxPlayers)
