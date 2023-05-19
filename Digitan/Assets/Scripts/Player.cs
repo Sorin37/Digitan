@@ -32,7 +32,7 @@ public class Player : NetworkBehaviour
     public NetworkVariable<FixedString64Bytes> nickName = new NetworkVariable<FixedString64Bytes>("Uninitialized", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public NetworkVariable<int> order = new NetworkVariable<int>(1);
     public NetworkVariable<int> currentPlayerTurn = new NetworkVariable<int>(-1);
-    public NetworkVariable<int> nrOfFinishedDiscards = new NetworkVariable<int>(0);
+    public NetworkVariable<int> nrOfFinishedDiscards = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
 
     public Dictionary<string, List<string>> resourcesDict;
@@ -59,6 +59,10 @@ public class Player : NetworkBehaviour
         base.OnNetworkSpawn();
         color = IdToColor(NetworkManager.Singleton.LocalClientId);
         currentPlayerTurn.Value = -1;
+        if (IsServer)
+        {
+            nrOfFinishedDiscards.OnValueChanged += (s, e) => { print("M-am schimbat"); };
+        }
     }
 
     async void Start()
@@ -858,6 +862,7 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void DiscardHandClientRpc()
     {
+
         int handSize = 0;
         var myPlayer = GetMyPlayer();
         var hostPlayer = GetHostPlayer();
@@ -881,7 +886,7 @@ public class Player : NetworkBehaviour
             hostPlayer.nrOfFinishedDiscards.Value++;
         }
 
-        if(hostPlayer.nrOfFinishedDiscards.Value == hostPlayer.nrOfMaxPlayers)
+        if (hostPlayer.nrOfFinishedDiscards.Value == hostPlayer.nrOfMaxPlayers)
         {
             print("Au decartat toti");
         }
@@ -932,5 +937,11 @@ public class Player : NetworkBehaviour
         {
             resourceDict[resource].Add(resource);
         }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void FinishedDiscardingServerRpc()
+    {
+        GetHostPlayer().nrOfFinishedDiscards.Value++;
     }
 }

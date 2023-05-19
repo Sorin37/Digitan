@@ -170,7 +170,7 @@ public class DiscardManager : MonoBehaviour
 
                 transform.parent.gameObject.SetActive(false);
                 GetMyPlayer().UpdateHand();
-                GetHostPlayer().nrOfFinishedDiscards.Value++;
+                GetHostPlayer().FinishedDiscardingServerRpc();
             }
         });
     }
