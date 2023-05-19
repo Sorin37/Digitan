@@ -71,6 +71,7 @@ public class Player : NetworkBehaviour
     private void FinishedDiscarding(object sender, EventArgs e)
     {
         var player = GetHostPlayer();
+        print(player.nrOfFinishedDiscards.Value);
 
         if (player.nrOfFinishedDiscards.Value == 0)
         {
@@ -898,9 +899,11 @@ public class Player : NetworkBehaviour
         }
         else
         {
-            Resources.FindObjectsOfTypeAll<DiscardWaitingManager>()[0].transform.parent.gameObject.SetActive(true);
             if (IsOwner)
+            {
+                Resources.FindObjectsOfTypeAll<DiscardWaitingManager>()[0].transform.parent.gameObject.SetActive(true);
                 hostPlayer.FinishedDiscardingServerRpc();
+            }
         }
     }
 
@@ -975,7 +978,7 @@ public class Player : NetworkBehaviour
     public void HideDiscardWaitingCanvasClientRpc()
     {
         var canvas = GameObject.Find("DiscardWaitingCanvas");
-        if(canvas != null)
+        if (canvas != null)
         {
             canvas.SetActive(false);
         }
