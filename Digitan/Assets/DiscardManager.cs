@@ -171,6 +171,8 @@ public class DiscardManager : MonoBehaviour
                 transform.parent.gameObject.SetActive(false);
                 GetMyPlayer().UpdateHand();
                 Resources.FindObjectsOfTypeAll<DiscardWaitingManager>()[0].transform.parent.gameObject.SetActive(true);
+                InitDiscardDict();
+                DrawDiscardDict();
                 GetHostPlayer().FinishedDiscardingServerRpc();
             }
         });

@@ -903,9 +903,7 @@ public class Player : NetworkBehaviour
             {
                 Resources.FindObjectsOfTypeAll<DiscardWaitingManager>()[0].transform.parent.gameObject.SetActive(true);
                 hostPlayer.FinishedDiscardingServerRpc();
-                print("in ownder");
             }
-            print("inafara ownder");
         }
     }
 
