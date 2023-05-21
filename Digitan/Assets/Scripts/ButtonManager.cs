@@ -15,21 +15,23 @@ public class ButtonManager : MonoBehaviour
     [SerializeField] private Button rollDiceButton;
     [SerializeField] private Button tradeButton;
     [SerializeField] private Button cityButton;
+    [SerializeField] private Button developmentButton;
     [SerializeField] private Canvas tradeCanvas;
     [SerializeField] private GameObject tradeManager;
     private bool hasRolledDice = false;
 
     private void Awake()
     {
-        initEndTurnButton();
-        initRollDiceButton();
-        initSettlementButton();
-        initRoadButton();
-        initTradeButton();
-        initCityButton();
+        InitEndTurnButton();
+        InitRollDiceButton();
+        InitSettlementButton();
+        InitRoadButton();
+        InitTradeButton();
+        InitCityButton();
+        InitDevelopmentButton();
     }
 
-    private void initRollDiceButton()
+    private void InitRollDiceButton()
     {
         rollDiceButton.onClick.AddListener(() =>
         {
@@ -44,7 +46,7 @@ public class ButtonManager : MonoBehaviour
         });
     }
 
-    private void initEndTurnButton()
+    private void InitEndTurnButton()
     {
         endTurnButton.onClick.AddListener(() =>
         {
@@ -56,7 +58,7 @@ public class ButtonManager : MonoBehaviour
             GetHostPlayer().GetComponent<Player>().PassTurnServerRpc();
         });
     }
-    private void initSettlementButton()
+    private void InitSettlementButton()
     {
         settlementButton.onClick.AddListener(() =>
         {
@@ -75,7 +77,7 @@ public class ButtonManager : MonoBehaviour
             }
         });
     }
-    private void initRoadButton()
+    private void InitRoadButton()
     {
         roadButton.onClick.AddListener(() =>
         {
@@ -94,7 +96,7 @@ public class ButtonManager : MonoBehaviour
             }
         });
     }
-    private void initTradeButton()
+    private void InitTradeButton()
     {
         tradeButton.onClick.AddListener(() =>
         {
@@ -106,7 +108,7 @@ public class ButtonManager : MonoBehaviour
             tradeCanvas.gameObject.SetActive(true);
         });
     }
-    private void initCityButton()
+    private void InitCityButton()
     {
         cityButton.onClick.AddListener(() =>
         {
@@ -125,6 +127,19 @@ public class ButtonManager : MonoBehaviour
                 //todo: implement an error message or smth
                 print("You don't have enough resources for a road!");
             }
+        });
+    }
+
+    private void InitDevelopmentButton()
+    {
+        developmentButton.onClick.AddListener(() =>
+        {
+            if (!IsMyTurn() || !hasRolledDice)
+            {
+                return;
+            }
+
+            print("Ar trebui sa ma dezvolt");
         });
     }
 
