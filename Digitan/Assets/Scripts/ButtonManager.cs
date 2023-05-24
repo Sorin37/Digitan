@@ -42,7 +42,7 @@ public class ButtonManager : MonoBehaviour
 
             hasRolledDice = true;
 
-            GetHostPlayer().GetComponent<Player>().RollDiceServerRpc();
+            GetHostPlayer().RollDiceServerRpc();
         });
     }
 
@@ -55,7 +55,7 @@ public class ButtonManager : MonoBehaviour
 
             hasRolledDice = false;
 
-            GetHostPlayer().GetComponent<Player>().PassTurnServerRpc();
+            GetHostPlayer().PassTurnServerRpc();
         });
     }
     private void InitSettlementButton()
@@ -139,7 +139,7 @@ public class ButtonManager : MonoBehaviour
                 return;
             }
 
-            print("Ar trebui sa ma dezvolt");
+            GetHostPlayer().GetDevelopmentServerRpc(new ServerRpcParams());
         });
     }
 
@@ -198,14 +198,14 @@ public class ButtonManager : MonoBehaviour
         return false;
     }
 
-    private GameObject GetHostPlayer()
+    private Player GetHostPlayer()
     {
         var players = GameObject.FindGameObjectsWithTag("Player");
 
         foreach (var p in players)
         {
             if (p.GetComponent<Player>().IsOwnedByServer)
-                return p;
+                return p.GetComponent<Player>();
         }
 
         return null;
@@ -242,13 +242,13 @@ public class ButtonManager : MonoBehaviour
         getDict["Ore"] = 0;
         getDict["Wool"] = 0;
 
-        GetHostPlayer().GetComponent<Player>().nrOfDeclinedTrades = 0;
+        GetHostPlayer().nrOfDeclinedTrades = 0;
 
         tradeManager.DrawDicts();
     }
 
     private bool IsMyTurn()
     {
-        return GetHostPlayer().GetComponent<Player>().currentPlayerTurn.Value == (int)NetworkManager.Singleton.LocalClientId;
+        return GetHostPlayer().currentPlayerTurn.Value == (int)NetworkManager.Singleton.LocalClientId;
     }
 }

@@ -43,6 +43,9 @@ public class Player : NetworkBehaviour
     public int nrOfDeclinedTrades = 0;
     public Color color;
 
+    public List<string> developments = new List<string>();
+    public List<string> developmentsDeck;
+
     public event EventHandler OnPlayersJoined;
     public event EventHandler OnFinishDiscardChanged;
 
@@ -98,6 +101,7 @@ public class Player : NetworkBehaviour
             if (IsHost)
             {
                 resourcesCode.Value = GenerateResourcesCode();
+                InitializeDevelopmentDeck();
             }
 
             gameGrid.GetComponent<GameGrid>().CreateGrid(resourcesCode.Value.ToString());
@@ -983,5 +987,42 @@ public class Player : NetworkBehaviour
             canvas.SetActive(false);
         }
         print("Acum ascund");
+    }
+
+    private void InitializeDevelopmentDeck()
+    {
+        developmentsDeck = new List<string>
+        {
+            "Knight", "Knight", "Knight", "Knight", "Knight",
+            "Knight", "Knight", "Knight", "Knight", "Knight",
+            "Knight", "Knight", "Knight", "Knight", "Knight",
+            "Monopoly", "Monopoly", "Monopoly",
+            "RoadBuilding", "RoadBuilding", "RoadBuilding",
+            "YearOfPlenty", "YearOfPlenty", "YearOfPlenty",
+            "Chapel",
+            "GreatHall",
+            "Library",
+            "Market",
+            "University"
+        };
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void GetDevelopmentServerRpc(ServerRpcParams srp)
+    {
+        if(developmentsDeck.Count == 0) {
+            print("no more developments left");
+            return;
+        }
+        int randomIndex = UnityEngine.Random.Range(0, developmentsDeck.Count);
+        string number = developmentsDeck[randomIndex];
+        developmentsDeck.RemoveAt(randomIndex);
+        print(number);
+    }
+
+    [ClientRpc]
+    public void GetDevelopmentClientRpc(ClientRpcParams crp)
+    {
+
     }
 }
