@@ -44,7 +44,7 @@ public class Player : NetworkBehaviour
     public Color color;
 
     public List<string> developments = new List<string>();
-    public List<string> developmentsDeck;
+    private List<string> developmentsDeck;
 
     public event EventHandler OnPlayersJoined;
     public event EventHandler OnFinishDiscardChanged;
