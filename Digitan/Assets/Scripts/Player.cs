@@ -1046,7 +1046,7 @@ public class Player : NetworkBehaviour
 
         GameObject deck = null;
 
-        foreach(Transform child in deckGroup.transform)
+        foreach (Transform child in deckGroup.transform)
         {
             if (child.gameObject.name == deckName)
             {
@@ -1069,7 +1069,18 @@ public class Player : NetworkBehaviour
         //resize the deck
         var deckRectTransform = deck.transform as RectTransform;
 
-        deckRectTransform.sizeDelta = new Vector2(100, deckRectTransform.sizeDelta.y);
+        float width = 0;
+
+        if (deckRectTransform.sizeDelta.x < 0)
+        {
+            width = 120;
+        }
+        else if (deckRectTransform.sizeDelta.x >= 100)
+        {
+            width = 25;
+        }
+
+        deckRectTransform.sizeDelta = new Vector2(deckRectTransform.sizeDelta.x + width, deckRectTransform.sizeDelta.y);
     }
 
     private string DevelopmentToDeck(string development)
