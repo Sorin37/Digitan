@@ -1064,7 +1064,7 @@ public class Player : NetworkBehaviour
         //add the card
         var developmentGO = GameObject.Instantiate(DevelopmentToPrefab(development));
 
-        developmentGO.transform.parent = deck.transform;
+        developmentGO.transform.SetParent(deck.transform); 
 
         //resize the deck
         var deckRectTransform = deck.transform as RectTransform;
