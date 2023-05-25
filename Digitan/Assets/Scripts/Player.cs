@@ -986,7 +986,6 @@ public class Player : NetworkBehaviour
         {
             canvas.SetActive(false);
         }
-        print("Acum ascund");
     }
 
     private void InitializeDevelopmentDeck()
@@ -1010,19 +1009,27 @@ public class Player : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void GetDevelopmentServerRpc(ServerRpcParams srp)
     {
-        if(developmentsDeck.Count == 0) {
+        if (developmentsDeck.Count == 0)
+        {
             print("no more developments left");
             return;
         }
+
         int randomIndex = UnityEngine.Random.Range(0, developmentsDeck.Count);
-        string number = developmentsDeck[randomIndex];
+        string development = developmentsDeck[randomIndex];
         developmentsDeck.RemoveAt(randomIndex);
-        print(number);
+
+        GetHostPlayer().GetDevelopmentClientRpc(
+            development,
+            new ClientRpcParams
+            {
+                Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { srp.Receive.SenderClientId } }
+            });
     }
 
     [ClientRpc]
-    public void GetDevelopmentClientRpc(ClientRpcParams crp)
+    public void GetDevelopmentClientRpc(string development, ClientRpcParams crp)
     {
-
+        print("I did get my " + development);
     }
 }
