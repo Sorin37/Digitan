@@ -1067,9 +1067,9 @@ public class Player : NetworkBehaviour
         developmentGO.transform.parent = deck.transform;
 
         //resize the deck
-        var size = (deck.transform as RectTransform).sizeDelta;
+        var deckRectTransform = deck.transform as RectTransform;
 
-        size = new Vector2(100, size.y);
+        deckRectTransform.sizeDelta = new Vector2(100, deckRectTransform.sizeDelta.y);
     }
 
     private string DevelopmentToDeck(string development)
