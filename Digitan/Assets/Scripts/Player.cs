@@ -21,6 +21,15 @@ public class Player : NetworkBehaviour
     [SerializeField] private GameObject settlementPrefab;
     [SerializeField] private GameObject cityPrefab;
     [SerializeField] private GameObject thiefPrefab;
+    [SerializeField] private GameObject chapelPrefab;
+    [SerializeField] private GameObject greatHallPrefab;
+    [SerializeField] private GameObject knightPrefab;
+    [SerializeField] private GameObject libraryPrefab;
+    [SerializeField] private GameObject marketPrefab;
+    [SerializeField] private GameObject monopolyPrefab;
+    [SerializeField] private GameObject roadBuildingPrefab;
+    [SerializeField] private GameObject universityPrefab;
+    [SerializeField] private GameObject yearOfPlentyPrefab;
 
     private GameObject gameGrid;
     private GameObject roadGrid;
@@ -1030,6 +1039,50 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void GetDevelopmentClientRpc(string development, ClientRpcParams crp)
     {
-        print("I did get my " + development);
+        var deck = GameObject.Find(DevelopmentToDeck(development));
+
+        if (deck == null)
+        {
+            print("No such deck");
+            return;
+        }
+
+        var developmentGO = GameObject.Instantiate(DevelopmentToPrefab(development));
+
+        developmentGO.transform.parent = deck.transform;
+    }
+
+    private string DevelopmentToDeck(string development)
+    {
+        switch (development)
+        {
+            case "Knight": return "KnightDeck";
+            case "Monopoly": return "MonopolyDeck";
+            case "RoadBuilding": return "RoadBuildingDeck";
+            case "YearOfPlenty": return "YearOfPlentyDeck";
+            case "Chapel": return "VictoryPointDeck";
+            case "GreatHall": return "VictoryPointDeck";
+            case "Library": return "VictoryPointDeck";
+            case "Market": return "VictoryPointDeck";
+            case "University": return "VictoryPointDeck";
+            default: return null;
+        }
+    }
+
+    private GameObject DevelopmentToPrefab(string development)
+    {
+        switch (development)
+        {
+            case "Knight": return knightPrefab;
+            case "Monopoly": return monopolyPrefab;
+            case "RoadBuilding": return roadBuildingPrefab;
+            case "YearOfPlenty": return yearOfPlentyPrefab;
+            case "Chapel": return chapelPrefab;
+            case "GreatHall": return greatHallPrefab;
+            case "Library": return libraryPrefab;
+            case "Market": return marketPrefab;
+            case "University": return universityPrefab;
+            default: return null;
+        }
     }
 }
