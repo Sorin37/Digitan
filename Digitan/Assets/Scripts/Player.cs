@@ -1039,7 +1039,20 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void GetDevelopmentClientRpc(string development, ClientRpcParams crp)
     {
-        var deck = GameObject.Find(DevelopmentToDeck(development));
+        var deckGroup = Resources.FindObjectsOfTypeAll<DeckGroup>()[0];
+
+        var deckName = DevelopmentToDeck(development);
+
+        GameObject deck = null;
+
+        foreach(Transform child in deckGroup.transform)
+        {
+            if (child.gameObject.name == deckName)
+            {
+                deck = child.gameObject;
+                break;
+            }
+        }
 
         if (deck == null)
         {
