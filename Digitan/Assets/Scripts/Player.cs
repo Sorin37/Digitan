@@ -1039,6 +1039,7 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void GetDevelopmentClientRpc(string development, ClientRpcParams crp)
     {
+        //find the deck (it can be disabled if the tab is not active)
         var deckGroup = Resources.FindObjectsOfTypeAll<DeckGroup>()[0];
 
         var deckName = DevelopmentToDeck(development);
@@ -1060,9 +1061,15 @@ public class Player : NetworkBehaviour
             return;
         }
 
+        //add the card
         var developmentGO = GameObject.Instantiate(DevelopmentToPrefab(development));
 
         developmentGO.transform.parent = deck.transform;
+
+        //resize the deck
+        var size = (deck.transform as RectTransform).sizeDelta;
+
+        size = new Vector2(100, size.y);
     }
 
     private string DevelopmentToDeck(string development)
