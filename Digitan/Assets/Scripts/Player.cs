@@ -1154,8 +1154,6 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void MonopolyClientRpc(string resource, ulong senderId, ClientRpcParams crp)
     {
-        print("Se furua de la mine!!");
-
         var myPlayer = GetMyPlayer();
 
         int nrOfCards = myPlayer.playerHand[resource];
@@ -1163,6 +1161,12 @@ public class Player : NetworkBehaviour
         myPlayer.playerHand[resource] = 0;
 
         myPlayer.UpdateHand();
+
+        var messageBoard = Resources.FindObjectsOfTypeAll<MonopolyMessageManager>()[0];
+
+        messageBoard.SetMessage(GetPlayerWithId(senderId).nickName.Value.ToString(), resource);
+
+        messageBoard.gameObject.SetActive(true);
 
         GetHostPlayer().AddResourcesToPlayerServerRpc(resource, nrOfCards, senderId);
     }
