@@ -2,13 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class KnightDevelopment : MonoBehaviour
 {
+    [SerializeField] private Button button;
+
     // Start is called before the first frame update
     void Start()
     {
         print("K am un cavaler");
+        InitializeButton();
     }
 
     // Update is called once per frame
@@ -17,14 +21,11 @@ public class KnightDevelopment : MonoBehaviour
         
     }
 
-    private void OnMouseDown()
+    private void InitializeButton()
     {
-        //necessary piece of code in order to prevent clicking through UI elements
-        if (EventSystem.current.IsPointerOverGameObject())
+        button.onClick.AddListener(() =>
         {
-            return;
-        }
-
-        print("You touched me");
+            print("I am touched");
+        });
     }
 }
