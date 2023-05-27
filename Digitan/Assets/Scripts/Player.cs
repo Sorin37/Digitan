@@ -1156,11 +1156,13 @@ public class Player : NetworkBehaviour
     {
         print("Se furua de la mine!!");
 
-        var myPlayer = GetHostPlayer();
+        var myPlayer = GetMyPlayer();
 
         int nrOfCards = myPlayer.playerHand[resource];
 
         myPlayer.playerHand[resource] = 0;
+
+        myPlayer.UpdateHand();
 
         GetHostPlayer().AddResourcesToPlayerServerRpc(resource, nrOfCards, senderId);
     }
@@ -1177,7 +1179,10 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void AddResourcesToPlayerClientRpc(string resource, int nrOfCards, ClientRpcParams crp)
     {
-        GetMyPlayer().playerHand[resource] += nrOfCards;
+        var player = GetMyPlayer();
+
+        player.playerHand[resource] += nrOfCards;
+        player.UpdateHand();
     }
 
 }
