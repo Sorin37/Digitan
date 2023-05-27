@@ -15,21 +15,23 @@ public class ButtonManager : MonoBehaviour
     [SerializeField] private Button rollDiceButton;
     [SerializeField] private Button tradeButton;
     [SerializeField] private Button cityButton;
+    [SerializeField] private Button developmentButton;
     [SerializeField] private Canvas tradeCanvas;
     [SerializeField] private GameObject tradeManager;
     private bool hasRolledDice = false;
 
     private void Awake()
     {
-        initEndTurnButton();
-        initRollDiceButton();
-        initSettlementButton();
-        initRoadButton();
-        initTradeButton();
-        initCityButton();
+        InitEndTurnButton();
+        InitRollDiceButton();
+        InitSettlementButton();
+        InitRoadButton();
+        InitTradeButton();
+        InitCityButton();
+        InitDevelopmentButton();
     }
 
-    private void initRollDiceButton()
+    private void InitRollDiceButton()
     {
         rollDiceButton.onClick.AddListener(() =>
         {
@@ -40,11 +42,11 @@ public class ButtonManager : MonoBehaviour
 
             hasRolledDice = true;
 
-            GetHostPlayer().GetComponent<Player>().RollDiceServerRpc();
+            GetHostPlayer().RollDiceServerRpc();
         });
     }
 
-    private void initEndTurnButton()
+    private void InitEndTurnButton()
     {
         endTurnButton.onClick.AddListener(() =>
         {
@@ -53,10 +55,10 @@ public class ButtonManager : MonoBehaviour
 
             hasRolledDice = false;
 
-            GetHostPlayer().GetComponent<Player>().PassTurnServerRpc();
+            GetHostPlayer().PassTurnServerRpc();
         });
     }
-    private void initSettlementButton()
+    private void InitSettlementButton()
     {
         settlementButton.onClick.AddListener(() =>
         {
@@ -75,7 +77,7 @@ public class ButtonManager : MonoBehaviour
             }
         });
     }
-    private void initRoadButton()
+    private void InitRoadButton()
     {
         roadButton.onClick.AddListener(() =>
         {
@@ -94,7 +96,7 @@ public class ButtonManager : MonoBehaviour
             }
         });
     }
-    private void initTradeButton()
+    private void InitTradeButton()
     {
         tradeButton.onClick.AddListener(() =>
         {
@@ -106,7 +108,7 @@ public class ButtonManager : MonoBehaviour
             tradeCanvas.gameObject.SetActive(true);
         });
     }
-    private void initCityButton()
+    private void InitCityButton()
     {
         cityButton.onClick.AddListener(() =>
         {
@@ -125,6 +127,19 @@ public class ButtonManager : MonoBehaviour
                 //todo: implement an error message or smth
                 print("You don't have enough resources for a road!");
             }
+        });
+    }
+
+    private void InitDevelopmentButton()
+    {
+        developmentButton.onClick.AddListener(() =>
+        {
+            if (!IsMyTurn() || !hasRolledDice)
+            {
+                return;
+            }
+
+            GetHostPlayer().GetDevelopmentServerRpc(new ServerRpcParams());
         });
     }
 
@@ -183,14 +198,14 @@ public class ButtonManager : MonoBehaviour
         return false;
     }
 
-    private GameObject GetHostPlayer()
+    private Player GetHostPlayer()
     {
         var players = GameObject.FindGameObjectsWithTag("Player");
 
         foreach (var p in players)
         {
             if (p.GetComponent<Player>().IsOwnedByServer)
-                return p;
+                return p.GetComponent<Player>();
         }
 
         return null;
@@ -227,13 +242,13 @@ public class ButtonManager : MonoBehaviour
         getDict["Ore"] = 0;
         getDict["Wool"] = 0;
 
-        GetHostPlayer().GetComponent<Player>().nrOfDeclinedTrades = 0;
+        GetHostPlayer().nrOfDeclinedTrades = 0;
 
         tradeManager.DrawDicts();
     }
 
     private bool IsMyTurn()
     {
-        return GetHostPlayer().GetComponent<Player>().currentPlayerTurn.Value == (int)NetworkManager.Singleton.LocalClientId;
+        return GetHostPlayer().currentPlayerTurn.Value == (int)NetworkManager.Singleton.LocalClientId;
     }
 }

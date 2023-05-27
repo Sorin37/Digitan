@@ -12,6 +12,7 @@ public class RoadGrid : MonoBehaviour
     [SerializeField] private GameObject circlePrefab;
     public GameObject[][] roadGrid;
     private GameObject gameGrid;
+    public bool usedRoadBuilding = false;
 
     // Awake is called before all the Start functions when the script is loaded
     void Awake()

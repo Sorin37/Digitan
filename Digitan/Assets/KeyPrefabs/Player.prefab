@@ -67,6 +67,15 @@ MonoBehaviour:
   settlementPrefab: {fileID: 4748187627253956761, guid: a0ab8d06dc4f50e449063604a25218bd, type: 3}
   cityPrefab: {fileID: 1114969853857197570, guid: c6391f64d5a181e4495ed46752d4eabd, type: 3}
   thiefPrefab: {fileID: 2344186312042310433, guid: 55d0565b14f7dbc4c89ac69b16fbe2a5, type: 3}
+  chapelPrefab: {fileID: 4907788587833267494, guid: eaf37121a64ec904794b12c4c6a26d7c, type: 3}
+  greatHallPrefab: {fileID: 1621548675605153821, guid: b55d37d0536995a43b0ba2e606091611, type: 3}
+  knightPrefab: {fileID: 7418165571947190596, guid: 56dea5805ceceea4f8723c4ce9e77aac, type: 3}
+  libraryPrefab: {fileID: 57270084896507304, guid: 191c252a0a08d6449979551eccdc3b6a, type: 3}
+  marketPrefab: {fileID: 1846948774262746709, guid: a74f9d2f9bab75143a2e3670406f49fe, type: 3}
+  monopolyPrefab: {fileID: 8433220379331446071, guid: 1ae59700986e4db49b8035d643a1f23f, type: 3}
+  roadBuildingPrefab: {fileID: 2330444736991331523, guid: 0f6b3526e62812141b32ff55a119f2d9, type: 3}
+  universityPrefab: {fileID: 7240338853409535047, guid: 04092a8e11c2e4e4f8f10918990aa873, type: 3}
+  yearOfPlentyPrefab: {fileID: 8551725448996108395, guid: c9e66d3997c899b48855458c6aa43bb0, type: 3}
   resourcesCode:
     m_InternalValue:
       utf8LengthInBytes: 13
@@ -280,6 +289,9 @@ MonoBehaviour:
     m_InternalValue: 1
   currentPlayerTurn:
     m_InternalValue: -1
+  nrOfFinishedDiscards:
+    m_InternalValue: -1
   nrOfMaxPlayers: 0
   nrOfDeclinedTrades: 0
   color: {r: 0, g: 0, b: 0.80784315, a: 0}
+  developments: []

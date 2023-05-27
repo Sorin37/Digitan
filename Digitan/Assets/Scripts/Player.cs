@@ -21,6 +21,15 @@ public class Player : NetworkBehaviour
     [SerializeField] private GameObject settlementPrefab;
     [SerializeField] private GameObject cityPrefab;
     [SerializeField] private GameObject thiefPrefab;
+    [SerializeField] private GameObject chapelPrefab;
+    [SerializeField] private GameObject greatHallPrefab;
+    [SerializeField] private GameObject knightPrefab;
+    [SerializeField] private GameObject libraryPrefab;
+    [SerializeField] private GameObject marketPrefab;
+    [SerializeField] private GameObject monopolyPrefab;
+    [SerializeField] private GameObject roadBuildingPrefab;
+    [SerializeField] private GameObject universityPrefab;
+    [SerializeField] private GameObject yearOfPlentyPrefab;
 
     private GameObject gameGrid;
     private GameObject roadGrid;
@@ -42,6 +51,9 @@ public class Player : NetworkBehaviour
     public int nrOfMaxPlayers;
     public int nrOfDeclinedTrades = 0;
     public Color color;
+
+    public List<string> developments = new List<string>();
+    private List<string> developmentsDeck;
 
     public event EventHandler OnPlayersJoined;
     public event EventHandler OnFinishDiscardChanged;
@@ -98,6 +110,7 @@ public class Player : NetworkBehaviour
             if (IsHost)
             {
                 resourcesCode.Value = GenerateResourcesCode();
+                InitializeDevelopmentDeck();
             }
 
             gameGrid.GetComponent<GameGrid>().CreateGrid(resourcesCode.Value.ToString());
@@ -233,7 +246,15 @@ public class Player : NetworkBehaviour
         Destroy(pressedCircle);
 
         //make the road circles invisible
-        Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("Road Circle"));
+        if (!roadGrid.GetComponent<RoadGrid>().usedRoadBuilding)
+        {
+            Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("Road Circle"));
+
+        }
+        else
+        {
+            roadGrid.GetComponent<RoadGrid>().usedRoadBuilding = false;
+        }
     }
 
     private Quaternion GetRotationFromPos((int x, int y) pos)
@@ -527,7 +548,12 @@ public class Player : NetworkBehaviour
 
         foreach (var card in playerHand)
         {
-            GameObject.Find(card.Key.Substring(0, card.Key.IndexOf(" ")) + "Label").GetComponent<TextMeshProUGUI>().SetText("x " + card.Value.ToString());
+            var labelGO = GameObject.Find(card.Key.Substring(0, card.Key.IndexOf(" ")) + "Label");
+
+            if (labelGO == null)
+                continue;
+
+            labelGO.GetComponent<TextMeshProUGUI>().SetText("x " + card.Value.ToString());
         }
     }
 
@@ -761,7 +787,7 @@ public class Player : NetworkBehaviour
 
         if (thiefPiece != null)
         {
-            //dispaly the circle the thief is taken from
+            //display the circle the thief is taken from
             var colliders = Physics.OverlapSphere(
                 thiefPiece.transform.position,
                 1f,
@@ -907,7 +933,7 @@ public class Player : NetworkBehaviour
         }
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     public void DisplayThiefCirclesServerRpc()
     {
         var player = GetHostPlayer();
@@ -982,6 +1008,185 @@ public class Player : NetworkBehaviour
         {
             canvas.SetActive(false);
         }
-        print("Acum ascund");
     }
+
+    private void InitializeDevelopmentDeck()
+    {
+        developmentsDeck = new List<string>
+        {
+            "Knight", "Knight", "Knight", "Knight", "Knight",
+            "Knight", "Knight", "Knight", "Knight", "Knight",
+            "Knight", "Knight", "Knight", "Knight", "Knight",
+            "Monopoly", "Monopoly", "Monopoly",
+            "RoadBuilding", "RoadBuilding", "RoadBuilding",
+            "YearOfPlenty", "YearOfPlenty", "YearOfPlenty",
+            "Chapel",
+            "GreatHall",
+            "Library",
+            "Market",
+            "University"
+        };
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void GetDevelopmentServerRpc(ServerRpcParams srp)
+    {
+        if (developmentsDeck.Count == 0)
+        {
+            print("no more developments left");
+            return;
+        }
+
+        int randomIndex = UnityEngine.Random.Range(0, developmentsDeck.Count);
+        string development = developmentsDeck[randomIndex];
+        developmentsDeck.RemoveAt(randomIndex);
+
+        GetHostPlayer().GetDevelopmentClientRpc(
+            development,
+            new ClientRpcParams
+            {
+                Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { srp.Receive.SenderClientId } }
+            });
+    }
+
+    [ClientRpc]
+    public void GetDevelopmentClientRpc(string development, ClientRpcParams crp)
+    {
+        //find the deck (it can be disabled if the tab is not active)
+        var deckGroup = Resources.FindObjectsOfTypeAll<DeckGroup>()[0];
+
+        var deckName = DevelopmentToDeck(development);
+
+        GameObject deck = null;
+
+        foreach (Transform child in deckGroup.transform)
+        {
+            if (child.gameObject.name == deckName)
+            {
+                deck = child.gameObject;
+                break;
+            }
+        }
+
+        if (deck == null)
+        {
+            print("No such deck");
+            return;
+        }
+
+        //add the card
+        var developmentGO = GameObject.Instantiate(DevelopmentToPrefab(development));
+
+        developmentGO.transform.SetParent(deck.transform);
+
+        //resize the deck
+        var deckRectTransform = deck.transform as RectTransform;
+
+        float width = 0;
+
+        if (deckRectTransform.sizeDelta.x < 0)
+        {
+            width = 120;
+        }
+        else if (deckRectTransform.sizeDelta.x >= 100)
+        {
+            width = 25;
+        }
+
+        deckRectTransform.sizeDelta = new Vector2(deckRectTransform.sizeDelta.x + width, deckRectTransform.sizeDelta.y);
+    }
+
+    private string DevelopmentToDeck(string development)
+    {
+        switch (development)
+        {
+            case "Knight": return "KnightDeck";
+            case "Monopoly": return "MonopolyDeck";
+            case "RoadBuilding": return "RoadBuildingDeck";
+            case "YearOfPlenty": return "YearOfPlentyDeck";
+            case "Chapel": return "VictoryPointDeck";
+            case "GreatHall": return "VictoryPointDeck";
+            case "Library": return "VictoryPointDeck";
+            case "Market": return "VictoryPointDeck";
+            case "University": return "VictoryPointDeck";
+            default: return null;
+        }
+    }
+
+    private GameObject DevelopmentToPrefab(string development)
+    {
+        switch (development)
+        {
+            case "Knight": return knightPrefab;
+            case "Monopoly": return monopolyPrefab;
+            case "RoadBuilding": return roadBuildingPrefab;
+            case "YearOfPlenty": return yearOfPlentyPrefab;
+            case "Chapel": return chapelPrefab;
+            case "GreatHall": return greatHallPrefab;
+            case "Library": return libraryPrefab;
+            case "Market": return marketPrefab;
+            case "University": return universityPrefab;
+            default: return null;
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void MonopolyServerRpc(string resource, ServerRpcParams srp)
+    {
+        List<ulong> ids = new List<ulong>();
+
+        for (ulong i = 0; i < (ulong)GetHostPlayer().nrOfMaxPlayers; i++)
+        {
+            ids.Add(i);
+        }
+
+        ids.Remove(srp.Receive.SenderClientId);
+
+        GetHostPlayer().MonopolyClientRpc(
+            resource,
+            srp.Receive.SenderClientId,
+            new ClientRpcParams
+            {
+                Send = new ClientRpcSendParams { TargetClientIds = ids }
+            });
+    }
+
+    [ClientRpc]
+    public void MonopolyClientRpc(string resource, ulong senderId, ClientRpcParams crp)
+    {
+        var myPlayer = GetMyPlayer();
+
+        int nrOfCards = myPlayer.playerHand[resource];
+
+        myPlayer.playerHand[resource] = 0;
+
+        myPlayer.UpdateHand();
+
+        var messageBoard = Resources.FindObjectsOfTypeAll<MonopolyMessageManager>()[0];
+
+        messageBoard.SetMessage(GetPlayerWithId(senderId).nickName.Value.ToString(), resource);
+
+        messageBoard.gameObject.SetActive(true);
+
+        GetHostPlayer().AddResourcesToPlayerServerRpc(resource, nrOfCards, senderId);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void AddResourcesToPlayerServerRpc(string resource, int nrOfCards, ulong targetId)
+    {
+        GetHostPlayer().AddResourcesToPlayerClientRpc(resource, nrOfCards, new ClientRpcParams
+        {
+            Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { targetId } }
+        });
+    }
+
+    [ClientRpc]
+    public void AddResourcesToPlayerClientRpc(string resource, int nrOfCards, ClientRpcParams crp)
+    {
+        var player = GetMyPlayer();
+
+        player.playerHand[resource] += nrOfCards;
+        player.UpdateHand();
+    }
+
 }
