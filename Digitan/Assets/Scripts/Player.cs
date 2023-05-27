@@ -550,7 +550,7 @@ public class Player : NetworkBehaviour
         {
             var labelGO = GameObject.Find(card.Key.Substring(0, card.Key.IndexOf(" ")) + "Label");
 
-            if(labelGO == null)
+            if (labelGO == null)
                 continue;
 
             labelGO.GetComponent<TextMeshProUGUI>().SetText("x " + card.Value.ToString());
@@ -1077,7 +1077,7 @@ public class Player : NetworkBehaviour
         //add the card
         var developmentGO = GameObject.Instantiate(DevelopmentToPrefab(development));
 
-        developmentGO.transform.SetParent(deck.transform); 
+        developmentGO.transform.SetParent(deck.transform);
 
         //resize the deck
         var deckRectTransform = deck.transform as RectTransform;
@@ -1129,4 +1129,53 @@ public class Player : NetworkBehaviour
             default: return null;
         }
     }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void MonopolyServerRpc(string resource, ServerRpcParams srp)
+    {
+        List<ulong> ids = new List<ulong>();
+
+        for (ulong i = 0; i < (ulong)GetHostPlayer().nrOfMaxPlayers; i++)
+        {
+            ids.Add(i);
+        }
+
+        ids.Remove(srp.Receive.SenderClientId);
+
+        GetHostPlayer().MonopolyClientRpc(
+            resource,
+            srp.Receive.SenderClientId,
+            new ClientRpcParams
+            {
+                Send = new ClientRpcSendParams { TargetClientIds = ids }
+            });
+    }
+
+    [ClientRpc]
+    public void MonopolyClientRpc(string resource, ulong senderId, ClientRpcParams crp)
+    {
+        var myPlayer = GetHostPlayer();
+
+        int nrOfCards = myPlayer.playerHand[resource];
+
+        myPlayer.playerHand[resource] = 0;
+
+        GetHostPlayer().AddResourcesToPlayerServerRpc(resource, nrOfCards, senderId);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void AddResourcesToPlayerServerRpc(string resource, int nrOfCards, ulong targetId)
+    {
+        GetHostPlayer().AddResourcesToPlayerClientRpc(resource, nrOfCards, new ClientRpcParams
+        {
+            Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { targetId } }
+        });
+    }
+
+    [ClientRpc]
+    public void AddResourcesToPlayerClientRpc(string resource, int nrOfCards, ClientRpcParams crp)
+    {
+        GetMyPlayer().playerHand[resource] += nrOfCards;
+    }
+
 }
