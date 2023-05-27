@@ -21,7 +21,7 @@ public class YearOfPlentyManager : MonoBehaviour
             GetMyPlayer().playerHand["Brick Resource"]++;
             GetMyPlayer().UpdateHand();
 
-            if(nrOfClickedCards == 2)
+            if (nrOfClickedCards == 2)
             {
                 transform.parent.gameObject.SetActive(false);
             }
