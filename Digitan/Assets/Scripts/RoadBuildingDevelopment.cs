@@ -1,10 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class KnightDevelopment : MonoBehaviour
+public class RoadBuildingDevelopment : MonoBehaviour
 {
     [SerializeField] private Button button;
 
@@ -24,7 +23,7 @@ public class KnightDevelopment : MonoBehaviour
     {
         button.onClick.AddListener(() =>
         {
-            RemoveDevelopment("KnightDeck");
+            RemoveDevelopment("RoadBuildingDeck");
         });
     }
 
