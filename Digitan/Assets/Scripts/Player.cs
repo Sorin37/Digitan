@@ -1154,6 +1154,8 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void MonopolyClientRpc(string resource, ulong senderId, ClientRpcParams crp)
     {
+        print("Se furua de la mine!!");
+
         var myPlayer = GetHostPlayer();
 
         int nrOfCards = myPlayer.playerHand[resource];
