@@ -24,6 +24,7 @@ public class YearOfPlentyManager : MonoBehaviour
             if (nrOfClickedCards == 2)
             {
                 transform.parent.gameObject.SetActive(false);
+                nrOfClickedCards = 0;
             }
         });
 
@@ -36,6 +37,7 @@ public class YearOfPlentyManager : MonoBehaviour
             if (nrOfClickedCards == 2)
             {
                 transform.parent.gameObject.SetActive(false);
+                nrOfClickedCards = 0;
             }
         });
 
@@ -48,6 +50,7 @@ public class YearOfPlentyManager : MonoBehaviour
             if (nrOfClickedCards == 2)
             {
                 transform.parent.gameObject.SetActive(false);
+                nrOfClickedCards = 0;
             }
         });
 
@@ -60,6 +63,7 @@ public class YearOfPlentyManager : MonoBehaviour
             if (nrOfClickedCards == 2)
             {
                 transform.parent.gameObject.SetActive(false);
+                nrOfClickedCards = 0;
             }
         });
 
@@ -72,6 +76,7 @@ public class YearOfPlentyManager : MonoBehaviour
             if (nrOfClickedCards == 2)
             {
                 transform.parent.gameObject.SetActive(false);
+                nrOfClickedCards = 0;
             }
         });
     }
