@@ -11,7 +11,7 @@ public class CardsButton : MonoBehaviour
     {
         gameObject.GetComponent<Button>().onClick.AddListener(() =>
         {
-            print("xdddd");
+            GetMyPlayer().UpdateHand();
         });
     }
 
@@ -21,5 +21,16 @@ public class CardsButton : MonoBehaviour
         
     }
 
-    
+    private Player GetMyPlayer()
+    {
+        var players = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (var p in players)
+        {
+            if (p.GetComponent<Player>().IsOwner)
+                return p.GetComponent<Player>();
+        }
+
+        return null;
+    }
 }

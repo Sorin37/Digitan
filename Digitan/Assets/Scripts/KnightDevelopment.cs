@@ -25,6 +25,7 @@ public class KnightDevelopment : MonoBehaviour
         button.onClick.AddListener(() =>
         {
             RemoveDevelopment("KnightDeck");
+            GetHostPlayer().DisplayThiefCirclesServerRpc();
         });
     }
 
@@ -69,5 +70,18 @@ public class KnightDevelopment : MonoBehaviour
         }
 
         deckRectTransform.sizeDelta = new Vector2(deckRectTransform.sizeDelta.x + width, deckRectTransform.sizeDelta.y);
+    }
+
+    private Player GetHostPlayer()
+    {
+        var players = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (var p in players)
+        {
+            if (p.GetComponent<Player>().IsOwnedByServer)
+                return p.GetComponent<Player>();
+        }
+
+        return null;
     }
 }

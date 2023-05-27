@@ -779,7 +779,7 @@ public class Player : NetworkBehaviour
 
         if (thiefPiece != null)
         {
-            //dispaly the circle the thief is taken from
+            //display the circle the thief is taken from
             var colliders = Physics.OverlapSphere(
                 thiefPiece.transform.position,
                 1f,
@@ -925,7 +925,7 @@ public class Player : NetworkBehaviour
         }
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     public void DisplayThiefCirclesServerRpc()
     {
         var player = GetHostPlayer();
