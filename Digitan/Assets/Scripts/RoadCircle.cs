@@ -9,16 +9,17 @@ using UnityEngine.EventSystems;
 
 public class RoadCircle : MonoBehaviour
 {
-    private GameObject _renderer;
     [SerializeField] private GameObject Road;
     private GameObject settlementGrid;
+    private RoadGrid availableRoadsGrid;
     private GameObject[][] roadGrid;
     public bool isOccupied = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        roadGrid = GameObject.Find("AvailableRoadsGrid").transform.GetComponent<RoadGrid>().roadGrid;
+        availableRoadsGrid = GameObject.Find("AvailableRoadsGrid").GetComponent<RoadGrid>();
+        roadGrid = availableRoadsGrid.roadGrid;
         settlementGrid = GameObject.Find("AvailableSettlementGrid");
     }
 

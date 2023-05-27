@@ -32,7 +32,6 @@ public class MonopolyDevelopment : MonoBehaviour
         //find the deck
         var deckGroup = Resources.FindObjectsOfTypeAll<DeckGroup>()[0];
 
-
         GameObject deck = null;
 
         foreach (Transform child in deckGroup.transform)
