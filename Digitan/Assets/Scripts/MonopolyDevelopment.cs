@@ -24,6 +24,7 @@ public class MonopolyDevelopment : MonoBehaviour
         button.onClick.AddListener(() =>
         {
             RemoveDevelopment("MonopolyDeck");
+            Resources.FindObjectsOfTypeAll<MonopolyManager>()[0].transform.parent.gameObject.SetActive(true);
         });
     }
 
