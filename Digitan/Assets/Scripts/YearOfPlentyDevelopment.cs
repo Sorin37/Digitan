@@ -24,6 +24,7 @@ public class YearOfPlentyDevelopment : MonoBehaviour
         button.onClick.AddListener(() =>
         {
             RemoveDevelopment("YearOfPlentyDeck");
+            Resources.FindObjectsOfTypeAll<YearOfPlentyManager>()[0].transform.parent.gameObject.SetActive(true);
         });
     }
 
