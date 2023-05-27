@@ -540,7 +540,12 @@ public class Player : NetworkBehaviour
 
         foreach (var card in playerHand)
         {
-            GameObject.Find(card.Key.Substring(0, card.Key.IndexOf(" ")) + "Label").GetComponent<TextMeshProUGUI>().SetText("x " + card.Value.ToString());
+            var labelGO = GameObject.Find(card.Key.Substring(0, card.Key.IndexOf(" ")) + "Label");
+
+            if(labelGO == null)
+                continue;
+
+            labelGO.GetComponent<TextMeshProUGUI>().SetText("x " + card.Value.ToString());
         }
     }
 
