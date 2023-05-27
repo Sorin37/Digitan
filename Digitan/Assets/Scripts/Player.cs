@@ -246,7 +246,15 @@ public class Player : NetworkBehaviour
         Destroy(pressedCircle);
 
         //make the road circles invisible
-        Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("Road Circle"));
+        if (!roadGrid.GetComponent<RoadGrid>().usedRoadBuilding)
+        {
+            Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("Road Circle"));
+
+        }
+        else
+        {
+            roadGrid.GetComponent<RoadGrid>().usedRoadBuilding = false;
+        }
     }
 
     private Quaternion GetRotationFromPos((int x, int y) pos)

@@ -24,6 +24,8 @@ public class RoadBuildingDevelopment : MonoBehaviour
         button.onClick.AddListener(() =>
         {
             RemoveDevelopment("RoadBuildingDeck");
+            GameObject.Find("AvailableRoadsGrid").GetComponent<RoadGrid>().usedRoadBuilding = true;
+            Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Road Circle"));
         });
     }
 
