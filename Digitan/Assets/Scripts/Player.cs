@@ -57,6 +57,7 @@ public class Player : NetworkBehaviour
     public NetworkVariable<int> order = new NetworkVariable<int>(1);
     public NetworkVariable<int> currentPlayerTurn = new NetworkVariable<int>(-1);
     public NetworkVariable<int> nrOfFinishedDiscards = new NetworkVariable<int>(-1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<int> nrOfVictoryPoints = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
 
     public Dictionary<string, List<string>> resourcesDict;
@@ -72,6 +73,7 @@ public class Player : NetworkBehaviour
 
     public event EventHandler OnPlayersJoined;
     public event EventHandler OnFinishDiscardChanged;
+    public event EventHandler OnVictoryPointsChanged;
 
     // Awake is called before all the Starts in a random order
     void Awake()
@@ -98,7 +100,6 @@ public class Player : NetworkBehaviour
     private void FinishedDiscarding(object sender, EventArgs e)
     {
         var player = GetHostPlayer();
-        print("teh nubmer is: " + player.nrOfFinishedDiscards.Value);
 
         if (player.nrOfFinishedDiscards.Value == 0)
         {
@@ -134,12 +135,18 @@ public class Player : NetworkBehaviour
         if (IsOwner)
         {
             await PopInformationFromLobby();
+            nrOfVictoryPoints.OnValueChanged += VictoryPointsChangedEvent;
         }
 
         if (IsOwnedByServer)
         {
             PlayerJoinedServerRpc();
         }
+    }
+
+    private void VictoryPointsChangedEvent(int oldValue, int newValue)
+    {
+        print("Am schimbat punctele victorioase: " + newValue);
     }
 
     private void InitializeTradeDict()
@@ -302,6 +309,7 @@ public class Player : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void PlaceSettlementServerRpc(int x, int y, Color color, ServerRpcParams serverRpcParams)
     {
+        GetPlayerWithId(serverRpcParams.Receive.SenderClientId).nrOfVictoryPoints.Value++;
         PlaceSettlementClientRpc(x, y, color, serverRpcParams.Receive.SenderClientId);
     }
 
