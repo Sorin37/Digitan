@@ -309,6 +309,7 @@ public class Player : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void PlaceSettlementServerRpc(int x, int y, Color color, ServerRpcParams serverRpcParams)
     {
+        print("Client cu id priemste punct " + serverRpcParams.Receive.SenderClientId);
         GetPlayerWithId(serverRpcParams.Receive.SenderClientId).nrOfVictoryPoints.Value++;
         PlaceSettlementClientRpc(x, y, color, serverRpcParams.Receive.SenderClientId);
     }
