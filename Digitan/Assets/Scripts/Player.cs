@@ -722,7 +722,7 @@ public class Player : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void PlaceCityServerRpc(float x, float y, float z, Color color, ServerRpcParams serverRpcParams)
     {
-        GetPlayerWithId(serverRpcParams.Receive.SenderClientId).nrOfVictoryPoints.Value += 2;
+        GetPlayerWithId(serverRpcParams.Receive.SenderClientId).nrOfVictoryPoints.Value++;
         PlaceCityClientRpc(x, y, z, color, serverRpcParams.Receive.SenderClientId);
     }
 
