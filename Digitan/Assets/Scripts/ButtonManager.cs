@@ -134,7 +134,12 @@ public class ButtonManager : MonoBehaviour
     {
         developmentButton.onClick.AddListener(() =>
         {
-            if (!IsMyTurn() || !hasRolledDice)
+            if (!IsMyTurn())
+            {
+                return;
+            }
+
+            if(!HasDevelopmentResources())
             {
                 return;
             }
@@ -143,7 +148,7 @@ public class ButtonManager : MonoBehaviour
         });
     }
 
-    bool HasSettlementResources()
+    private bool HasSettlementResources()
     {
         var playerHand = GetMyPlayer().GetComponent<Player>().playerHand;
         if (playerHand["Brick Resource"] > 0 &&
@@ -164,7 +169,7 @@ public class ButtonManager : MonoBehaviour
         return false;
     }
 
-    bool HasRoadResources()
+    private bool HasRoadResources()
     {
         var playerHand = GetMyPlayer().GetComponent<Player>().playerHand;
 
@@ -250,5 +255,25 @@ public class ButtonManager : MonoBehaviour
     private bool IsMyTurn()
     {
         return GetHostPlayer().currentPlayerTurn.Value == (int)NetworkManager.Singleton.LocalClientId;
+    }
+
+    private bool HasDevelopmentResources()
+    {
+        var playerHand = GetMyPlayer().GetComponent<Player>().playerHand;
+
+        if (playerHand["Grain Resource"] > 0 &&
+            playerHand["Ore Resource"] > 0 &&
+            playerHand["Wool Resource"] > 0)
+        {
+            playerHand["Grain Resource"]--;
+            playerHand["Ore Resource"]--;
+            playerHand["Wool Resource"]--;
+
+            GetMyPlayer().GetComponent<Player>().UpdateHand();
+
+            return true;
+        }
+
+        return false;
     }
 }
