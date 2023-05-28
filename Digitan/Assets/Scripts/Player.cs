@@ -73,7 +73,6 @@ public class Player : NetworkBehaviour
 
     public event EventHandler OnPlayersJoined;
     public event EventHandler OnFinishDiscardChanged;
-    public event EventHandler OnVictoryPointsChanged;
 
     // Awake is called before all the Starts in a random order
     void Awake()
@@ -147,6 +146,11 @@ public class Player : NetworkBehaviour
     private void VictoryPointsChangedEvent(int oldValue, int newValue)
     {
         print("Am schimbat punctele victorioase: " + newValue);
+
+        if (newValue == 10)
+        {
+            print("Am 10 puncte, am castigat lamooo");
+        }
     }
 
     private void InitializeTradeDict()
@@ -309,7 +313,6 @@ public class Player : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void PlaceSettlementServerRpc(int x, int y, Color color, ServerRpcParams serverRpcParams)
     {
-        print("Client cu id priemste punct " + serverRpcParams.Receive.SenderClientId);
         GetPlayerWithId(serverRpcParams.Receive.SenderClientId).nrOfVictoryPoints.Value++;
         PlaceSettlementClientRpc(x, y, color, serverRpcParams.Receive.SenderClientId);
     }
@@ -719,6 +722,7 @@ public class Player : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void PlaceCityServerRpc(float x, float y, float z, Color color, ServerRpcParams serverRpcParams)
     {
+        GetPlayerWithId(serverRpcParams.Receive.SenderClientId).nrOfVictoryPoints.Value += 2;
         PlaceCityClientRpc(x, y, z, color, serverRpcParams.Receive.SenderClientId);
     }
 
@@ -1253,5 +1257,11 @@ public class Player : NetworkBehaviour
             case 6: return yellowDice6;
             default: return null;
         }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void AddVictoryPointServerRpc(ServerRpcParams srp)
+    {
+        GetPlayerWithId(srp.Receive.SenderClientId).nrOfVictoryPoints.Value++;
     }
 }
