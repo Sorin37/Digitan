@@ -73,6 +73,7 @@ public class SettlementCircle : MonoBehaviour
                     myPlayer.color,
                     GetMyPlayer().GetComponent<Player>().OwnerClientId
                 );
+                getHostPlayer().GetComponent<Player>().nrOfVictoryPoints.Value++;
             }
             else
             {
