@@ -20,7 +20,9 @@ public class Player : NetworkBehaviour
     [SerializeField] private GameObject roadPrefab;
     [SerializeField] private GameObject settlementPrefab;
     [SerializeField] private GameObject cityPrefab;
+
     [SerializeField] private GameObject thiefPrefab;
+
     [SerializeField] private GameObject chapelPrefab;
     [SerializeField] private GameObject greatHallPrefab;
     [SerializeField] private GameObject knightPrefab;
@@ -30,6 +32,19 @@ public class Player : NetworkBehaviour
     [SerializeField] private GameObject roadBuildingPrefab;
     [SerializeField] private GameObject universityPrefab;
     [SerializeField] private GameObject yearOfPlentyPrefab;
+
+    [SerializeField] private Sprite redDice1;
+    [SerializeField] private Sprite redDice2;
+    [SerializeField] private Sprite redDice3;
+    [SerializeField] private Sprite redDice4;
+    [SerializeField] private Sprite redDice5;
+    [SerializeField] private Sprite redDice6;
+    [SerializeField] private Sprite yellowDice1;
+    [SerializeField] private Sprite yellowDice2;
+    [SerializeField] private Sprite yellowDice3;
+    [SerializeField] private Sprite yellowDice4;
+    [SerializeField] private Sprite yellowDice5;
+    [SerializeField] private Sprite yellowDice6;
 
     private GameObject gameGrid;
     private GameObject roadGrid;
@@ -738,21 +753,22 @@ public class Player : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void RollDiceServerRpc()
     {
-        int dice1 = UnityEngine.Random.Range(1, 7);
-        int dice2 = UnityEngine.Random.Range(1, 7);
+        int redDice = UnityEngine.Random.Range(1, 7);
+        int yellowDice = UnityEngine.Random.Range(1, 7);
 
-        GetHostPlayer().RollDiceClientRpc(dice1 + dice2);
+        GetHostPlayer().RollDiceClientRpc(redDice, yellowDice);
 
     }
 
     [ClientRpc]
-    public void RollDiceClientRpc(int diceRoll)
+    public void RollDiceClientRpc(int redDice, int yellowDice)
     {
-        print(diceRoll);
+        var player = GetHostPlayer();
 
-        if (diceRoll == 7)
+        player.DisplayDiceServerRpc(redDice, yellowDice);
+
+        if ((redDice + yellowDice) == 7)
         {
-            var player = GetHostPlayer();
             if (IsServer)
             {
                 player.ResetFinishedDiscardsServerRpc();
@@ -761,11 +777,11 @@ public class Player : NetworkBehaviour
         }
         else
         {
-            var player = GetMyPlayer();
-            var resourcesDict = player.resourcesDict;
-            var playerHand = player.playerHand;
+            var myPlayer = GetMyPlayer();
+            var resourcesDict = myPlayer.resourcesDict;
+            var playerHand = myPlayer.playerHand;
 
-            foreach (string resource in resourcesDict[diceRoll.ToString()])
+            foreach (string resource in resourcesDict[(redDice + yellowDice).ToString()])
             {
                 playerHand[resource]++;
             }
@@ -1189,4 +1205,44 @@ public class Player : NetworkBehaviour
         player.UpdateHand();
     }
 
+    [ServerRpc(RequireOwnership = false)]
+    public void DisplayDiceServerRpc(int redDice, int yellowDice)
+    {
+        GetHostPlayer().DisplayDiceClientRpc(redDice, yellowDice);
+    }
+
+    [ClientRpc]
+    public void DisplayDiceClientRpc(int redDice, int yellowDice)
+    {
+        GameObject.Find("RedDice").GetComponent<Image>().sprite = NumberToRedDiceSprite(redDice);
+        GameObject.Find("YellowDice").GetComponent<Image>().sprite = NumberToYellowDiceSprite(yellowDice);
+    }
+
+    private Sprite NumberToRedDiceSprite(int number)
+    {
+        switch (number)
+        {
+            case 1: return redDice1;
+            case 2: return redDice2;
+            case 3: return redDice3;
+            case 4: return redDice4;
+            case 5: return redDice5;
+            case 6: return redDice6;
+            default: return null;
+        }
+    }
+
+    private Sprite NumberToYellowDiceSprite(int number)
+    {
+        switch (number)
+        {
+            case 1: return yellowDice1;
+            case 2: return yellowDice2;
+            case 3: return yellowDice3;
+            case 4: return yellowDice4;
+            case 5: return yellowDice5;
+            case 6: return yellowDice6;
+            default: return null;
+        }
+    }
 }
