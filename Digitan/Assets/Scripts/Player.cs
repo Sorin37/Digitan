@@ -1283,21 +1283,12 @@ public class Player : NetworkBehaviour
 
         var max = players.Max(p => p.usedKnights);
 
-        print("Max: " + max.ToString());
-
         if (max < 3)
         {
             return;
         }
 
-        foreach (var p in players)
-        {
-            print(p.id + " " + p.usedKnights);
-        }
-
         var apparitions = players.Where(p => p.usedKnights == max).Count();
-
-        print("Apparitions " + apparitions);
 
         if (apparitions > 1)
         {
@@ -1314,17 +1305,18 @@ public class Player : NetworkBehaviour
             }
         }
 
-        if (oldPlayer == null)
-            print("Mda player a ajusn null");
-
         //remove card
-        GetPlayerWithId(oldPlayer.OwnerClientId).hasLargestArmy.Value = false;
-        GetPlayerWithId(oldPlayer.OwnerClientId).nrOfVictoryPoints.Value -= 2;
-
-        GetHostPlayer().RemovePointCardClientRpc("Largest Army", new ClientRpcParams
+        if (oldPlayer != null)
         {
-            Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { oldPlayer.OwnerClientId } }
-        });
+
+            GetPlayerWithId(oldPlayer.OwnerClientId).hasLargestArmy.Value = false;
+            GetPlayerWithId(oldPlayer.OwnerClientId).nrOfVictoryPoints.Value -= 2;
+
+            GetHostPlayer().RemovePointCardClientRpc("Largest Army", new ClientRpcParams
+            {
+                Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { oldPlayer.OwnerClientId } }
+            });
+        }
 
 
         //add card
