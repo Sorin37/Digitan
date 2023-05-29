@@ -962,7 +962,7 @@ public class Player : NetworkBehaviour
         }
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     public void DisplayThiefCirclesServerRpc()
     {
         var player = GetHostPlayer();
