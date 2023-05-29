@@ -1,3 +1,4 @@
+using Mono.Cecil;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,6 +59,8 @@ public class Player : NetworkBehaviour
     public NetworkVariable<int> currentPlayerTurn = new NetworkVariable<int>(-1);
     public NetworkVariable<int> nrOfFinishedDiscards = new NetworkVariable<int>(-1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<int> nrOfVictoryPoints = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<int> nrOfUsedKnights = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<bool> hasLargestArmy = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
 
     public Dictionary<string, List<string>> resourcesDict;
@@ -147,7 +150,7 @@ public class Player : NetworkBehaviour
     {
         print("Am schimbat punctele victorioase: " + newValue);
 
-        if (newValue == 10)
+        if (newValue > 9)
         {
             print("Am 10 puncte, am castigat lamooo");
         }
@@ -1262,5 +1265,93 @@ public class Player : NetworkBehaviour
     public void AddVictoryPointServerRpc(ServerRpcParams srp)
     {
         GetPlayerWithId(srp.Receive.SenderClientId).nrOfVictoryPoints.Value++;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void UsedKnightServerRpc(ServerRpcParams srp)
+    {
+        GetPlayerWithId(srp.Receive.SenderClientId).nrOfUsedKnights.Value++;
+
+        List<(ulong id, int usedKnights)> players = new List<(ulong id, int usedKnights)>();
+
+        var playersGOs = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (var p in playersGOs)
+        {
+            players.Add((p.GetComponent<Player>().OwnerClientId, p.GetComponent<Player>().nrOfUsedKnights.Value));
+        }
+
+        var max = players.Max(p => p.usedKnights);
+
+        if (max < 3)
+        {
+            return;
+        }
+
+        var apparitions = players.Select(p => p.usedKnights == max).Count();
+
+        if (apparitions > 1)
+        {
+            return;
+        }
+
+        Player oldPlayer = null;
+
+        foreach (var p in playersGOs)
+        {
+            if (p.GetComponent<Player>().hasLargestArmy.Value)
+            {
+                oldPlayer = p.GetComponent<Player>();
+            }
+        }
+
+        //remove card
+        GetPlayerWithId(oldPlayer.OwnerClientId).hasLargestArmy.Value = false;
+        GetPlayerWithId(oldPlayer.OwnerClientId).nrOfVictoryPoints.Value -= 2;
+
+        GetHostPlayer().RemovePointCardClientRpc("Largest Army", new ClientRpcParams
+        {
+            Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { oldPlayer.OwnerClientId } }
+        });
+
+
+        //add card
+        GetPlayerWithId(srp.Receive.SenderClientId).hasLargestArmy.Value = true;
+        GetPlayerWithId(srp.Receive.SenderClientId).nrOfVictoryPoints.Value += 2;
+
+
+        GetHostPlayer().AddPointCardClientRpc("Largest Army", new ClientRpcParams
+        {
+            Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { srp.Receive.SenderClientId } }
+        });
+    }
+
+    [ClientRpc]
+    public void RemovePointCardClientRpc(string type, ClientRpcParams crp)
+    {
+        print("Am pierdut cartea");
+        if (type == "Largest Army")
+        {
+            GameObject.Find("LargestArmy").gameObject.SetActive(false);
+        }
+        else if (type == "Longest Road")
+        {
+            GameObject.Find("LongestRoad").gameObject.SetActive(false);
+
+        }
+    }
+
+    [ClientRpc]
+    public void AddPointCardClientRpc(string type, ClientRpcParams crp)
+    {
+        print("Am primit cartea");
+        if (type == "Largest Army")
+        {
+            Resources.FindObjectsOfTypeAll<LargestArmy>()[0].gameObject.SetActive(true);
+        }
+        else if (type == "Longest Road")
+        {
+            Resources.FindObjectsOfTypeAll<LongestRoad>()[0].gameObject.SetActive(true);
+        }
     }
 }

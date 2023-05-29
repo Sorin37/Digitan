@@ -24,8 +24,10 @@ public class KnightDevelopment : MonoBehaviour
     {
         button.onClick.AddListener(() =>
         {
+            var player = GetHostPlayer();
             RemoveDevelopment("KnightDeck");
-            GetHostPlayer().DisplayThiefCirclesServerRpc();
+            player.UsedKnightServerRpc(new Unity.Netcode.ServerRpcParams());
+            player.DisplayThiefCirclesServerRpc();
         });
     }
 
