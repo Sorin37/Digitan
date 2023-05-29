@@ -139,10 +139,10 @@ public class ButtonManager : MonoBehaviour
                 return;
             }
 
-            if(!HasDevelopmentResources())
-            {
-                return;
-            }
+            //if(!HasDevelopmentResources())
+            //{
+            //    return;
+            //}
 
             GetHostPlayer().GetDevelopmentServerRpc(new ServerRpcParams());
         });

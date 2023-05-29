@@ -1283,12 +1283,16 @@ public class Player : NetworkBehaviour
 
         var max = players.Max(p => p.usedKnights);
 
+        print("Max: " + max.ToString());
+
         if (max < 3)
         {
             return;
         }
 
         var apparitions = players.Select(p => p.usedKnights == max).Count();
+
+        print("Apparitions " + apparitions);
 
         if (apparitions > 1)
         {
@@ -1304,6 +1308,9 @@ public class Player : NetworkBehaviour
                 oldPlayer = p.GetComponent<Player>();
             }
         }
+
+        if (oldPlayer == null)
+            print("Mda player a ajusn null");
 
         //remove card
         GetPlayerWithId(oldPlayer.OwnerClientId).hasLargestArmy.Value = false;
