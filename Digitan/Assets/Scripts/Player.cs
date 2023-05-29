@@ -962,7 +962,7 @@ public class Player : NetworkBehaviour
         }
     }
 
-    [ServerRpc(RequireOwnership = false)]
+    [ServerRpc]
     public void DisplayThiefCirclesServerRpc()
     {
         var player = GetHostPlayer();
@@ -971,7 +971,6 @@ public class Player : NetworkBehaviour
         {
             Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { (ulong)player.currentPlayerTurn.Value } }
         });
-
     }
 
     [ClientRpc]
