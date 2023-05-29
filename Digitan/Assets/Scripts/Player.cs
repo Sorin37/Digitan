@@ -1295,6 +1295,11 @@ public class Player : NetworkBehaviour
             return;
         }
 
+        if (players.FirstOrDefault(p=> p.usedKnights == max).id != srp.Receive.SenderClientId)
+        {
+            return;
+        }
+
         Player oldPlayer = null;
 
         foreach (var p in playersGOs)
