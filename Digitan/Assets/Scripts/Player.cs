@@ -1290,6 +1290,11 @@ public class Player : NetworkBehaviour
             return;
         }
 
+        foreach (var p in players)
+        {
+            print(p.id + " " + p.usedKnights);
+        }
+
         var apparitions = players.Select(p => p.usedKnights == max).Count();
 
         print("Apparitions " + apparitions);
