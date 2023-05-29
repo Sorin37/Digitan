@@ -267,6 +267,7 @@ public class Player : NetworkBehaviour
 
         //change the color
         roadObject.GetComponent<Renderer>().material.color = color;
+        roadObject.GetComponent<RoadDetails>().Color = color;
 
         //neccessary piece of code so that the nearby circles know that it just got occupied
         roadObject.GetComponent<RoadCircle>().isOccupied = true;
@@ -278,7 +279,6 @@ public class Player : NetworkBehaviour
         if (!roadGrid.GetComponent<RoadGrid>().usedRoadBuilding)
         {
             Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("Road Circle"));
-
         }
         else
         {
@@ -1338,7 +1338,6 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void RemovePointCardClientRpc(string type, ClientRpcParams crp)
     {
-        print("Am pierdut cartea");
         if (type == "Largest Army")
         {
             GameObject.Find("LargestArmy").gameObject.SetActive(false);
@@ -1353,7 +1352,6 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void AddPointCardClientRpc(string type, ClientRpcParams crp)
     {
-        print("Am primit cartea");
         if (type == "Largest Army")
         {
             Resources.FindObjectsOfTypeAll<LargestArmy>()[0].gameObject.SetActive(true);
@@ -1363,4 +1361,6 @@ public class Player : NetworkBehaviour
             Resources.FindObjectsOfTypeAll<LongestRoad>()[0].gameObject.SetActive(true);
         }
     }
+
+    
 }
