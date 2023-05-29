@@ -152,7 +152,7 @@ public class Player : NetworkBehaviour
 
         if (newValue > 9)
         {
-            print("Am 10 puncte, am castigat lamooo");
+            GetHostPlayer().VictoryServerRpc();
         }
     }
 
@@ -1295,7 +1295,7 @@ public class Player : NetworkBehaviour
             return;
         }
 
-        if (players.FirstOrDefault(p=> p.usedKnights == max).id != srp.Receive.SenderClientId)
+        if (players.FirstOrDefault(p => p.usedKnights == max).id != srp.Receive.SenderClientId)
         {
             return;
         }
@@ -1362,5 +1362,15 @@ public class Player : NetworkBehaviour
         }
     }
 
-    
+    [ServerRpc(RequireOwnership = false)]
+    public void VictoryServerRpc()
+    {
+        GetHostPlayer().VictoryClientRpc();
+    }
+
+    [ClientRpc]
+    public void VictoryClientRpc()
+    {
+        Resources.FindObjectsOfTypeAll<VictoryManager>()[0].gameObject.SetActive(true);
+    }
 }

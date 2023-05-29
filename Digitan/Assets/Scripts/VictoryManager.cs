@@ -1,11 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class RoadDetails : MonoBehaviour
+public class VictoryManager : MonoBehaviour
 {
-    [SerializeField] public Color Color;
-    [SerializeField] public bool isVisited = false;
+    [SerializeField] private Button exitButton;
 
     // Start is called before the first frame update
     void Start()
