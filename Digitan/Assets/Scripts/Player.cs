@@ -1295,7 +1295,7 @@ public class Player : NetworkBehaviour
             print(p.id + " " + p.usedKnights);
         }
 
-        var apparitions = players.Select(p => p.usedKnights == max).Count();
+        var apparitions = players.Where(p => p.usedKnights == max).Count();
 
         print("Apparitions " + apparitions);
 
