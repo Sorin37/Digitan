@@ -1,3 +1,4 @@
+using Mono.Cecil;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,6 +58,9 @@ public class Player : NetworkBehaviour
     public NetworkVariable<int> order = new NetworkVariable<int>(1);
     public NetworkVariable<int> currentPlayerTurn = new NetworkVariable<int>(-1);
     public NetworkVariable<int> nrOfFinishedDiscards = new NetworkVariable<int>(-1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<int> nrOfVictoryPoints = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<int> nrOfUsedKnights = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<bool> hasLargestArmy = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
 
     public Dictionary<string, List<string>> resourcesDict;
@@ -98,7 +102,6 @@ public class Player : NetworkBehaviour
     private void FinishedDiscarding(object sender, EventArgs e)
     {
         var player = GetHostPlayer();
-        print("teh nubmer is: " + player.nrOfFinishedDiscards.Value);
 
         if (player.nrOfFinishedDiscards.Value == 0)
         {
@@ -134,11 +137,22 @@ public class Player : NetworkBehaviour
         if (IsOwner)
         {
             await PopInformationFromLobby();
+            nrOfVictoryPoints.OnValueChanged += VictoryPointsChangedEvent;
         }
 
         if (IsOwnedByServer)
         {
             PlayerJoinedServerRpc();
+        }
+    }
+
+    private void VictoryPointsChangedEvent(int oldValue, int newValue)
+    {
+        print("Am schimbat punctele victorioase: " + newValue);
+
+        if (newValue > 9)
+        {
+            GetHostPlayer().VictoryServerRpc(GetMyPlayer().nickName.Value.ToString());
         }
     }
 
@@ -253,6 +267,7 @@ public class Player : NetworkBehaviour
 
         //change the color
         roadObject.GetComponent<Renderer>().material.color = color;
+        roadObject.GetComponent<RoadDetails>().Color = color;
 
         //neccessary piece of code so that the nearby circles know that it just got occupied
         roadObject.GetComponent<RoadCircle>().isOccupied = true;
@@ -264,7 +279,6 @@ public class Player : NetworkBehaviour
         if (!roadGrid.GetComponent<RoadGrid>().usedRoadBuilding)
         {
             Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("Road Circle"));
-
         }
         else
         {
@@ -302,6 +316,7 @@ public class Player : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void PlaceSettlementServerRpc(int x, int y, Color color, ServerRpcParams serverRpcParams)
     {
+        GetPlayerWithId(serverRpcParams.Receive.SenderClientId).nrOfVictoryPoints.Value++;
         PlaceSettlementClientRpc(x, y, color, serverRpcParams.Receive.SenderClientId);
     }
 
@@ -710,6 +725,7 @@ public class Player : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void PlaceCityServerRpc(float x, float y, float z, Color color, ServerRpcParams serverRpcParams)
     {
+        GetPlayerWithId(serverRpcParams.Receive.SenderClientId).nrOfVictoryPoints.Value++;
         PlaceCityClientRpc(x, y, z, color, serverRpcParams.Receive.SenderClientId);
     }
 
@@ -958,7 +974,6 @@ public class Player : NetworkBehaviour
         {
             Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { (ulong)player.currentPlayerTurn.Value } }
         });
-
     }
 
     [ClientRpc]
@@ -1244,5 +1259,120 @@ public class Player : NetworkBehaviour
             case 6: return yellowDice6;
             default: return null;
         }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void AddVictoryPointServerRpc(ServerRpcParams srp)
+    {
+        GetPlayerWithId(srp.Receive.SenderClientId).nrOfVictoryPoints.Value++;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void UsedKnightServerRpc(ServerRpcParams srp)
+    {
+        GetPlayerWithId(srp.Receive.SenderClientId).nrOfUsedKnights.Value++;
+
+        List<(ulong id, int usedKnights)> players = new List<(ulong id, int usedKnights)>();
+
+        var playersGOs = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (var p in playersGOs)
+        {
+            players.Add((p.GetComponent<Player>().OwnerClientId, p.GetComponent<Player>().nrOfUsedKnights.Value));
+        }
+
+        var max = players.Max(p => p.usedKnights);
+
+        if (max < 3)
+        {
+            return;
+        }
+
+        var apparitions = players.Where(p => p.usedKnights == max).Count();
+
+        if (apparitions > 1)
+        {
+            return;
+        }
+
+        if (players.FirstOrDefault(p => p.usedKnights == max).id != srp.Receive.SenderClientId)
+        {
+            return;
+        }
+
+        Player oldPlayer = null;
+
+        foreach (var p in playersGOs)
+        {
+            if (p.GetComponent<Player>().hasLargestArmy.Value)
+            {
+                oldPlayer = p.GetComponent<Player>();
+            }
+        }
+
+        //remove card
+        if (oldPlayer != null)
+        {
+
+            GetPlayerWithId(oldPlayer.OwnerClientId).hasLargestArmy.Value = false;
+            GetPlayerWithId(oldPlayer.OwnerClientId).nrOfVictoryPoints.Value -= 2;
+
+            GetHostPlayer().RemovePointCardClientRpc("Largest Army", new ClientRpcParams
+            {
+                Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { oldPlayer.OwnerClientId } }
+            });
+        }
+
+
+        //add card
+        GetPlayerWithId(srp.Receive.SenderClientId).hasLargestArmy.Value = true;
+        GetPlayerWithId(srp.Receive.SenderClientId).nrOfVictoryPoints.Value += 2;
+
+
+        GetHostPlayer().AddPointCardClientRpc("Largest Army", new ClientRpcParams
+        {
+            Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { srp.Receive.SenderClientId } }
+        });
+    }
+
+    [ClientRpc]
+    public void RemovePointCardClientRpc(string type, ClientRpcParams crp)
+    {
+        if (type == "Largest Army")
+        {
+            GameObject.Find("LargestArmy").gameObject.SetActive(false);
+        }
+        else if (type == "Longest Road")
+        {
+            GameObject.Find("LongestRoad").gameObject.SetActive(false);
+
+        }
+    }
+
+    [ClientRpc]
+    public void AddPointCardClientRpc(string type, ClientRpcParams crp)
+    {
+        if (type == "Largest Army")
+        {
+            Resources.FindObjectsOfTypeAll<LargestArmy>()[0].gameObject.SetActive(true);
+        }
+        else if (type == "Longest Road")
+        {
+            Resources.FindObjectsOfTypeAll<LongestRoad>()[0].gameObject.SetActive(true);
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void VictoryServerRpc(string winnerName)
+    {
+        GetHostPlayer().VictoryClientRpc(winnerName);
+    }
+
+    [ClientRpc]
+    public void VictoryClientRpc(string winnerName)
+    {
+        var victoryBoard = Resources.FindObjectsOfTypeAll<VictoryManager>()[0];
+        victoryBoard.GetComponent<VictoryManager>().SetMessage(winnerName);
+        victoryBoard.gameObject.SetActive(true);
     }
 }
