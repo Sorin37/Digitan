@@ -152,7 +152,7 @@ public class Player : NetworkBehaviour
 
         if (newValue > 9)
         {
-            GetHostPlayer().VictoryServerRpc();
+            GetHostPlayer().VictoryServerRpc(GetMyPlayer().nickName.Value.ToString());
         }
     }
 
@@ -1363,14 +1363,16 @@ public class Player : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void VictoryServerRpc()
+    public void VictoryServerRpc(string winnerName)
     {
-        GetHostPlayer().VictoryClientRpc();
+        GetHostPlayer().VictoryClientRpc(winnerName);
     }
 
     [ClientRpc]
-    public void VictoryClientRpc()
+    public void VictoryClientRpc(string winnerName)
     {
-        Resources.FindObjectsOfTypeAll<VictoryManager>()[0].gameObject.SetActive(true);
+        var victoryBoard = Resources.FindObjectsOfTypeAll<VictoryManager>()[0];
+        victoryBoard.GetComponent<VictoryManager>().SetMessage(winnerName);
+        victoryBoard.gameObject.SetActive(true);
     }
 }
