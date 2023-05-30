@@ -525,7 +525,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LobbyName: {fileID: 1364239653}
   ListPanel: {fileID: 1607050257}
-  PlayerDetails: {fileID: 7527175852860821717, guid: 64668674f6d718e4da63ef63673d1e3d, type: 3}
+  PlayerDetails: {fileID: 7527175852860821717, guid: 836d124384b67cf4abbf6a5aefb90ee7, type: 3}
   PlayButton: {fileID: 1878546748}
 --- !u!1 &1364239653
 GameObject:

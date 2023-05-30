@@ -16,8 +16,10 @@ public class ButtonManager : MonoBehaviour
     [SerializeField] private Button tradeButton;
     [SerializeField] private Button cityButton;
     [SerializeField] private Button developmentButton;
+    [SerializeField] private Button chatButton;
     [SerializeField] private Canvas tradeCanvas;
     [SerializeField] private GameObject tradeManager;
+    [SerializeField] private GameObject chat;
     private bool hasRolledDice = false;
 
     private void Awake()
@@ -29,6 +31,7 @@ public class ButtonManager : MonoBehaviour
         InitTradeButton();
         InitCityButton();
         InitDevelopmentButton();
+        InitChatButton();
     }
 
     private void InitRollDiceButton()
@@ -145,6 +148,14 @@ public class ButtonManager : MonoBehaviour
             //}
 
             GetHostPlayer().GetDevelopmentServerRpc(new ServerRpcParams());
+        });
+    }
+
+    private void InitChatButton()
+    {
+        chatButton.onClick.AddListener(() =>
+        {
+            chat.gameObject.SetActive(!chat.gameObject.activeSelf);
         });
     }
 

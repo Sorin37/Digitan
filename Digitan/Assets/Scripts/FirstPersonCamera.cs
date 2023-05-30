@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class FirstPersonCamera : MonoBehaviour
 {
+    [SerializeField] private TMP_InputField chatInput;
     private float cameraVerticalRotation = 82f;
     private float cameraHorizontalRotation = 0f;
 
@@ -16,7 +19,10 @@ public class FirstPersonCamera : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        HandleCameraMovement();
+        if(!chatInput.isFocused)
+        {
+            HandleCameraMovement();
+        }
     }
 
     private void HandleCameraMovement()
