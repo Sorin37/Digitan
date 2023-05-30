@@ -47,6 +47,8 @@ public class Player : NetworkBehaviour
     [SerializeField] private Sprite yellowDice5;
     [SerializeField] private Sprite yellowDice6;
 
+    [SerializeField] private GameObject messagePrefab;
+
     private GameObject gameGrid;
     private GameObject roadGrid;
     private GameObject settlementGrid;
@@ -388,6 +390,23 @@ public class Player : NetworkBehaviour
                 return Color.white;
             default:
                 return Color.magenta;
+        }
+    }
+
+    public string IdToHexColor(ulong id)
+    {
+        switch (id)
+        {
+            case 0ul:
+                return "#0000CC";
+            case 1ul:
+                return "#FF0000";
+            case 2ul:
+                return "#FFA300";
+            case 4ul:
+                return "#FFFFFF";
+            default:
+                return "#FF00FF";
         }
     }
 
@@ -1374,5 +1393,24 @@ public class Player : NetworkBehaviour
         var victoryBoard = Resources.FindObjectsOfTypeAll<VictoryManager>()[0];
         victoryBoard.GetComponent<VictoryManager>().SetMessage(winnerName);
         victoryBoard.gameObject.SetActive(true);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void SendChatMessageServerRpc(string msg, ServerRpcParams srp)
+    {
+        var color = IdToHexColor(srp.Receive.SenderClientId);
+        var name = GetPlayerWithId(srp.Receive.SenderClientId).nickName.Value.ToString();
+
+        msg = "<color=" + color + ">" + name + ": </color>" + msg;
+
+        GetHostPlayer().SendChatMessageClientRpc(msg);
+    }
+
+    [ClientRpc]
+    public void SendChatMessageClientRpc(string msg)
+    {
+        var messageGO = Instantiate(messagePrefab);
+        messageGO.GetComponent<TextMeshProUGUI>().text = msg;
+        messageGO.transform.SetParent(Resources.FindObjectsOfTypeAll<ChatContent>()[0].transform);
     }
 }

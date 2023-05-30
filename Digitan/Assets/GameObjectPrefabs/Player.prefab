@@ -88,6 +88,7 @@ MonoBehaviour:
   yellowDice4: {fileID: 21300000, guid: 1ba62607700b25649a3f8bcb5154caf8, type: 3}
   yellowDice5: {fileID: 21300000, guid: d5959e9b124314a498d3419b0dad60bd, type: 3}
   yellowDice6: {fileID: 21300000, guid: 928e13e6c3e4dfa4e858afa25e947ba6, type: 3}
+  messagePrefab: {fileID: 7519700150789999443, guid: 8449f2c6675b60846acdd7f5b0c3fae3, type: 3}
   resourcesCode:
     m_InternalValue:
       utf8LengthInBytes: 13
@@ -303,6 +304,12 @@ MonoBehaviour:
     m_InternalValue: -1
   nrOfFinishedDiscards:
     m_InternalValue: -1
+  nrOfVictoryPoints:
+    m_InternalValue: 0
+  nrOfUsedKnights:
+    m_InternalValue: 0
+  hasLargestArmy:
+    m_InternalValue: 0
   nrOfMaxPlayers: 0
   nrOfDeclinedTrades: 0
   color: {r: 0, g: 0, b: 0.80784315, a: 0}
