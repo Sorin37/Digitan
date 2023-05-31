@@ -19,7 +19,7 @@ public class ChatManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyUp(KeyCode.Return))
+        if (Input.GetKeyUp(KeyCode.Return) && chatInput.gameObject.activeSelf)
         {
             GetHostPlayer().SendChatMessageServerRpc(chatInput.text, new Unity.Netcode.ServerRpcParams());
             chatInput.text = string.Empty;
