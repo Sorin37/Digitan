@@ -1,5 +1,6 @@
 using Mono.Cecil;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ using Unity.Services.Lobbies.Models;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class Player : NetworkBehaviour
 {
@@ -609,7 +611,7 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     private void ChangeCurrentPlayerDetailsColorClientRpc(ulong id)
     {
-        GameObject.Find("ColorPanel").GetComponent<Image>().color = IdToColor(id);
+        GameObject.Find("ColorPanel").GetComponent<UnityEngine.UI.Image>().color = IdToColor(id);
     }
 
     [ClientRpc]
@@ -1248,8 +1250,8 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void DisplayDiceClientRpc(int redDice, int yellowDice)
     {
-        GameObject.Find("RedDice").GetComponent<Image>().sprite = NumberToRedDiceSprite(redDice);
-        GameObject.Find("YellowDice").GetComponent<Image>().sprite = NumberToYellowDiceSprite(yellowDice);
+        GameObject.Find("RedDice").GetComponent<UnityEngine.UI.Image>().sprite = NumberToRedDiceSprite(redDice);
+        GameObject.Find("YellowDice").GetComponent<UnityEngine.UI.Image>().sprite = NumberToYellowDiceSprite(yellowDice);
     }
 
     private Sprite NumberToRedDiceSprite(int number)

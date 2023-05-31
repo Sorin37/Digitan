@@ -12309,11 +12309,11 @@ RectTransform:
   m_Father: {fileID: 85023035}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0, y: 1}
 --- !u!114 &840347700
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12333,8 +12333,8 @@ MonoBehaviour:
     m_Bottom: 0
   m_ChildAlignment: 0
   m_Spacing: 0
-  m_ChildForceExpandWidth: 0
-  m_ChildForceExpandHeight: 0
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
@@ -18299,6 +18299,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chatInput: {fileID: 1902674289}
+  scroll: {fileID: 1824598579}
+  content: {fileID: 840347698}
 --- !u!1 &1161139677
 GameObject:
   m_ObjectHideFlags: 0
