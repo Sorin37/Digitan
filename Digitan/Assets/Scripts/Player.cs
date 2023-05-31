@@ -1414,5 +1414,10 @@ public class Player : NetworkBehaviour
         var messageGO = Instantiate(messagePrefab);
         messageGO.GetComponent<TextMeshProUGUI>().text = msg;
         messageGO.transform.SetParent(Resources.FindObjectsOfTypeAll<ChatContent>()[0].transform);
+
+        if (!GameObject.Find("Chat"))
+        {
+            Resources.FindObjectsOfTypeAll<NewMessagesDot>()[0].gameObject.SetActive(true);
+        }
     }
 }

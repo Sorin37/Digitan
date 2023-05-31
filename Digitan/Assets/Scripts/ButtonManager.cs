@@ -156,6 +156,7 @@ public class ButtonManager : MonoBehaviour
         chatButton.onClick.AddListener(() =>
         {
             chat.gameObject.SetActive(!chat.gameObject.activeSelf);
+            GameObject.Find("NewMessagesDot")?.gameObject.SetActive(false);
         });
     }
 
