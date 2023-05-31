@@ -1,5 +1,6 @@
 using Mono.Cecil;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ using Unity.Services.Lobbies.Models;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class Player : NetworkBehaviour
 {
@@ -46,6 +48,8 @@ public class Player : NetworkBehaviour
     [SerializeField] private Sprite yellowDice4;
     [SerializeField] private Sprite yellowDice5;
     [SerializeField] private Sprite yellowDice6;
+
+    [SerializeField] private GameObject messagePrefab;
 
     private GameObject gameGrid;
     private GameObject roadGrid;
@@ -391,6 +395,23 @@ public class Player : NetworkBehaviour
         }
     }
 
+    public string IdToHexColor(ulong id)
+    {
+        switch (id)
+        {
+            case 0ul:
+                return "#0000CC";
+            case 1ul:
+                return "#FF0000";
+            case 2ul:
+                return "#FFA300";
+            case 4ul:
+                return "#FFFFFF";
+            default:
+                return "#FF00FF";
+        }
+    }
+
     private Player GetMyPlayer()
     {
         var players = GameObject.FindGameObjectsWithTag("Player");
@@ -590,7 +611,7 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     private void ChangeCurrentPlayerDetailsColorClientRpc(ulong id)
     {
-        GameObject.Find("ColorPanel").GetComponent<Image>().color = IdToColor(id);
+        GameObject.Find("ColorPanel").GetComponent<UnityEngine.UI.Image>().color = IdToColor(id);
     }
 
     [ClientRpc]
@@ -1229,8 +1250,8 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void DisplayDiceClientRpc(int redDice, int yellowDice)
     {
-        GameObject.Find("RedDice").GetComponent<Image>().sprite = NumberToRedDiceSprite(redDice);
-        GameObject.Find("YellowDice").GetComponent<Image>().sprite = NumberToYellowDiceSprite(yellowDice);
+        GameObject.Find("RedDice").GetComponent<UnityEngine.UI.Image>().sprite = NumberToRedDiceSprite(redDice);
+        GameObject.Find("YellowDice").GetComponent<UnityEngine.UI.Image>().sprite = NumberToYellowDiceSprite(yellowDice);
     }
 
     private Sprite NumberToRedDiceSprite(int number)
@@ -1374,5 +1395,29 @@ public class Player : NetworkBehaviour
         var victoryBoard = Resources.FindObjectsOfTypeAll<VictoryManager>()[0];
         victoryBoard.GetComponent<VictoryManager>().SetMessage(winnerName);
         victoryBoard.gameObject.SetActive(true);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void SendChatMessageServerRpc(string msg, ServerRpcParams srp)
+    {
+        var color = IdToHexColor(srp.Receive.SenderClientId);
+        var name = GetPlayerWithId(srp.Receive.SenderClientId).nickName.Value.ToString();
+
+        msg = "<color=" + color + ">" + name + ": </color>" + msg;
+
+        GetHostPlayer().SendChatMessageClientRpc(msg);
+    }
+
+    [ClientRpc]
+    public void SendChatMessageClientRpc(string msg)
+    {
+        var messageGO = Instantiate(messagePrefab);
+        messageGO.GetComponent<TextMeshProUGUI>().text = msg;
+        messageGO.transform.SetParent(Resources.FindObjectsOfTypeAll<ChatContent>()[0].transform);
+
+        if (!GameObject.Find("Chat"))
+        {
+            Resources.FindObjectsOfTypeAll<NewMessagesDot>()[0].gameObject.SetActive(true);
+        }
     }
 }
