@@ -65,7 +65,8 @@ public class NumbersGrid : MonoBehaviour
         if (getMyPlayer().GetComponent<Player>().GetIsHost())
         {
             CreateGrid();
-        }else
+        }
+        else
         {
             CreateGrid(getHostPlayer().GetComponent<Player>().numbersCode.Value.ToString());
         }
@@ -131,6 +132,7 @@ public class NumbersGrid : MonoBehaviour
                 numbersGrid[x][y].gameObject.name = number.name;
                 numbersGrid[x][y].gameObject.transform.parent = transform;
                 numbersGrid[x][y].gameObject.GetComponent<Number>().resource = gameGrid.GetComponent<GameGrid>().gameGrid[x][y].gameObject.name;
+                numbersGrid[x][y].gameObject.GetComponent<Number>().frequency = NumberToFrequency(number.name);
             }
         }
 
@@ -161,7 +163,8 @@ public class NumbersGrid : MonoBehaviour
                             try
                             {
                                 findAvailableSpace(x, y, position, number);
-                            }catch(IndexOutOfRangeException)
+                            }
+                            catch (IndexOutOfRangeException)
                             {
                                 Debug.LogError("exceptie speciala");
                             }
@@ -184,7 +187,7 @@ public class NumbersGrid : MonoBehaviour
                 numbersGrid[x][y].gameObject.name = number.name;
                 numbersGrid[x][y].gameObject.transform.parent = transform;
                 numbersGrid[x][y].gameObject.GetComponent<Number>().resource = gameGrid.GetComponent<GameGrid>().gameGrid[x][y].gameObject.name;
-
+                numbersGrid[x][y].gameObject.GetComponent<Number>().frequency = NumberToFrequency(number.name);
             }
         }
 
@@ -247,6 +250,7 @@ public class NumbersGrid : MonoBehaviour
                 numbersGrid[x][y].gameObject.name = number.name;
                 numbersGrid[x][y].gameObject.transform.parent = transform;
                 numbersGrid[x][y].gameObject.GetComponent<Number>().resource = gameGrid.GetComponent<GameGrid>().gameGrid[x][y].gameObject.name;
+                numbersGrid[x][y].gameObject.GetComponent<Number>().frequency = NumberToFrequency(number.name);
             }
         }
 
@@ -277,6 +281,7 @@ public class NumbersGrid : MonoBehaviour
                 numbersGrid[x][y].gameObject.name = number.name;
                 numbersGrid[x][y].gameObject.transform.parent = transform;
                 numbersGrid[x][y].gameObject.GetComponent<Number>().resource = gameGrid.GetComponent<GameGrid>().gameGrid[x][y].gameObject.name;
+                numbersGrid[x][y].gameObject.GetComponent<Number>().frequency = NumberToFrequency(number.name);
             }
         }
 
@@ -429,5 +434,23 @@ public class NumbersGrid : MonoBehaviour
         }
 
         return null;
+    }
+
+    private int NumberToFrequency(string number)
+    {
+        switch (number)
+        {
+            case "2": return 1;
+            case "3": return 2;
+            case "4": return 3;
+            case "5": return 4;
+            case "6": return 5;
+            case "8": return 5;
+            case "9": return 4;
+            case "10": return 3;
+            case "11": return 2;
+            case "12": return 1;
+            default: return 0;
+        }
     }
 }
