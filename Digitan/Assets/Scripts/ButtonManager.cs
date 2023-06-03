@@ -167,6 +167,7 @@ public class ButtonManager : MonoBehaviour
     {
         tipsButton.onClick.AddListener(() =>
         {
+            tips.GetComponent<TipsManager>().GenerateTip();
             tips.gameObject.SetActive(!tips.gameObject.activeSelf);
         });
     }
