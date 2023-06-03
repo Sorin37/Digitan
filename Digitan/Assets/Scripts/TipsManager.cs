@@ -29,7 +29,7 @@ public class TipsManager : MonoBehaviour
         int tipValue = 0;
         string tipMessage = "";
 
-        FindMostFrequentSpot(out tipValue, out tipMessage);
+        BestSettlementSpot(out tipValue, out tipMessage);
 
         tips.Add((tipValue, tipMessage));
 
@@ -38,7 +38,7 @@ public class TipsManager : MonoBehaviour
         tipsLabel.text = finalMessage;
     }
 
-    public void FindMostFrequentSpot(out int tipValue, out string tipMessage)
+    public void BestSettlementSpot(out int tipValue, out string tipMessage)
     {
         List<int> spacesPerRow = new List<int> { 3, 4, 4, 5, 5, 6, 6, 5, 5, 4, 4, 3 };
 
@@ -82,6 +82,11 @@ public class TipsManager : MonoBehaviour
         tipMessage = "The settlement place surrounded by the numbers: " + maxNumbers + ", gives a high probability of obtaining resources. Consider placing your settlement there!";
 
         tipValue = max > 9 ? 3 : 1;
+
+        if (!Resources.FindObjectsOfTypeAll<SettlementGrid>()[0].isStartPhase)
+        {
+            tipValue = 1;
+        }
     }
 
     private int CollidersValue(Vector3 pos, out string numbers)
