@@ -29,9 +29,9 @@ public class TipsManager : MonoBehaviour
         int tipValue = 0;
         string tipMessage = "";
 
-        //BestSettlementSpot(out tipValue, out tipMessage);
+        BestSettlementSpot(out tipValue, out tipMessage);
 
-        //tips.Add((tipValue, tipMessage));
+        tips.Add((tipValue, tipMessage));
 
         MonopolySettlementSpot(out tipValue, out tipMessage);
 
