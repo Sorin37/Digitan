@@ -45,7 +45,7 @@ public class TipsManager : MonoBehaviour
 
         tips.Add((tipValue, tipMessage));
 
-        string finalMessage = tips.Where(t => t.tipValue > 0).OrderBy(t => t.tipValue).FirstOrDefault().tipMessage;
+        string finalMessage = tips.Where(t => t.tipValue > 0).OrderByDescending(t => t.tipValue).FirstOrDefault().tipMessage;
 
         tipsLabel.text = finalMessage;
     }
