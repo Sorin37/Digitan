@@ -284,29 +284,38 @@ public class TipsManager : MonoBehaviour
 
         List<(string resource, int frequency)> frequencies = new List<(string resource, int frequency)>();
 
-        foreach(var key in resourceFrequency.Keys)
+        foreach (var key in resourceFrequency.Keys)
         {
             frequencies.Add((key, resourceFrequency[key]));
         }
 
         //most frequent resources
-        int max = frequencies.Max(f => f.frequency);
+        if (frequencies.Count > 0)
+        {
+            int max = frequencies.Max(f => f.frequency);
 
-        firstPlace.AddRange(frequencies.Where(f => f.frequency == max).Select(f => f.resource).ToList());
+            firstPlace.AddRange(frequencies.Where(f => f.frequency == max).Select(f => f.resource).ToList());
+
+            frequencies.RemoveAll(f => f.frequency == max);
+        }
 
         //second most frequent resources
-        frequencies.RemoveAll(f=> f.frequency == max);
+        if (frequencies.Count > 0)
+        {
+            int max = frequencies.Max(f => f.frequency);
 
-        max = frequencies.Max(f => f.frequency);
+            secondPlace.AddRange(frequencies.Where(f => f.frequency == max).Select(f => f.resource).ToList());
 
-        secondPlace.AddRange(frequencies.Where(f => f.frequency == max).Select(f => f.resource).ToList());
+            frequencies.RemoveAll(f => f.frequency == max);
+        }
 
         //third most frequent resources
-        frequencies.RemoveAll(f => f.frequency == max);
+        if (frequencies.Count > 0)
+        {
+            int max = frequencies.Max(f => f.frequency);
 
-        max = frequencies.Max(f => f.frequency);
-
-        thirdPlace.AddRange(frequencies.Where(f => f.frequency == max).Select(f => f.resource).ToList());
+            thirdPlace.AddRange(frequencies.Where(f => f.frequency == max).Select(f => f.resource).ToList());
+        }
 
         List<string> top2Resources = new List<string>();
         top2Resources.AddRange(firstPlace);
@@ -331,8 +340,8 @@ public class TipsManager : MonoBehaviour
         top3Resources.AddRange(thirdPlace);
 
 
-        if (top3Resources.Contains("Ore Resource") && 
-            top3Resources.Contains("Grain Resource") && 
+        if (top3Resources.Contains("Ore Resource") &&
+            top3Resources.Contains("Grain Resource") &&
             top3Resources.Contains("Wool Resource"))
         {
             tipValue = 4;
