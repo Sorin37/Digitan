@@ -5,6 +5,7 @@ using UnityEngine;
 public class Number : MonoBehaviour
 {
     public string resource;
+    public int frequency;
 
     // Start is called before the first frame update
     void Start()
