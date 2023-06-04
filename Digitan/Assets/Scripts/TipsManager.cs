@@ -37,6 +37,14 @@ public class TipsManager : MonoBehaviour
 
         tips.Add((tipValue, tipMessage));
 
+        EarlyGamePlaceMoreSettlements(out tipValue, out tipMessage);
+
+        tips.Add((tipValue, tipMessage));
+
+        MiddleGameFocus(out tipValue, out tipMessage);
+
+        tips.Add((tipValue, tipMessage));
+
         string finalMessage = tips.Where(t => t.tipValue > 0).OrderBy(t => t.tipValue).FirstOrDefault().tipMessage;
 
         tipsLabel.text = finalMessage;
@@ -164,15 +172,20 @@ public class TipsManager : MonoBehaviour
                     );
                 }
 
-                if(foundMonopoly)
+                if (foundMonopoly)
                 {
-                    tipMessage = "The settlement place surrounded by the numbers: " + numbers + ", will make you establish a monopoly on the " + resource + ". Other players will be forced to offer you advantageous trades. Consider placing your settlement there!";
+                    tipMessage = "The settlement place surrounded by the numbers: "
+                        + numbers +
+                        ", will make you establish a monopoly on the "
+                        + resource +
+                        ". Other players will be forced to offer you advantageous trades. Consider placing your settlement there!\nYou may want to take control of the "
+                        + resource + " port, in order to make the most out of your monopoly.";
 
                     tipValue = 2;
 
                     if (!Resources.FindObjectsOfTypeAll<SettlementGrid>()[0].isStartPhase)
                     {
-                        tipValue = 1;
+                        tipValue = 0;
                     }
 
                     return;
@@ -214,7 +227,7 @@ public class TipsManager : MonoBehaviour
 
         foreach (var collider in colliders)
         {
-            if(collider.GetComponent<Number>().resource != colliders[0].GetComponent<Number>().resource)
+            if (collider.GetComponent<Number>().resource != colliders[0].GetComponent<Number>().resource)
                 return false;
 
             if (numbers.Length != 0)
@@ -226,5 +239,143 @@ public class TipsManager : MonoBehaviour
         resource = colliders[0].GetComponent<Number>().resource;
 
         return true;
+    }
+
+    private void EarlyGamePlaceMoreSettlements(out int tipValue, out string tipMessage)
+    {
+        tipValue = 0;
+        tipMessage = "";
+
+        if (GetMyPlayer().nrOfVictoryPoints.Value > 5) return;
+
+        tipValue = 2;
+        tipMessage = "Extend your resource collecting pool by placing more settlements or upgrading them into cities!";
+    }
+
+    private void MiddleGameFocus(out int tipValue, out string tipMessage)
+    {
+        var myPlayer = GetMyPlayer();
+
+        tipValue = 0;
+        tipMessage = "";
+
+        if (myPlayer.nrOfVictoryPoints.Value < 5) return;
+
+        Dictionary<string, int> resourceFrequency = new Dictionary<string, int>();
+
+        foreach (var number in myPlayer.resourcesDict.Keys)
+        {
+            foreach (var resource in myPlayer.resourcesDict[number])
+            {
+                if (resourceFrequency.ContainsKey(resource))
+                {
+                    resourceFrequency[resource] += NumberToFrequency(number);
+                }
+                else
+                {
+                    resourceFrequency[resource] = NumberToFrequency(number);
+                }
+            }
+        }
+
+        List<string> firstPlace = new List<string>();
+        List<string> secondPlace = new List<string>();
+        List<string> thirdPlace = new List<string>();
+
+        List<(string resource, int frequency)> frequencies = new List<(string resource, int frequency)>();
+
+        foreach(var key in resourceFrequency.Keys)
+        {
+            frequencies.Add((key, resourceFrequency[key]));
+        }
+
+        //most frequent resources
+        int max = frequencies.Max(f => f.frequency);
+
+        firstPlace.AddRange(frequencies.Where(f => f.frequency == max).Select(f => f.resource).ToList());
+
+        //second most frequent resources
+        frequencies.RemoveAll(f=> f.frequency == max);
+
+        max = frequencies.Max(f => f.frequency);
+
+        secondPlace.AddRange(frequencies.Where(f => f.frequency == max).Select(f => f.resource).ToList());
+
+        //third most frequent resources
+        frequencies.RemoveAll(f => f.frequency == max);
+
+        max = frequencies.Max(f => f.frequency);
+
+        thirdPlace.AddRange(frequencies.Where(f => f.frequency == max).Select(f => f.resource).ToList());
+
+        List<string> top2Resources = new List<string>();
+        top2Resources.AddRange(firstPlace);
+        top2Resources.AddRange(secondPlace);
+
+        if (top2Resources.Contains("Brick Resource") && top2Resources.Contains("Wood Resource"))
+        {
+            tipValue = 4;
+            tipMessage = "Your key resources are bricks and woods. Focus on placing settlements and building roads so that you can obtain The Longest Road. Try to reach for the Brick or Wood ports as well!";
+            return;
+        }
+
+        if (top2Resources.Contains("Ore Resource") && top2Resources.Contains("Grain Resource"))
+        {
+            tipValue = 4;
+            tipMessage = "Your key resources are grains and ores. Focus on developing your settlements into cities. Try to reach for the Grain or Ore ports as well!";
+            return;
+        }
+
+        List<string> top3Resources = new List<string>();
+        top3Resources.AddRange(top2Resources);
+        top3Resources.AddRange(thirdPlace);
+
+
+        if (top3Resources.Contains("Ore Resource") && 
+            top3Resources.Contains("Grain Resource") && 
+            top3Resources.Contains("Wool Resource"))
+        {
+            tipValue = 4;
+            tipMessage = "Your key resources are grain, ore and wool. Focus on acquiring developments so that you can obtain many Victory Points and The Largest Army.";
+            return;
+        }
+
+        if (firstPlace.Contains("Wool Resource"))
+        {
+            tipValue = 3;
+            tipMessage = "Your key resource is wool. Focus on reaching the wool port as fast as possible, otherwise you will fall behind! The other players might have a difficult time obtaining wool, so force them into offering you multiple resources for wool when trading.";
+            return;
+        }
+    }
+
+    private Player GetMyPlayer()
+    {
+        var players = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (var p in players)
+        {
+            if (p.GetComponent<Player>().IsOwner)
+                return p.GetComponent<Player>();
+        }
+
+        return null;
+    }
+
+    private int NumberToFrequency(string number)
+    {
+        switch (number)
+        {
+            case "2": return 1;
+            case "3": return 2;
+            case "4": return 3;
+            case "5": return 4;
+            case "6": return 5;
+            case "8": return 5;
+            case "9": return 4;
+            case "10": return 3;
+            case "11": return 2;
+            case "12": return 1;
+            default: return 0;
+        }
     }
 }
