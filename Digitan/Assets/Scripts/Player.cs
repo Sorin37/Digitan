@@ -269,6 +269,8 @@ public class Player : NetworkBehaviour
                                             pressedCircle.transform.position,
                                             GetRotationFromPos((x, y)));
 
+        roadGrid.GetComponent<RoadGrid>().roadGrid[x][y] = roadObject;
+
         //change the color
         roadObject.GetComponent<Renderer>().material.color = color;
         roadObject.GetComponent<RoadDetails>().Color = color;
