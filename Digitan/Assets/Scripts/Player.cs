@@ -1443,7 +1443,12 @@ public class Player : NetworkBehaviour
 
                 var roadDetails = road.GetComponent<RoadDetails>();
 
-                if(roadDetails != null)
+                if(roadDetails == null)
+                {
+                    return;
+                }
+
+                if(roadDetails.Color == GetMyPlayer().color)
                 {
                     roadCount++;
                 }
