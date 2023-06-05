@@ -288,6 +288,8 @@ public class Player : NetworkBehaviour
         {
             roadGrid.GetComponent<RoadGrid>().usedRoadBuilding = false;
         }
+
+        CalculateLongestRoad();
     }
 
     private Quaternion GetRotationFromPos((int x, int y) pos)
@@ -1420,4 +1422,26 @@ public class Player : NetworkBehaviour
             Resources.FindObjectsOfTypeAll<NewMessagesDot>()[0].gameObject.SetActive(true);
         }
     }
+
+    #region Longest Road
+    private void CalculateLongestRoad()
+    {
+        var roadGrid = this.roadGrid.GetComponent<RoadGrid>().roadGrid;
+
+        int roadCount = 0;
+
+        foreach (var row in roadGrid)
+        {
+            foreach (var road in row)
+            {
+                if (road != null)
+                {
+                    roadCount++;
+                }
+            }
+        }
+
+        print("Am " + roadCount + " drumuri");
+    }
+    #endregion
 }
