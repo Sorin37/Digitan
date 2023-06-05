@@ -1448,7 +1448,10 @@ public class Player : NetworkBehaviour
                     break;
                 }
 
-                if(roadDetails.Color == GetMyPlayer().color)
+                print("== " + (roadDetails.Color == GetMyPlayer().color));
+                print("equals " + roadDetails.Color.Equals(GetMyPlayer().color));
+
+                if (roadDetails.Color == GetMyPlayer().color)
                 {
                     roadCount++;
                 }
