@@ -1436,7 +1436,14 @@ public class Player : NetworkBehaviour
         {
             foreach (var road in row)
             {
-                if (road != null)
+                if (road == null)
+                {
+                    return;
+                }
+
+                var roadCircle = road.GetComponent<RoadCircle>();
+
+                if(roadCircle != null)
                 {
                     roadCount++;
                 }
