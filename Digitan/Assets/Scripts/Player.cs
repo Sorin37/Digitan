@@ -1475,6 +1475,9 @@ public class Player : NetworkBehaviour
                 (int)Mathf.Pow(2, LayerMask.NameToLayer("Road"))
             );
 
+        //check if there are enemy settlements near the roads
+        //if so, do the capsule thingy
+        //add the nearbyRoads that are yours to a queue?
 
         return 0;
     }
