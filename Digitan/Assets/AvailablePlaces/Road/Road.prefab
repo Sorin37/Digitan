@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5079039575616004304}
   - component: {fileID: -5830533487679865401}
   - component: {fileID: -4217582365979050663}
-  m_Layer: 0
+  m_Layer: 18
   m_Name: Road
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -111,3 +111,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa41c67c253a2084ca25fafe74769b46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  color: {r: 0, g: 0, b: 0, a: 0}
+  isVisited: 0

@@ -271,11 +271,13 @@ public class Player : NetworkBehaviour
 
         roadGrid.GetComponent<RoadGrid>().roadGrid[x][y] = roadObject;
 
+        roadObject.name = x + " " + y + " Road";
+
         //change the color
         roadObject.GetComponent<Renderer>().material.color = color;
-        roadObject.GetComponent<RoadDetails>().Color = color;
+        roadObject.GetComponent<RoadDetails>().color = color;
 
-        //neccessary piece of code so that the nearby circles know that it just got occupied
+        //neccessary piece of code so that the nearby circles know that it got occupied
         roadObject.GetComponent<RoadCircle>().isOccupied = true;
 
         //destroy the road circle
@@ -1448,17 +1450,33 @@ public class Player : NetworkBehaviour
                     continue;
                 }
 
-                print("== " + (roadDetails.Color == GetMyPlayer().color));
-                print("equals " + roadDetails.Color.Equals(GetMyPlayer().color));
-
-                if (roadDetails.Color == GetMyPlayer().color)
+                if (roadDetails.color != GetMyPlayer().color)
                 {
-                    roadCount++;
+                    continue;
                 }
+
+                if (roadDetails.isVisited)
+                {
+                    continue;
+                }
+
+                int roadLength = ConexComponentLongestRoad(road);
             }
         }
 
         print("Am " + roadCount + " drumuri");
+    }
+
+    private int ConexComponentLongestRoad(GameObject road)
+    {
+        var nearbyRoads = Physics.OverlapSphere(
+                road.transform.position,
+                2,
+                (int)Mathf.Pow(2, LayerMask.NameToLayer("Road"))
+            );
+
+
+        return 0;
     }
     #endregion
 }
