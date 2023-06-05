@@ -1441,9 +1441,9 @@ public class Player : NetworkBehaviour
                     return;
                 }
 
-                var roadCircle = road.GetComponent<RoadCircle>();
+                var roadDetails = road.GetComponent<RoadDetails>();
 
-                if(roadCircle != null)
+                if(roadDetails != null)
                 {
                     roadCount++;
                 }
