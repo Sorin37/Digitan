@@ -1438,14 +1438,14 @@ public class Player : NetworkBehaviour
             {
                 if (road == null)
                 {
-                    return;
+                    break;
                 }
 
                 var roadDetails = road.GetComponent<RoadDetails>();
 
                 if(roadDetails == null)
                 {
-                    return;
+                    break;
                 }
 
                 if(roadDetails.Color == GetMyPlayer().color)
