@@ -1465,11 +1465,15 @@ public class Player : NetworkBehaviour
             }
         }
 
+        //fa toate drumurile sa fie nevizitate
+
         print("Am " + roadCount + " drumuri");
     }
 
     private int ConexComponentLongestRoad(GameObject road)
     {
+        print("Facem conexe bro");
+
         road.GetComponent<RoadDetails>().isVisited = true;
 
         Queue<GameObject> roadsQueue = new Queue<GameObject>();
@@ -1480,6 +1484,8 @@ public class Player : NetworkBehaviour
 
         while (roadsQueue.Count != 0)
         {
+            print("Prima iteratie din loop");
+
             GameObject currentRoad = roadsQueue.Dequeue();
 
             adjancencyList[currentRoad.name] = new List<string>();
@@ -1502,12 +1508,16 @@ public class Player : NetworkBehaviour
                 out containsRoads,
                 out containsEnemyBuilding);
 
+            print("Drumuri: " + containsRoads);
+            print("Inamici: " + containsEnemyBuilding);
+
             if (containsRoads && containsEnemyBuilding)
             {
                 print("xd cica a gasit ceva strain");
             }
             else if (containsRoads) //contains only roads
             {
+                print("Am gasit macar drumur?i");
                 foreach (var building in nearbyBuildings)
                 {
                     var roadDetails = building.GetComponent<RoadDetails>();
@@ -1522,7 +1532,7 @@ public class Player : NetworkBehaviour
 
         }
 
-        print(adjancencyList.Count);
+        print("Lista de adiacenta spune: " + adjancencyList.Count);
 
         return 0;
     }
@@ -1531,6 +1541,8 @@ public class Player : NetworkBehaviour
     {
         hasRoads = false;
         hasBuildings = false;
+
+        print("Am atatea collidere: " + nearbyBuildings.Length);
 
         foreach (var nearbyBuilding in nearbyBuildings)
         {
