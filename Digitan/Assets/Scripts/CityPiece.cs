@@ -5,6 +5,7 @@ using UnityEngine;
 public class CityPiece : MonoBehaviour
 {
     public ulong playerId;
+    public Color color;
 
     // Start is called before the first frame update
     void Start()

@@ -770,6 +770,7 @@ public class Player : NetworkBehaviour
         );
 
         city.GetComponent<CityPiece>().playerId = playerId;
+        city.GetComponent<CityPiece>().color = color;
 
         //change the color
         foreach (var material in city.GetComponent<Renderer>().materials)
@@ -1445,7 +1446,7 @@ public class Player : NetworkBehaviour
 
                 var roadDetails = road.GetComponent<RoadDetails>();
 
-                if(roadDetails == null)
+                if (roadDetails == null)
                 {
                     continue;
                 }
@@ -1469,17 +1470,100 @@ public class Player : NetworkBehaviour
 
     private int ConexComponentLongestRoad(GameObject road)
     {
-        var nearbyRoads = Physics.OverlapSphere(
-                road.transform.position,
+        road.GetComponent<RoadDetails>().isVisited = true;
+
+        Queue<GameObject> roadsQueue = new Queue<GameObject>();
+
+        roadsQueue.Enqueue(road);
+
+        Dictionary<string, List<string>> adjancencyList = new Dictionary<string, List<string>>();
+
+        while (roadsQueue.Count != 0)
+        {
+            GameObject currentRoad = roadsQueue.Dequeue();
+
+            adjancencyList[currentRoad.name] = new List<string>();
+
+            var nearbyBuildings = Physics.OverlapSphere(
+                currentRoad.transform.position,
                 2,
-                (int)Mathf.Pow(2, LayerMask.NameToLayer("Road"))
+                (int)
+                (Mathf.Pow(2, LayerMask.NameToLayer("Settlement")) +
+                Mathf.Pow(2, LayerMask.NameToLayer("Road")) +
+                Mathf.Pow(2, LayerMask.NameToLayer("City")))
             );
 
-        //check if there are enemy settlements near the roads
-        //if so, do the capsule thingy
-        //add the nearbyRoads that are yours to a queue?
+            bool containsRoads = false;
+            bool containsEnemyBuilding = false;
+
+            CheckHasRoadsAndEnemyBuildingNearby(
+                nearbyBuildings,
+                currentRoad.GetComponent<RoadDetails>().color,
+                out containsRoads,
+                out containsEnemyBuilding);
+
+            if (containsRoads && containsEnemyBuilding)
+            {
+                print("xd cica a gasit ceva strain");
+            }
+            else if (containsRoads) //contains only roads
+            {
+                foreach (var building in nearbyBuildings)
+                {
+                    var roadDetails = building.GetComponent<RoadDetails>();
+                    if (!roadDetails.isVisited && roadDetails.color == currentRoad.GetComponent<RoadDetails>().color)
+                    {
+                        roadDetails.isVisited = true;
+                        adjancencyList[currentRoad.name].Add(building.name);
+                        roadsQueue.Enqueue(building.gameObject);
+                    }
+                }
+            }
+
+        }
+
+        print(adjancencyList.Count);
 
         return 0;
+    }
+
+    private void CheckHasRoadsAndEnemyBuildingNearby(Collider[] nearbyBuildings, Color color, out bool hasRoads, out bool hasBuildings)
+    {
+        hasRoads = false;
+        hasBuildings = false;
+
+        foreach (var nearbyBuilding in nearbyBuildings)
+        {
+            var roadDetails = nearbyBuilding.GetComponent<RoadDetails>();
+
+            if (roadDetails == null)
+            {
+                var city = nearbyBuilding.GetComponent<CityPiece>();
+                if (city == null)
+                {
+                    hasBuildings = true;
+                    continue;
+                }
+                else
+                {
+                    if (city.color != color)
+                    {
+                        hasBuildings = true;
+                        continue;
+                    }
+                }
+            }
+
+            if (roadDetails.color != color)
+            {
+                continue;
+            }
+
+            if (roadDetails.isVisited == false)
+            {
+                hasRoads = true;
+            }
+        }
     }
     #endregion
 }
