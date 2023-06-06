@@ -362,9 +362,8 @@ public class Player : NetworkBehaviour
 
         settlementObject.name = x + " " + y + " Settlement";
 
-        settlementGrid.GetComponent<SettlementGrid>().settlementGrid[x][y] = settlementObject;
-
         settlementObject.GetComponent<SettlementPiece>().playerId = playerId;
+        settlementObject.GetComponent<SettlementPiece>().color = color;
 
         //so that the settlements do not disappear when other players want to place a city
         if (color == this.color)
