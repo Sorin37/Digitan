@@ -1465,7 +1465,7 @@ public class Player : NetworkBehaviour
             }
         }
 
-        //fa toate drumurile sa fie nevizitate
+        TurnAllRoadsUnvisited(roadGrid);
 
         print("Am " + roadCount + " drumuri");
     }
@@ -1574,6 +1574,24 @@ public class Player : NetworkBehaviour
             if (roadDetails.isVisited == false)
             {
                 hasRoads = true;
+            }
+        }
+    }
+
+    private void TurnAllRoadsUnvisited(GameObject[][] roadGrid)
+    {
+        foreach (var row in roadGrid)
+        {
+            foreach (var road in row)
+            {
+                var roadDetails = road.GetComponent<RoadDetails>();
+
+                if(roadDetails == null)
+                {
+                    continue;
+                }
+
+                roadDetails.isVisited = false;
             }
         }
     }
