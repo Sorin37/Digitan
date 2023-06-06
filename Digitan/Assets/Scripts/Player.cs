@@ -1550,6 +1550,48 @@ public class Player : NetworkBehaviour
                     roadsQueue.Enqueue(nearbyRoad.gameObject);
                 }
             }
+            else if (IsInterrupted(currentRoad))
+            {
+                print("I've been interrupted");
+
+                var interruptedNodes = Physics.OverlapSphere(
+                    currentRoad.transform.position,
+                    2,
+                    (int)
+                    (Mathf.Pow(2, LayerMask.NameToLayer("City")) +
+                    Mathf.Pow(2, LayerMask.NameToLayer("Settlement")) +
+                    Mathf.Pow(2, LayerMask.NameToLayer("Unvisible Circle")) +
+                    Mathf.Pow(2, LayerMask.NameToLayer("Settlement Circle")))
+                );
+
+                print("We should be " + interruptedNodes[0].name + " " + interruptedNodes[1].name);
+
+                //add to the current node's list
+                if (!adjancencyList.ContainsKey(interruptedNodes[0].name))
+                {
+                    adjancencyList[interruptedNodes[0].name] = new List<string> { interruptedNodes[1].name };
+                }
+                else
+                {
+                    if (!adjancencyList[interruptedNodes[0].name].Contains(interruptedNodes[1].name))
+                    {
+                        adjancencyList[interruptedNodes[0].name].Add(interruptedNodes[1].name);
+                    }
+                }
+
+                //add to the other node as well
+                if (!adjancencyList.ContainsKey(interruptedNodes[1].name))
+                {
+                    adjancencyList[interruptedNodes[1].name] = new List<string> { interruptedNodes[0].name };
+                }
+                else
+                {
+                    if (!adjancencyList[interruptedNodes[1].name].Contains(interruptedNodes[0].name))
+                    {
+                        adjancencyList[interruptedNodes[1].name].Add(interruptedNodes[0].name);
+                    }
+                }
+            }
 
         }
 
@@ -1591,6 +1633,47 @@ public class Player : NetworkBehaviour
         }
 
         return counter == 2;
+    }
+
+    private bool IsInterrupted(GameObject road)
+    {
+        int counter = 0;
+        bool isEnemyBuilding = false;
+
+        var nearbyBuildings = Physics.OverlapSphere(
+                road.transform.position,
+                2,
+                (int)
+                (Mathf.Pow(2, LayerMask.NameToLayer("Settlement")) +
+                Mathf.Pow(2, LayerMask.NameToLayer("City")) +
+                Mathf.Pow(2, LayerMask.NameToLayer("Unvisible Circle")) +
+                Mathf.Pow(2, LayerMask.NameToLayer("Settlement Circle")))
+        );
+
+        foreach (var building in nearbyBuildings)
+        {
+            var cityPiece = building.GetComponent<CityPiece>();
+            if (cityPiece != null)
+            {
+                if (cityPiece.color != color)
+                {
+                    isEnemyBuilding = true;
+                    continue;
+                }
+            }
+
+            //there should be only enemy settlements
+            var settlementPiece = building.GetComponent<SettlementPiece>();
+            if (settlementPiece != null)
+            {
+                isEnemyBuilding = true;
+                continue;
+            }
+
+            counter++;
+        }
+
+        return isEnemyBuilding && (counter == 1);
     }
 
     private void TurnAllRoadsUnvisited(GameObject[][] roadGrid)
