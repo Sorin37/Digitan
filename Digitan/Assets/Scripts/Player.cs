@@ -1493,6 +1493,7 @@ public class Player : NetworkBehaviour
                 (int)
                 (Mathf.Pow(2, LayerMask.NameToLayer("My Settlement")) +
                 Mathf.Pow(2, LayerMask.NameToLayer("City")) +
+                Mathf.Pow(2, LayerMask.NameToLayer("Unvisible Circle")) +
                 Mathf.Pow(2, LayerMask.NameToLayer("Settlement Circle")))
             );
 
@@ -1566,9 +1567,9 @@ public class Player : NetworkBehaviour
 
         int longestRoad = LongestPath(adjancencyList);
 
-        print("Cel mai lung drum este: " + longestRoad);
+        print("Cel mai lung drum este: " + (longestRoad - 1));
 
-        return 0;
+        return longestRoad - 1;
     }
 
     private bool Has2NodesNearby(Collider[] buildings, Color color)
@@ -1577,25 +1578,17 @@ public class Player : NetworkBehaviour
 
         foreach (var building in buildings)
         {
-            if (building.gameObject.layer == LayerMask.NameToLayer("Settlement Circle"))
+            var cityPiece = building.GetComponent<CityPiece>();
+            if (cityPiece != null)
             {
-                counter++;
-                continue;
+                if (cityPiece.color != color)
+                {
+                    continue;
+                }
             }
 
-            if (building.GetComponent<SettlementPiece>() != null)
-            {
-                counter++;
-                continue;
-            }
-
-            if (building.GetComponent<CityPiece>().color == color)
-            {
-                counter++;
-            }
+            counter++;
         }
-
-        print("K pai am mai mult de 2: " + counter);
 
         return counter == 2;
     }
