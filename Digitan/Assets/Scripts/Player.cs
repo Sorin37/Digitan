@@ -1525,6 +1525,16 @@ public class Player : NetworkBehaviour
                     {
                         roadDetails.isVisited = true;
                         adjancencyList[currentRoad.name].Add(building.name);
+
+                        if (!adjancencyList.ContainsKey(building.name))
+                        {
+                            adjancencyList[building.name] = new List<string> { currentRoad.name };
+                        }
+                        else
+                        {
+                            adjancencyList[building.name].Add(currentRoad.name);
+                        }
+
                         roadsQueue.Enqueue(building.gameObject);
                     }
                 }
@@ -1533,6 +1543,16 @@ public class Player : NetworkBehaviour
         }
 
         print("Lista de adiacenta spune: " + adjancencyList.Count);
+
+        foreach (var key in adjancencyList.Keys)
+        {
+            print("Cheie: " + key);
+
+            foreach (var neighbour in adjancencyList[key])
+            {
+                print(neighbour);
+            }
+        }
 
         return 0;
     }
@@ -1586,7 +1606,7 @@ public class Player : NetworkBehaviour
             {
                 var roadDetails = road.GetComponent<RoadDetails>();
 
-                if(roadDetails == null)
+                if (roadDetails == null)
                 {
                     continue;
                 }
