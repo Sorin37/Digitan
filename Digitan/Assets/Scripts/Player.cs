@@ -1549,17 +1549,21 @@ public class Player : NetworkBehaviour
 
         }
 
-        print("Lista de adiacenta spune: " + adjancencyList.Count);
+        //foreach (var key in adjancencyList.Keys)
+        //{
+        //    print("Cheie: " + key);
 
-        foreach (var key in adjancencyList.Keys)
-        {
-            print("Cheie: " + key);
+        //    foreach (var neighbour in adjancencyList[key])
+        //    {
+        //        print(neighbour);
+        //    }
+        //}
 
-            foreach (var neighbour in adjancencyList[key])
-            {
-                print(neighbour);
-            }
-        }
+        TurnRoadsVisited(adjancencyList, false);
+
+        int longestRoad = LongestPath(adjancencyList);
+
+        print("Cel mai lung drum este: " + longestRoad);
 
         return 0;
     }
@@ -1568,8 +1572,6 @@ public class Player : NetworkBehaviour
     {
         hasRoads = false;
         hasBuildings = false;
-
-        print("Am atatea collidere: " + nearbyBuildings.Length);
 
         foreach (var nearbyBuilding in nearbyBuildings)
         {
@@ -1621,6 +1623,61 @@ public class Player : NetworkBehaviour
                 roadDetails.isVisited = false;
             }
         }
+    }
+
+    private int MaxPathDFS(Dictionary<string, List<string>> adjancencyList, string node)
+    {
+
+        var roadDetails = GameObject.Find(node).GetComponent<RoadDetails>();
+
+        if (roadDetails == null)
+        {
+            print("Road details is null in max path dfs");
+        }
+
+        if (roadDetails.isVisited)
+        {
+            return 0;
+        }
+
+        roadDetails.isVisited = true;
+
+        int maxPath = 0;
+
+        foreach (var neighbour in adjancencyList[node])
+        {
+            int dfsCallback = MaxPathDFS(adjancencyList, neighbour) + 1;
+            maxPath = dfsCallback > maxPath ? dfsCallback : maxPath;
+        }
+
+        return maxPath;
+    }
+
+    private void TurnRoadsVisited(Dictionary<string, List<string>> adjancencyList, bool visited)
+    {
+        foreach (var road in adjancencyList.Keys)
+        {
+            GameObject.Find(road).GetComponent<RoadDetails>().isVisited = visited;
+        }
+    }
+
+    private int LongestPath(Dictionary<string, List<string>> adjancencyList)
+    {
+        int longestPath = 0;
+
+        foreach (var road1 in adjancencyList.Keys)
+        {
+            foreach (var road2 in adjancencyList.Keys)
+            {
+                GameObject.Find(road2).GetComponent<RoadDetails>().isVisited = false;
+            }
+
+            int dfsLength = MaxPathDFS(adjancencyList, road1);
+
+            longestPath = dfsLength > longestPath ? dfsLength : longestPath;
+        }
+
+        return longestPath;
     }
     #endregion
 }
