@@ -360,6 +360,10 @@ public class Player : NetworkBehaviour
             Quaternion.Euler(90, 0, 0)
         );
 
+        settlementObject.name = x + " " + y + " Settlement";
+
+        settlementGrid.GetComponent<SettlementGrid>().settlementGrid[x][y] = settlementObject;
+
         settlementObject.GetComponent<SettlementPiece>().playerId = playerId;
 
         //so that the settlements do not disappear when other players want to place a city
