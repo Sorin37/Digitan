@@ -1505,11 +1505,12 @@ public class Player : NetworkBehaviour
 
             if (containsRoads && containsEnemyBuilding)
             {
-                print("xd cica a gasit ceva strain");
+                //do the capsule collider check
+                continue;
             }
-            else if (containsRoads) //contains only roads
+
+            if (containsRoads) //contains only roads
             {
-                print("Am gasit macar drumur?i");
                 foreach (var building in nearbyBuildings)
                 {
                     var roadDetails = building.GetComponent<RoadDetails>();
