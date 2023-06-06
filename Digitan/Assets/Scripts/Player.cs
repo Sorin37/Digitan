@@ -1466,16 +1466,10 @@ public class Player : NetworkBehaviour
         }
 
         TurnAllRoadsUnvisited(roadGrid);
-
-        print("Am " + roadCount + " drumuri");
     }
 
     private int ConexComponentLongestRoad(GameObject road)
     {
-        print("Facem conexe bro");
-
-        road.GetComponent<RoadDetails>().isVisited = true;
-
         Queue<GameObject> roadsQueue = new Queue<GameObject>();
 
         roadsQueue.Enqueue(road);
@@ -1484,11 +1478,9 @@ public class Player : NetworkBehaviour
 
         while (roadsQueue.Count != 0)
         {
-            print("Prima iteratie din loop");
-
             GameObject currentRoad = roadsQueue.Dequeue();
 
-            adjancencyList[currentRoad.name] = new List<string>();
+            currentRoad.GetComponent<RoadDetails>().isVisited = true;
 
             var nearbyBuildings = Physics.OverlapSphere(
                 currentRoad.transform.position,
@@ -1499,8 +1491,8 @@ public class Player : NetworkBehaviour
                 Mathf.Pow(2, LayerMask.NameToLayer("City")))
             );
 
-            bool containsRoads = false;
-            bool containsEnemyBuilding = false;
+            bool containsRoads;
+            bool containsEnemyBuilding;
 
             CheckHasRoadsAndEnemyBuildingNearby(
                 nearbyBuildings,
@@ -1508,8 +1500,8 @@ public class Player : NetworkBehaviour
                 out containsRoads,
                 out containsEnemyBuilding);
 
-            print("Drumuri: " + containsRoads);
-            print("Inamici: " + containsEnemyBuilding);
+            //print("Drumuri: " + containsRoads);
+            //print("Inamici: " + containsEnemyBuilding);
 
             if (containsRoads && containsEnemyBuilding)
             {
@@ -1523,16 +1515,30 @@ public class Player : NetworkBehaviour
                     var roadDetails = building.GetComponent<RoadDetails>();
                     if (!roadDetails.isVisited && roadDetails.color == currentRoad.GetComponent<RoadDetails>().color)
                     {
-                        roadDetails.isVisited = true;
-                        adjancencyList[currentRoad.name].Add(building.name);
+                        //add to the current node's list
+                        if (!adjancencyList.ContainsKey(currentRoad.name))
+                        {
+                            adjancencyList[currentRoad.name] = new List<string> { building.name };
+                        }
+                        else
+                        {
+                            if (!adjancencyList[currentRoad.name].Contains(building.name))
+                            {
+                                adjancencyList[currentRoad.name].Add(building.name);
+                            }
+                        }
 
+                        //add to the other node as well
                         if (!adjancencyList.ContainsKey(building.name))
                         {
                             adjancencyList[building.name] = new List<string> { currentRoad.name };
                         }
                         else
                         {
-                            adjancencyList[building.name].Add(currentRoad.name);
+                            if (!adjancencyList[building.name].Contains(currentRoad.name))
+                            {
+                                adjancencyList[building.name].Add(currentRoad.name);
+                            }
                         }
 
                         roadsQueue.Enqueue(building.gameObject);
