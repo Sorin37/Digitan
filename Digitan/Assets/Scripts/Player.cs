@@ -772,6 +772,8 @@ public class Player : NetworkBehaviour
             Quaternion.Euler(0, 0, 0)
         );
 
+        city.name = Math.Round(x, 2) + " " + Math.Round(z, 2) + " City";
+
         city.GetComponent<CityPiece>().playerId = playerId;
         city.GetComponent<CityPiece>().color = color;
 
@@ -1489,78 +1491,76 @@ public class Player : NetworkBehaviour
                 currentRoad.transform.position,
                 2,
                 (int)
-                (Mathf.Pow(2, LayerMask.NameToLayer("Settlement")) +
-                Mathf.Pow(2, LayerMask.NameToLayer("Road")) +
-                Mathf.Pow(2, LayerMask.NameToLayer("City")))
+                (Mathf.Pow(2, LayerMask.NameToLayer("My Settlement")) +
+                Mathf.Pow(2, LayerMask.NameToLayer("City")) +
+                Mathf.Pow(2, LayerMask.NameToLayer("Settlement Circle")))
             );
 
-            bool containsRoads;
-            bool containsEnemyBuilding;
+            var nearbyRoads = Physics.OverlapSphere(
+                currentRoad.transform.position,
+                2,
+                (int)
+                Mathf.Pow(2, LayerMask.NameToLayer("Road"))
+            );
 
-            CheckHasRoadsAndEnemyBuildingNearby(
-                nearbyBuildings,
-                currentRoad.GetComponent<RoadDetails>().color,
-                out containsRoads,
-                out containsEnemyBuilding);
-
-            //print("Drumuri: " + containsRoads);
-            //print("Inamici: " + containsEnemyBuilding);
-
-            if (containsRoads && containsEnemyBuilding)
+            if (Has2NodesNearby(nearbyBuildings, currentRoad.GetComponent<RoadDetails>().color)) //contains only roads
             {
-                //do the capsule collider check
-                continue;
-            }
-
-            if (containsRoads) //contains only roads
-            {
-                foreach (var building in nearbyBuildings)
+                //add to the current node's list
+                if (!adjancencyList.ContainsKey(nearbyBuildings[0].name))
                 {
-                    var roadDetails = building.GetComponent<RoadDetails>();
-                    if (!roadDetails.isVisited && roadDetails.color == currentRoad.GetComponent<RoadDetails>().color)
+                    adjancencyList[nearbyBuildings[0].name] = new List<string> { nearbyBuildings[1].name };
+                }
+                else
+                {
+                    if (!adjancencyList[nearbyBuildings[0].name].Contains(nearbyBuildings[1].name))
                     {
-                        //add to the current node's list
-                        if (!adjancencyList.ContainsKey(currentRoad.name))
-                        {
-                            adjancencyList[currentRoad.name] = new List<string> { building.name };
-                        }
-                        else
-                        {
-                            if (!adjancencyList[currentRoad.name].Contains(building.name))
-                            {
-                                adjancencyList[currentRoad.name].Add(building.name);
-                            }
-                        }
-
-                        //add to the other node as well
-                        if (!adjancencyList.ContainsKey(building.name))
-                        {
-                            adjancencyList[building.name] = new List<string> { currentRoad.name };
-                        }
-                        else
-                        {
-                            if (!adjancencyList[building.name].Contains(currentRoad.name))
-                            {
-                                adjancencyList[building.name].Add(currentRoad.name);
-                            }
-                        }
-
-                        roadsQueue.Enqueue(building.gameObject);
+                        adjancencyList[nearbyBuildings[0].name].Add(nearbyBuildings[1].name);
                     }
+                }
+
+                //add to the other node as well
+                if (!adjancencyList.ContainsKey(nearbyBuildings[1].name))
+                {
+                    adjancencyList[nearbyBuildings[1].name] = new List<string> { nearbyBuildings[0].name };
+                }
+                else
+                {
+                    if (!adjancencyList[nearbyBuildings[1].name].Contains(nearbyBuildings[0].name))
+                    {
+                        adjancencyList[nearbyBuildings[1].name].Add(nearbyBuildings[0].name);
+                    }
+                }
+
+                //iterate over the next nearby roads
+                foreach (var nearbyRoad in nearbyRoads)
+                {
+                    var roadDetails = nearbyRoad.GetComponent<RoadDetails>();
+
+                    if (roadDetails.color != currentRoad.GetComponent<RoadDetails>().color)
+                    {
+                        continue;
+                    }
+
+                    if (roadDetails.isVisited)
+                    {
+                        continue;
+                    }
+
+                    roadsQueue.Enqueue(nearbyRoad.gameObject);
                 }
             }
 
         }
 
-        //foreach (var key in adjancencyList.Keys)
-        //{
-        //    print("Cheie: " + key);
+        foreach (var key in adjancencyList.Keys)
+        {
+            print("Cheie: " + key);
 
-        //    foreach (var neighbour in adjancencyList[key])
-        //    {
-        //        print(neighbour);
-        //    }
-        //}
+            foreach (var neighbour in adjancencyList[key])
+            {
+                print(neighbour);
+            }
+        }
 
         TurnRoadsVisited(adjancencyList, false);
 
@@ -1571,43 +1571,33 @@ public class Player : NetworkBehaviour
         return 0;
     }
 
-    private void CheckHasRoadsAndEnemyBuildingNearby(Collider[] nearbyBuildings, Color color, out bool hasRoads, out bool hasBuildings)
+    private bool Has2NodesNearby(Collider[] buildings, Color color)
     {
-        hasRoads = false;
-        hasBuildings = false;
+        int counter = 0;
 
-        foreach (var nearbyBuilding in nearbyBuildings)
+        foreach (var building in buildings)
         {
-            var roadDetails = nearbyBuilding.GetComponent<RoadDetails>();
-
-            if (roadDetails == null)
+            if (building.gameObject.layer == LayerMask.NameToLayer("Settlement Circle"))
             {
-                var city = nearbyBuilding.GetComponent<CityPiece>();
-                if (city == null)
-                {
-                    hasBuildings = true;
-                    continue;
-                }
-                else
-                {
-                    if (city.color != color)
-                    {
-                        hasBuildings = true;
-                        continue;
-                    }
-                }
-            }
-
-            if (roadDetails.color != color)
-            {
+                counter++;
                 continue;
             }
 
-            if (roadDetails.isVisited == false)
+            if (building.GetComponent<SettlementPiece>() != null)
             {
-                hasRoads = true;
+                counter++;
+                continue;
+            }
+
+            if (building.GetComponent<CityPiece>().color == color)
+            {
+                counter++;
             }
         }
+
+        print("K pai am mai mult de 2: " + counter);
+
+        return counter == 2;
     }
 
     private void TurnAllRoadsUnvisited(GameObject[][] roadGrid)
@@ -1631,19 +1621,19 @@ public class Player : NetworkBehaviour
     private int MaxPathDFS(Dictionary<string, List<string>> adjancencyList, string node)
     {
 
-        var roadDetails = GameObject.Find(node).GetComponent<RoadDetails>();
+        var dfsDetails = GameObject.Find(node).GetComponent<DFSDetails>();
 
-        if (roadDetails == null)
+        if (dfsDetails == null)
         {
-            print("Road details is null in max path dfs");
+            dfsDetails = settlementGrid.transform.Find(node).GetComponent<DFSDetails>();
         }
 
-        if (roadDetails.isVisited)
+        if (dfsDetails.isVisited)
         {
             return 0;
         }
 
-        roadDetails.isVisited = true;
+        dfsDetails.isVisited = true;
 
         int maxPath = 0;
 
@@ -1658,9 +1648,16 @@ public class Player : NetworkBehaviour
 
     private void TurnRoadsVisited(Dictionary<string, List<string>> adjancencyList, bool visited)
     {
-        foreach (var road in adjancencyList.Keys)
+        foreach (var node in adjancencyList.Keys)
         {
-            GameObject.Find(road).GetComponent<RoadDetails>().isVisited = visited;
+            var dfsDetails = GameObject.Find(node).GetComponent<DFSDetails>();
+
+            if (dfsDetails == null)
+            {
+                dfsDetails = settlementGrid.transform.Find(node).GetComponent<DFSDetails>();
+            }
+
+            dfsDetails.isVisited = visited;
         }
     }
 
@@ -1668,14 +1665,23 @@ public class Player : NetworkBehaviour
     {
         int longestPath = 0;
 
-        foreach (var road1 in adjancencyList.Keys)
+        foreach (var node1 in adjancencyList.Keys)
         {
-            foreach (var road2 in adjancencyList.Keys)
+            foreach (var node2 in adjancencyList.Keys)
             {
-                GameObject.Find(road2).GetComponent<RoadDetails>().isVisited = false;
+                var dfsDetails = GameObject.Find(node2).GetComponent<DFSDetails>();
+
+                if (dfsDetails == null)
+                {
+                    settlementGrid.transform.Find(node2).GetComponent<DFSDetails>().isVisited = false;
+                }
+                else
+                {
+                    dfsDetails.isVisited = false;
+                }
             }
 
-            int dfsLength = MaxPathDFS(adjancencyList, road1);
+            int dfsLength = MaxPathDFS(adjancencyList, node1);
 
             longestPath = dfsLength > longestPath ? dfsLength : longestPath;
         }
