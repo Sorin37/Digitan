@@ -1899,6 +1899,7 @@ public class Player : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void PlayerWaitingServerRpc(ServerRpcParams srp)
     {
+        print("Jucatorul cu id va astepta: " +  srp.Receive.SenderClientId);
         GetPlayerWithId(srp.Receive.SenderClientId).isWaiting.Value = true;
     }
 
