@@ -385,6 +385,8 @@ public class Player : NetworkBehaviour
 
         //make the settlement circles invisible
         Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("Settlement Circle"));
+
+        CalculateLongestRoad();
     }
 
     public Color IdToColor(ulong id)
@@ -1438,7 +1440,7 @@ public class Player : NetworkBehaviour
     {
         var roadGrid = this.roadGrid.GetComponent<RoadGrid>().roadGrid;
 
-        int roadCount = 0;
+        int longestRoad = 0;
 
         foreach (var row in roadGrid)
         {
@@ -1467,10 +1469,14 @@ public class Player : NetworkBehaviour
                 }
 
                 int roadLength = ConexComponentLongestRoad(road);
+
+                longestRoad = roadLength > longestRoad ? roadLength : longestRoad;
             }
         }
 
         TurnAllRoadsUnvisited(roadGrid);
+
+        print("Longest road is: " +  longestRoad);
     }
 
     private int ConexComponentLongestRoad(GameObject road)
@@ -1552,7 +1558,7 @@ public class Player : NetworkBehaviour
             }
             else if (IsInterrupted(currentRoad))
             {
-                print("I've been interrupted");
+                //print("I've been interrupted");
 
                 var interruptedNodes = Physics.OverlapSphere(
                     currentRoad.transform.position,
@@ -1564,7 +1570,7 @@ public class Player : NetworkBehaviour
                     Mathf.Pow(2, LayerMask.NameToLayer("Settlement Circle")))
                 );
 
-                print("We should be " + interruptedNodes[0].name + " " + interruptedNodes[1].name);
+                //print("We should be " + interruptedNodes[0].name + " " + interruptedNodes[1].name);
 
                 //add to the current node's list
                 if (!adjancencyList.ContainsKey(interruptedNodes[0].name))
@@ -1595,21 +1601,21 @@ public class Player : NetworkBehaviour
 
         }
 
-        foreach (var key in adjancencyList.Keys)
-        {
-            print("Cheie: " + key);
+        //foreach (var key in adjancencyList.Keys)
+        //{
+        //    print("Cheie: " + key);
 
-            foreach (var neighbour in adjancencyList[key])
-            {
-                print(neighbour);
-            }
-        }
+        //    foreach (var neighbour in adjancencyList[key])
+        //    {
+        //        print(neighbour);
+        //    }
+        //}
 
         TurnRoadsVisited(adjancencyList, false);
 
         int longestRoad = LongestPath(adjancencyList);
 
-        print("Cel mai lung drum este: " + (longestRoad - 1));
+        //print("Cel mai lung drum este: " + (longestRoad - 1));
 
         return longestRoad - 1;
     }
