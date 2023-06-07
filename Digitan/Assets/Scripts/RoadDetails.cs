@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class RoadDetails : MonoBehaviour
 {
-    [SerializeField] public Color Color;
+    [SerializeField] public Color color;
     [SerializeField] public bool isVisited = false;
 
     // Start is called before the first frame update

@@ -65,6 +65,8 @@ public class Player : NetworkBehaviour
     public NetworkVariable<int> nrOfVictoryPoints = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<int> nrOfUsedKnights = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<bool> hasLargestArmy = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<int> longestRoad = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<bool> hasLongestRoad = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
 
     public Dictionary<string, List<string>> resourcesDict;
@@ -269,11 +271,15 @@ public class Player : NetworkBehaviour
                                             pressedCircle.transform.position,
                                             GetRotationFromPos((x, y)));
 
+        roadGrid.GetComponent<RoadGrid>().roadGrid[x][y] = roadObject;
+
+        roadObject.name = x + " " + y + " Road";
+
         //change the color
         roadObject.GetComponent<Renderer>().material.color = color;
-        roadObject.GetComponent<RoadDetails>().Color = color;
+        roadObject.GetComponent<RoadDetails>().color = color;
 
-        //neccessary piece of code so that the nearby circles know that it just got occupied
+        //neccessary piece of code so that the nearby circles know that it got occupied
         roadObject.GetComponent<RoadCircle>().isOccupied = true;
 
         //destroy the road circle
@@ -288,6 +294,8 @@ public class Player : NetworkBehaviour
         {
             roadGrid.GetComponent<RoadGrid>().usedRoadBuilding = false;
         }
+
+        CalculateLongestRoad();
     }
 
     private Quaternion GetRotationFromPos((int x, int y) pos)
@@ -354,7 +362,10 @@ public class Player : NetworkBehaviour
             Quaternion.Euler(90, 0, 0)
         );
 
+        settlementObject.name = x + " " + y + " Settlement";
+
         settlementObject.GetComponent<SettlementPiece>().playerId = playerId;
+        settlementObject.GetComponent<SettlementPiece>().color = color;
 
         //so that the settlements do not disappear when other players want to place a city
         if (color == this.color)
@@ -376,6 +387,8 @@ public class Player : NetworkBehaviour
 
         //make the settlement circles invisible
         Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("Settlement Circle"));
+
+        CalculateLongestRoad();
     }
 
     public Color IdToColor(ulong id)
@@ -763,7 +776,10 @@ public class Player : NetworkBehaviour
             Quaternion.Euler(0, 0, 0)
         );
 
+        city.name = Math.Round(x, 2) + " " + Math.Round(z, 2) + " City";
+
         city.GetComponent<CityPiece>().playerId = playerId;
+        city.GetComponent<CityPiece>().color = color;
 
         //change the color
         foreach (var material in city.GetComponent<Renderer>().materials)
@@ -1419,5 +1435,411 @@ public class Player : NetworkBehaviour
         {
             Resources.FindObjectsOfTypeAll<NewMessagesDot>()[0].gameObject.SetActive(true);
         }
+    }
+
+    #region Longest Road
+    private void CalculateLongestRoad()
+    {
+        var roadGrid = this.roadGrid.GetComponent<RoadGrid>().roadGrid;
+
+        int longestRoad = 0;
+
+        foreach (var row in roadGrid)
+        {
+            foreach (var road in row)
+            {
+                if (road == null)
+                {
+                    continue;
+                }
+
+                var roadDetails = road.GetComponent<RoadDetails>();
+
+                if (roadDetails == null)
+                {
+                    continue;
+                }
+
+                if (roadDetails.color != GetMyPlayer().color)
+                {
+                    continue;
+                }
+
+                if (roadDetails.isVisited)
+                {
+                    continue;
+                }
+
+                int roadLength = ConexComponentLongestRoad(road);
+
+                longestRoad = roadLength > longestRoad ? roadLength : longestRoad;
+            }
+        }
+
+        TurnAllRoadsUnvisited(roadGrid);
+
+        print("Longest road is: " +  longestRoad);
+        GetHostPlayer().LongestRoadServerRpc(longestRoad, new ServerRpcParams());
+    }
+
+    private int ConexComponentLongestRoad(GameObject road)
+    {
+        Queue<GameObject> roadsQueue = new Queue<GameObject>();
+
+        roadsQueue.Enqueue(road);
+
+        Dictionary<string, List<string>> adjancencyList = new Dictionary<string, List<string>>();
+
+        while (roadsQueue.Count != 0)
+        {
+            GameObject currentRoad = roadsQueue.Dequeue();
+
+            currentRoad.GetComponent<RoadDetails>().isVisited = true;
+
+            var nearbyBuildings = Physics.OverlapSphere(
+                currentRoad.transform.position,
+                2,
+                (int)
+                (Mathf.Pow(2, LayerMask.NameToLayer("My Settlement")) +
+                Mathf.Pow(2, LayerMask.NameToLayer("City")) +
+                Mathf.Pow(2, LayerMask.NameToLayer("Unvisible Circle")) +
+                Mathf.Pow(2, LayerMask.NameToLayer("Settlement Circle")))
+            );
+
+            var nearbyRoads = Physics.OverlapSphere(
+                currentRoad.transform.position,
+                2,
+                (int)
+                Mathf.Pow(2, LayerMask.NameToLayer("Road"))
+            );
+
+            if (Has2NodesNearby(nearbyBuildings, currentRoad.GetComponent<RoadDetails>().color)) //contains only roads
+            {
+                //add to the current node's list
+                if (!adjancencyList.ContainsKey(nearbyBuildings[0].name))
+                {
+                    adjancencyList[nearbyBuildings[0].name] = new List<string> { nearbyBuildings[1].name };
+                }
+                else
+                {
+                    if (!adjancencyList[nearbyBuildings[0].name].Contains(nearbyBuildings[1].name))
+                    {
+                        adjancencyList[nearbyBuildings[0].name].Add(nearbyBuildings[1].name);
+                    }
+                }
+
+                //add to the other node as well
+                if (!adjancencyList.ContainsKey(nearbyBuildings[1].name))
+                {
+                    adjancencyList[nearbyBuildings[1].name] = new List<string> { nearbyBuildings[0].name };
+                }
+                else
+                {
+                    if (!adjancencyList[nearbyBuildings[1].name].Contains(nearbyBuildings[0].name))
+                    {
+                        adjancencyList[nearbyBuildings[1].name].Add(nearbyBuildings[0].name);
+                    }
+                }
+
+                //iterate over the next nearby roads
+                foreach (var nearbyRoad in nearbyRoads)
+                {
+                    var roadDetails = nearbyRoad.GetComponent<RoadDetails>();
+
+                    if (roadDetails.color != currentRoad.GetComponent<RoadDetails>().color)
+                    {
+                        continue;
+                    }
+
+                    if (roadDetails.isVisited)
+                    {
+                        continue;
+                    }
+
+                    roadsQueue.Enqueue(nearbyRoad.gameObject);
+                }
+            }
+            else if (IsInterrupted(currentRoad))
+            {
+                //print("I've been interrupted");
+
+                var interruptedNodes = Physics.OverlapSphere(
+                    currentRoad.transform.position,
+                    2,
+                    (int)
+                    (Mathf.Pow(2, LayerMask.NameToLayer("City")) +
+                    Mathf.Pow(2, LayerMask.NameToLayer("Settlement")) +
+                    Mathf.Pow(2, LayerMask.NameToLayer("Unvisible Circle")) +
+                    Mathf.Pow(2, LayerMask.NameToLayer("Settlement Circle")))
+                );
+
+                //print("We should be " + interruptedNodes[0].name + " " + interruptedNodes[1].name);
+
+                //add to the current node's list
+                if (!adjancencyList.ContainsKey(interruptedNodes[0].name))
+                {
+                    adjancencyList[interruptedNodes[0].name] = new List<string> { interruptedNodes[1].name };
+                }
+                else
+                {
+                    if (!adjancencyList[interruptedNodes[0].name].Contains(interruptedNodes[1].name))
+                    {
+                        adjancencyList[interruptedNodes[0].name].Add(interruptedNodes[1].name);
+                    }
+                }
+
+                //add to the other node as well
+                if (!adjancencyList.ContainsKey(interruptedNodes[1].name))
+                {
+                    adjancencyList[interruptedNodes[1].name] = new List<string> { interruptedNodes[0].name };
+                }
+                else
+                {
+                    if (!adjancencyList[interruptedNodes[1].name].Contains(interruptedNodes[0].name))
+                    {
+                        adjancencyList[interruptedNodes[1].name].Add(interruptedNodes[0].name);
+                    }
+                }
+            }
+
+        }
+
+        //foreach (var key in adjancencyList.Keys)
+        //{
+        //    print("Cheie: " + key);
+
+        //    foreach (var neighbour in adjancencyList[key])
+        //    {
+        //        print(neighbour);
+        //    }
+        //}
+
+        TurnRoadsVisited(adjancencyList, false);
+
+        int longestRoad = LongestPath(adjancencyList);
+
+        //print("Cel mai lung drum este: " + (longestRoad - 1));
+
+        return longestRoad - 1;
+    }
+
+    private bool Has2NodesNearby(Collider[] buildings, Color color)
+    {
+        int counter = 0;
+
+        foreach (var building in buildings)
+        {
+            var cityPiece = building.GetComponent<CityPiece>();
+            if (cityPiece != null)
+            {
+                if (cityPiece.color != color)
+                {
+                    continue;
+                }
+            }
+
+            counter++;
+        }
+
+        return counter == 2;
+    }
+
+    private bool IsInterrupted(GameObject road)
+    {
+        int counter = 0;
+        bool isEnemyBuilding = false;
+
+        var nearbyBuildings = Physics.OverlapSphere(
+                road.transform.position,
+                2,
+                (int)
+                (Mathf.Pow(2, LayerMask.NameToLayer("Settlement")) +
+                Mathf.Pow(2, LayerMask.NameToLayer("City")) +
+                Mathf.Pow(2, LayerMask.NameToLayer("Unvisible Circle")) +
+                Mathf.Pow(2, LayerMask.NameToLayer("Settlement Circle")))
+        );
+
+        foreach (var building in nearbyBuildings)
+        {
+            var cityPiece = building.GetComponent<CityPiece>();
+            if (cityPiece != null)
+            {
+                if (cityPiece.color != color)
+                {
+                    isEnemyBuilding = true;
+                    continue;
+                }
+            }
+
+            //there should be only enemy settlements
+            var settlementPiece = building.GetComponent<SettlementPiece>();
+            if (settlementPiece != null)
+            {
+                isEnemyBuilding = true;
+                continue;
+            }
+
+            counter++;
+        }
+
+        return isEnemyBuilding && (counter == 1);
+    }
+
+    private void TurnAllRoadsUnvisited(GameObject[][] roadGrid)
+    {
+        foreach (var row in roadGrid)
+        {
+            foreach (var road in row)
+            {
+                var roadDetails = road.GetComponent<RoadDetails>();
+
+                if (roadDetails == null)
+                {
+                    continue;
+                }
+
+                roadDetails.isVisited = false;
+            }
+        }
+    }
+
+    private int MaxPathDFS(Dictionary<string, List<string>> adjancencyList, string node)
+    {
+
+        var dfsDetails = GameObject.Find(node).GetComponent<DFSDetails>();
+
+        if (dfsDetails == null)
+        {
+            dfsDetails = settlementGrid.transform.Find(node).GetComponent<DFSDetails>();
+        }
+
+        if (dfsDetails.isVisited)
+        {
+            return 0;
+        }
+
+        dfsDetails.isVisited = true;
+
+        int maxPath = 0;
+
+        foreach (var neighbour in adjancencyList[node])
+        {
+            int dfsCallback = MaxPathDFS(adjancencyList, neighbour) + 1;
+            maxPath = dfsCallback > maxPath ? dfsCallback : maxPath;
+        }
+
+        return maxPath;
+    }
+
+    private void TurnRoadsVisited(Dictionary<string, List<string>> adjancencyList, bool visited)
+    {
+        foreach (var node in adjancencyList.Keys)
+        {
+            var dfsDetails = GameObject.Find(node).GetComponent<DFSDetails>();
+
+            if (dfsDetails == null)
+            {
+                dfsDetails = settlementGrid.transform.Find(node).GetComponent<DFSDetails>();
+            }
+
+            dfsDetails.isVisited = visited;
+        }
+    }
+
+    private int LongestPath(Dictionary<string, List<string>> adjancencyList)
+    {
+        int longestPath = 0;
+
+        foreach (var node1 in adjancencyList.Keys)
+        {
+            foreach (var node2 in adjancencyList.Keys)
+            {
+                var dfsDetails = GameObject.Find(node2).GetComponent<DFSDetails>();
+
+                if (dfsDetails == null)
+                {
+                    settlementGrid.transform.Find(node2).GetComponent<DFSDetails>().isVisited = false;
+                }
+                else
+                {
+                    dfsDetails.isVisited = false;
+                }
+            }
+
+            int dfsLength = MaxPathDFS(adjancencyList, node1);
+
+            longestPath = dfsLength > longestPath ? dfsLength : longestPath;
+        }
+
+        return longestPath;
+    }
+    #endregion
+
+    [ServerRpc(RequireOwnership = false)]
+    public void LongestRoadServerRpc(int longestRoad, ServerRpcParams srp)
+    {
+        GetPlayerWithId(srp.Receive.SenderClientId).longestRoad.Value = longestRoad;
+
+        List<(ulong id, int longestRoad)> players = new List<(ulong id, int longestRoad)>();
+
+        var playersGOs = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (var p in playersGOs)
+        {
+            players.Add((p.GetComponent<Player>().OwnerClientId, p.GetComponent<Player>().longestRoad.Value));
+        }
+
+        var max = players.Max(p => p.longestRoad);
+
+        if (max < 5)
+        {
+            return;
+        }
+
+        var apparitions = players.Where(p => p.longestRoad == max).Count();
+
+        if (apparitions > 1)
+        {
+            return;
+        }
+
+        if (players.FirstOrDefault(p => p.longestRoad == max).id != srp.Receive.SenderClientId)
+        {
+            return;
+        }
+
+        Player oldPlayer = null;
+
+        foreach (var p in playersGOs)
+        {
+            if (p.GetComponent<Player>().hasLongestRoad.Value)
+            {
+                oldPlayer = p.GetComponent<Player>();
+            }
+        }
+
+        //remove card
+        if (oldPlayer != null)
+        {
+
+            GetPlayerWithId(oldPlayer.OwnerClientId).hasLongestRoad.Value = false;
+            GetPlayerWithId(oldPlayer.OwnerClientId).nrOfVictoryPoints.Value -= 2;
+
+            GetHostPlayer().RemovePointCardClientRpc("Longest Road", new ClientRpcParams
+            {
+                Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { oldPlayer.OwnerClientId } }
+            });
+        }
+
+
+        //add card
+        GetPlayerWithId(srp.Receive.SenderClientId).hasLongestRoad.Value = true;
+        GetPlayerWithId(srp.Receive.SenderClientId).nrOfVictoryPoints.Value += 2;
+
+
+        GetHostPlayer().AddPointCardClientRpc("Longest Road", new ClientRpcParams
+        {
+            Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { srp.Receive.SenderClientId } }
+        });
     }
 }
