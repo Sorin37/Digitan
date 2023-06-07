@@ -62,8 +62,8 @@ public class Player : NetworkBehaviour
     public NetworkVariable<int> order = new NetworkVariable<int>(1);
     public NetworkVariable<int> currentPlayerTurn = new NetworkVariable<int>(-1);
     public NetworkVariable<int> nrOfFinishedDiscards = new NetworkVariable<int>(-1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-    public NetworkVariable<int> nrOfWaitingPlayers = new NetworkVariable<int>(-1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<bool> isWaiting = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<bool> hasCommunicatedAboutDiscarding = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<int> nrOfVictoryPoints = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<int> nrOfUsedKnights = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<bool> hasLargestArmy = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
@@ -120,10 +120,26 @@ public class Player : NetworkBehaviour
         {
             player.HideDiscardWaitingCanvasServerRpc();
         }
-        else if (player.nrOfWaitingPlayers.Value == player.nrOfFinishedDiscards.Value)
+
+        if (CommunicatedAboutDiscardingCount() == player.nrOfMaxPlayers)
         {
             player.DisplayDiscardWaitClientRpc();
         }
+    }
+
+    private int CommunicatedAboutDiscardingCount()
+    {
+        var players = GameObject.FindGameObjectsWithTag("Player");
+
+        int count = 0;
+
+        foreach (var p in players)
+        {
+            if (p.GetComponent<Player>().hasCommunicatedAboutDiscarding.Value == true)
+                count++;
+        }
+
+        return count;
     }
 
     async void Start()
@@ -998,12 +1014,14 @@ public class Player : NetworkBehaviour
         if (handSize > 7)
         {
             Resources.FindObjectsOfTypeAll<DiscardManager>()[0].transform.parent.gameObject.SetActive(true);
+            hostPlayer.PlayerCommunicatedServerRpc(new ServerRpcParams());
         }
         else
         {
             if (IsOwnedByServer)
             {
-                GetHostPlayer().PlayerWaitingServerRpc(new ServerRpcParams());
+                hostPlayer.PlayerWaitingServerRpc(new ServerRpcParams());
+                hostPlayer.PlayerCommunicatedServerRpc(new ServerRpcParams());
                 //Resources.FindObjectsOfTypeAll<DiscardWaitingManager>()[0].transform.parent.gameObject.SetActive(true);
                 hostPlayer.FinishedDiscardingServerRpc();
             }
@@ -1060,7 +1078,6 @@ public class Player : NetworkBehaviour
     public void FinishedDiscardingServerRpc()
     {
         GetHostPlayer().nrOfFinishedDiscards.Value++;
-        GetHostPlayer().nrOfWaitingPlayers.Value++;
         OnFinishDiscardChanged?.Invoke(this, EventArgs.Empty);
     }
 
@@ -1068,7 +1085,6 @@ public class Player : NetworkBehaviour
     public void ResetFinishedDiscardsServerRpc()
     {
         GetHostPlayer().nrOfFinishedDiscards.Value = 0;
-        GetHostPlayer().nrOfWaitingPlayers.Value = 0;
         OnFinishDiscardChanged?.Invoke(this, EventArgs.Empty);
     }
 
@@ -1875,5 +1891,11 @@ public class Player : NetworkBehaviour
     public void PlayerWaitingServerRpc(ServerRpcParams srp)
     {
         GetPlayerWithId(srp.Receive.SenderClientId).isWaiting.Value = true;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void PlayerCommunicatedServerRpc(ServerRpcParams srp)
+    {
+        GetPlayerWithId(srp.Receive.SenderClientId).hasCommunicatedAboutDiscarding.Value = true;
     }
 }
