@@ -65,6 +65,8 @@ public class Player : NetworkBehaviour
     public NetworkVariable<int> nrOfVictoryPoints = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<int> nrOfUsedKnights = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<bool> hasLargestArmy = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<int> longestRoad = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<bool> hasLongestRoad = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
 
     public Dictionary<string, List<string>> resourcesDict;
@@ -1477,6 +1479,7 @@ public class Player : NetworkBehaviour
         TurnAllRoadsUnvisited(roadGrid);
 
         print("Longest road is: " +  longestRoad);
+        GetHostPlayer().LongestRoadServerRpc(longestRoad, new ServerRpcParams());
     }
 
     private int ConexComponentLongestRoad(GameObject road)
@@ -1771,4 +1774,72 @@ public class Player : NetworkBehaviour
         return longestPath;
     }
     #endregion
+
+    [ServerRpc(RequireOwnership = false)]
+    public void LongestRoadServerRpc(int longestRoad, ServerRpcParams srp)
+    {
+        GetPlayerWithId(srp.Receive.SenderClientId).longestRoad.Value = longestRoad;
+
+        List<(ulong id, int longestRoad)> players = new List<(ulong id, int longestRoad)>();
+
+        var playersGOs = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (var p in playersGOs)
+        {
+            players.Add((p.GetComponent<Player>().OwnerClientId, p.GetComponent<Player>().longestRoad.Value));
+        }
+
+        var max = players.Max(p => p.longestRoad);
+
+        if (max < 5)
+        {
+            return;
+        }
+
+        var apparitions = players.Where(p => p.longestRoad == max).Count();
+
+        if (apparitions > 1)
+        {
+            return;
+        }
+
+        if (players.FirstOrDefault(p => p.longestRoad == max).id != srp.Receive.SenderClientId)
+        {
+            return;
+        }
+
+        Player oldPlayer = null;
+
+        foreach (var p in playersGOs)
+        {
+            if (p.GetComponent<Player>().hasLongestRoad.Value)
+            {
+                oldPlayer = p.GetComponent<Player>();
+            }
+        }
+
+        //remove card
+        if (oldPlayer != null)
+        {
+
+            GetPlayerWithId(oldPlayer.OwnerClientId).hasLongestRoad.Value = false;
+            GetPlayerWithId(oldPlayer.OwnerClientId).nrOfVictoryPoints.Value -= 2;
+
+            GetHostPlayer().RemovePointCardClientRpc("Longest Road", new ClientRpcParams
+            {
+                Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { oldPlayer.OwnerClientId } }
+            });
+        }
+
+
+        //add card
+        GetPlayerWithId(srp.Receive.SenderClientId).hasLongestRoad.Value = true;
+        GetPlayerWithId(srp.Receive.SenderClientId).nrOfVictoryPoints.Value += 2;
+
+
+        GetHostPlayer().AddPointCardClientRpc("Longest Road", new ClientRpcParams
+        {
+            Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { srp.Receive.SenderClientId } }
+        });
+    }
 }
