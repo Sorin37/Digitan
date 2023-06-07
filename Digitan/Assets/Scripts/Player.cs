@@ -15,6 +15,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class Player : NetworkBehaviour
 {
@@ -127,6 +128,14 @@ public class Player : NetworkBehaviour
 
         if (communicated == player.nrOfMaxPlayers)
         {
+            var players = GameObject.FindGameObjectsWithTag("Player");
+
+            foreach (var p in players)
+            {
+                if (p.GetComponent<Player>().isWaiting.Value == true)
+                    print("Player: " + p.GetComponent<Player>().OwnerClientId + " asteapta: " + p.GetComponent<Player>().isWaiting);
+            }
+
             player.DisplayDiscardWaitClientRpc();
         }
     }
