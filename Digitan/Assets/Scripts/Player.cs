@@ -133,7 +133,7 @@ public class Player : NetworkBehaviour
             foreach (var p in players)
             {
                 if (p.GetComponent<Player>().isWaiting.Value == true)
-                    print("Player: " + p.GetComponent<Player>().OwnerClientId + " asteapta: " + p.GetComponent<Player>().isWaiting);
+                    print("Player: " + p.GetComponent<Player>().OwnerClientId + " asteapta: " + p.GetComponent<Player>().isWaiting.Value);
             }
 
             player.DisplayDiscardWaitServerRpc();
@@ -1903,7 +1903,7 @@ public class Player : NetworkBehaviour
     {
         if (!GetMyPlayer().isWaiting.Value)
         {
-            print("GG conditie proasta");
+            print("GG conditie proasta: " + GetMyPlayer().isWaiting.Value);
             return;
         }
 
