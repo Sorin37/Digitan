@@ -1003,7 +1003,7 @@ public class Player : NetworkBehaviour
         {
             if (IsOwnedByServer)
             {
-                GetHostPlayer().isWaiting.Value = true;
+                GetHostPlayer().PlayerWaitingServerRpc(new ServerRpcParams());
                 //Resources.FindObjectsOfTypeAll<DiscardWaitingManager>()[0].transform.parent.gameObject.SetActive(true);
                 hostPlayer.FinishedDiscardingServerRpc();
             }
@@ -1075,6 +1075,13 @@ public class Player : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void HideDiscardWaitingCanvasServerRpc()
     {
+        var players = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (var p in players)
+        {
+            p.GetComponent<Player>().isWaiting.Value = false;
+        }
+
         GetHostPlayer().HideDiscardWaitingCanvasClientRpc();
     }
 
@@ -1862,5 +1869,11 @@ public class Player : NetworkBehaviour
         }
 
         Resources.FindObjectsOfTypeAll<DiscardWaitingManager>()[0].transform.parent.gameObject.SetActive(true);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void PlayerWaitingServerRpc(ServerRpcParams srp)
+    {
+        GetPlayerWithId(srp.Receive.SenderClientId).isWaiting.Value = true;
     }
 }
