@@ -15,6 +15,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class Player : NetworkBehaviour
 {
@@ -62,6 +63,8 @@ public class Player : NetworkBehaviour
     public NetworkVariable<int> order = new NetworkVariable<int>(1);
     public NetworkVariable<int> currentPlayerTurn = new NetworkVariable<int>(-1);
     public NetworkVariable<int> nrOfFinishedDiscards = new NetworkVariable<int>(-1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<bool> isWaiting = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<bool> hasCommunicatedAboutDiscarding = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<int> nrOfVictoryPoints = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<int> nrOfUsedKnights = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<bool> hasLargestArmy = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
@@ -118,6 +121,43 @@ public class Player : NetworkBehaviour
         {
             player.HideDiscardWaitingCanvasServerRpc();
         }
+
+        int communicated = CommunicatedAboutDiscardingCount();
+
+        print("Jucatori care au comunicat: " + communicated);
+
+        if (communicated == player.nrOfMaxPlayers)
+        {
+            var players = GameObject.FindGameObjectsWithTag("Player");
+
+            List<ulong> waitingPlayers = new List<ulong>();
+
+            foreach (var p in players)
+            {
+                if (p.GetComponent<Player>().isWaiting.Value == true)
+                    waitingPlayers.Add(p.GetComponent<Player>().OwnerClientId);
+            }
+
+            player.DisplayDiscardWaitClientRpc(new ClientRpcParams
+            {
+                Send = new ClientRpcSendParams { TargetClientIds = waitingPlayers }
+            });
+        }
+    }
+
+    private int CommunicatedAboutDiscardingCount()
+    {
+        var players = GameObject.FindGameObjectsWithTag("Player");
+
+        int count = 0;
+
+        foreach (var p in players)
+        {
+            if (p.GetComponent<Player>().hasCommunicatedAboutDiscarding.Value == true)
+                count++;
+        }
+
+        return count;
     }
 
     async void Start()
@@ -826,6 +866,7 @@ public class Player : NetworkBehaviour
             {
                 player.ResetFinishedDiscardsServerRpc();
             }
+
             player.DisplayThiefCirclesServerRpc();
         }
         else
@@ -991,12 +1032,16 @@ public class Player : NetworkBehaviour
         if (handSize > 7)
         {
             Resources.FindObjectsOfTypeAll<DiscardManager>()[0].transform.parent.gameObject.SetActive(true);
+            hostPlayer.PlayerCommunicatedServerRpc(new ServerRpcParams());
         }
         else
         {
             if (IsOwnedByServer)
             {
-                Resources.FindObjectsOfTypeAll<DiscardWaitingManager>()[0].transform.parent.gameObject.SetActive(true);
+                print("Acum ma fac sa astept");
+                hostPlayer.PlayerWaitingServerRpc(new ServerRpcParams());
+                hostPlayer.PlayerCommunicatedServerRpc(new ServerRpcParams());
+                //Resources.FindObjectsOfTypeAll<DiscardWaitingManager>()[0].transform.parent.gameObject.SetActive(true);
                 hostPlayer.FinishedDiscardingServerRpc();
             }
         }
@@ -1065,6 +1110,14 @@ public class Player : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void HideDiscardWaitingCanvasServerRpc()
     {
+        var players = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (var p in players)
+        {
+            p.GetComponent<Player>().isWaiting.Value = false;
+            p.GetComponent<Player>().hasCommunicatedAboutDiscarding.Value = false;
+        }
+
         GetHostPlayer().HideDiscardWaitingCanvasClientRpc();
     }
 
@@ -1478,7 +1531,7 @@ public class Player : NetworkBehaviour
 
         TurnAllRoadsUnvisited(roadGrid);
 
-        print("Longest road is: " +  longestRoad);
+        //print("Longest road is: " + longestRoad);
         GetHostPlayer().LongestRoadServerRpc(longestRoad, new ServerRpcParams());
     }
 
@@ -1841,5 +1894,24 @@ public class Player : NetworkBehaviour
         {
             Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { srp.Receive.SenderClientId } }
         });
+    }
+
+    [ClientRpc]
+    public void DisplayDiscardWaitClientRpc(ClientRpcParams crp)
+    {
+        Resources.FindObjectsOfTypeAll<DiscardWaitingManager>()[0].transform.parent.gameObject.SetActive(true);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void PlayerWaitingServerRpc(ServerRpcParams srp)
+    {
+        print("Jucatorul cu id va astepta: " + srp.Receive.SenderClientId);
+        GetPlayerWithId(srp.Receive.SenderClientId).isWaiting.Value = true;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void PlayerCommunicatedServerRpc(ServerRpcParams srp)
+    {
+        GetPlayerWithId(srp.Receive.SenderClientId).hasCommunicatedAboutDiscarding.Value = true;
     }
 }
