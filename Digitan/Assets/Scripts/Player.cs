@@ -136,7 +136,7 @@ public class Player : NetworkBehaviour
                     print("Player: " + p.GetComponent<Player>().OwnerClientId + " asteapta: " + p.GetComponent<Player>().isWaiting);
             }
 
-            player.DisplayDiscardWaitClientRpc();
+            player.DisplayDiscardWaitServerRpc();
         }
     }
 
@@ -1889,6 +1889,13 @@ public class Player : NetworkBehaviour
         {
             Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { srp.Receive.SenderClientId } }
         });
+    }
+
+
+    [ServerRpc(RequireOwnership = false)]
+    public void DisplayDiscardWaitServerRpc()
+    {
+        GetHostPlayer().DisplayDiscardWaitClientRpc();
     }
 
     [ClientRpc]
