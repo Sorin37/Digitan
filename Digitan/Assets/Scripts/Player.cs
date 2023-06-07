@@ -130,13 +130,18 @@ public class Player : NetworkBehaviour
         {
             var players = GameObject.FindGameObjectsWithTag("Player");
 
+            List<ulong> waitingPlayers = new List<ulong>();
+
             foreach (var p in players)
             {
                 if (p.GetComponent<Player>().isWaiting.Value == true)
-                    print("Player: " + p.GetComponent<Player>().OwnerClientId + " asteapta: " + p.GetComponent<Player>().isWaiting.Value);
+                    waitingPlayers.Add(p.GetComponent<Player>().OwnerClientId);
             }
 
-            player.DisplayDiscardWaitServerRpc();
+            player.DisplayDiscardWaitClientRpc(new ClientRpcParams
+            {
+                Send = new ClientRpcSendParams { TargetClientIds = waitingPlayers }
+            });
         }
     }
 
@@ -1092,7 +1097,7 @@ public class Player : NetworkBehaviour
     public void FinishedDiscardingServerRpc()
     {
         GetHostPlayer().nrOfFinishedDiscards.Value++;
-        GetHostPlayer().OnFinishDiscardChanged?.Invoke(this, EventArgs.Empty);
+        OnFinishDiscardChanged?.Invoke(this, EventArgs.Empty);
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -1891,31 +1896,16 @@ public class Player : NetworkBehaviour
         });
     }
 
-
-    [ServerRpc(RequireOwnership = false)]
-    public void DisplayDiscardWaitServerRpc()
-    {
-        GetHostPlayer().DisplayDiscardWaitClientRpc();
-    }
-
     [ClientRpc]
-    public void DisplayDiscardWaitClientRpc()
+    public void DisplayDiscardWaitClientRpc(ClientRpcParams crp)
     {
-        if (!GetMyPlayer().isWaiting.Value)
-        {
-            print("GG conditie proasta: " + GetMyPlayer().isWaiting.Value);
-            return;
-        }
-
-        print("It looks like i am waiting");
-
         Resources.FindObjectsOfTypeAll<DiscardWaitingManager>()[0].transform.parent.gameObject.SetActive(true);
     }
 
     [ServerRpc(RequireOwnership = false)]
     public void PlayerWaitingServerRpc(ServerRpcParams srp)
     {
-        print("Jucatorul cu id va astepta: " +  srp.Receive.SenderClientId);
+        print("Jucatorul cu id va astepta: " + srp.Receive.SenderClientId);
         GetPlayerWithId(srp.Receive.SenderClientId).isWaiting.Value = true;
     }
 
