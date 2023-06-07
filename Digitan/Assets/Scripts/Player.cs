@@ -62,6 +62,8 @@ public class Player : NetworkBehaviour
     public NetworkVariable<int> order = new NetworkVariable<int>(1);
     public NetworkVariable<int> currentPlayerTurn = new NetworkVariable<int>(-1);
     public NetworkVariable<int> nrOfFinishedDiscards = new NetworkVariable<int>(-1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<int> nrOfWaitingPlayers = new NetworkVariable<int>(-1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<bool> isWaiting = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<int> nrOfVictoryPoints = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<int> nrOfUsedKnights = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<bool> hasLargestArmy = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
@@ -117,6 +119,10 @@ public class Player : NetworkBehaviour
         if (player.nrOfFinishedDiscards.Value == player.nrOfMaxPlayers)
         {
             player.HideDiscardWaitingCanvasServerRpc();
+        }
+        else if (player.nrOfWaitingPlayers.Value == player.nrOfFinishedDiscards.Value)
+        {
+            player.DisplayDiscardWaitClientRpc();
         }
     }
 
@@ -826,6 +832,7 @@ public class Player : NetworkBehaviour
             {
                 player.ResetFinishedDiscardsServerRpc();
             }
+
             player.DisplayThiefCirclesServerRpc();
         }
         else
@@ -996,7 +1003,8 @@ public class Player : NetworkBehaviour
         {
             if (IsOwnedByServer)
             {
-                Resources.FindObjectsOfTypeAll<DiscardWaitingManager>()[0].transform.parent.gameObject.SetActive(true);
+                GetHostPlayer().isWaiting.Value = true;
+                //Resources.FindObjectsOfTypeAll<DiscardWaitingManager>()[0].transform.parent.gameObject.SetActive(true);
                 hostPlayer.FinishedDiscardingServerRpc();
             }
         }
@@ -1052,6 +1060,7 @@ public class Player : NetworkBehaviour
     public void FinishedDiscardingServerRpc()
     {
         GetHostPlayer().nrOfFinishedDiscards.Value++;
+        GetHostPlayer().nrOfWaitingPlayers.Value++;
         OnFinishDiscardChanged?.Invoke(this, EventArgs.Empty);
     }
 
@@ -1059,6 +1068,7 @@ public class Player : NetworkBehaviour
     public void ResetFinishedDiscardsServerRpc()
     {
         GetHostPlayer().nrOfFinishedDiscards.Value = 0;
+        GetHostPlayer().nrOfWaitingPlayers.Value = 0;
         OnFinishDiscardChanged?.Invoke(this, EventArgs.Empty);
     }
 
@@ -1478,7 +1488,7 @@ public class Player : NetworkBehaviour
 
         TurnAllRoadsUnvisited(roadGrid);
 
-        print("Longest road is: " +  longestRoad);
+        print("Longest road is: " + longestRoad);
         GetHostPlayer().LongestRoadServerRpc(longestRoad, new ServerRpcParams());
     }
 
@@ -1841,5 +1851,16 @@ public class Player : NetworkBehaviour
         {
             Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { srp.Receive.SenderClientId } }
         });
+    }
+
+    [ClientRpc]
+    public void DisplayDiscardWaitClientRpc()
+    {
+        if (!GetMyPlayer().isWaiting.Value)
+        {
+            return;
+        }
+
+        Resources.FindObjectsOfTypeAll<DiscardWaitingManager>()[0].transform.parent.gameObject.SetActive(true);
     }
 }
