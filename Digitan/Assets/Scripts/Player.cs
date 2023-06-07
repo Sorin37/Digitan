@@ -121,7 +121,11 @@ public class Player : NetworkBehaviour
             player.HideDiscardWaitingCanvasServerRpc();
         }
 
-        if (CommunicatedAboutDiscardingCount() == player.nrOfMaxPlayers)
+        int communicated = CommunicatedAboutDiscardingCount();
+
+        print("Jucatori care au comunicat: " + communicated);
+
+        if (communicated == player.nrOfMaxPlayers)
         {
             player.DisplayDiscardWaitClientRpc();
         }
@@ -1096,6 +1100,7 @@ public class Player : NetworkBehaviour
         foreach (var p in players)
         {
             p.GetComponent<Player>().isWaiting.Value = false;
+            p.GetComponent<Player>().hasCommunicatedAboutDiscarding.Value = false;
         }
 
         GetHostPlayer().HideDiscardWaitingCanvasClientRpc();
@@ -1881,8 +1886,11 @@ public class Player : NetworkBehaviour
     {
         if (!GetMyPlayer().isWaiting.Value)
         {
+            print("GG conditie proasta");
             return;
         }
+
+        print("It looks like i am waiting");
 
         Resources.FindObjectsOfTypeAll<DiscardWaitingManager>()[0].transform.parent.gameObject.SetActive(true);
     }
