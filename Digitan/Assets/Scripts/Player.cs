@@ -1092,7 +1092,7 @@ public class Player : NetworkBehaviour
     public void FinishedDiscardingServerRpc()
     {
         GetHostPlayer().nrOfFinishedDiscards.Value++;
-        OnFinishDiscardChanged?.Invoke(this, EventArgs.Empty);
+        GetHostPlayer().OnFinishDiscardChanged?.Invoke(this, EventArgs.Empty);
     }
 
     [ServerRpc(RequireOwnership = false)]
