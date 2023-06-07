@@ -1024,6 +1024,7 @@ public class Player : NetworkBehaviour
         {
             if (IsOwnedByServer)
             {
+                print("Acum ma fac sa astept");
                 hostPlayer.PlayerWaitingServerRpc(new ServerRpcParams());
                 hostPlayer.PlayerCommunicatedServerRpc(new ServerRpcParams());
                 //Resources.FindObjectsOfTypeAll<DiscardWaitingManager>()[0].transform.parent.gameObject.SetActive(true);
@@ -1516,7 +1517,7 @@ public class Player : NetworkBehaviour
 
         TurnAllRoadsUnvisited(roadGrid);
 
-        print("Longest road is: " + longestRoad);
+        //print("Longest road is: " + longestRoad);
         GetHostPlayer().LongestRoadServerRpc(longestRoad, new ServerRpcParams());
     }
 
