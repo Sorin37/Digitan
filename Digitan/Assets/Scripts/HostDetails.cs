@@ -19,8 +19,7 @@ public class HostDetails : MonoBehaviour
     [SerializeField] public TMP_InputField LobbyNameInput;
     [SerializeField] public TMP_InputField NicknameInput;
     [SerializeField] private GameObject hostLobby;
-    [SerializeField] private Canvas popupCanvas;
-    [SerializeField] private Canvas inputCanvas;
+    [SerializeField] private GameObject popupCanvas;
     private int SelectedInput;
 
     private void Awake()
@@ -37,6 +36,16 @@ public class HostDetails : MonoBehaviour
     {
         hostButton.onClick.AddListener(async () =>
         {
+
+            if (InputsAreEmpty())
+            {
+                popupCanvas.transform.Find("PopupManager").GetComponent<PopupHostManager>().SetErrorMessage(
+                    "You can not leave the fields empty!"
+                    );
+                popupCanvas.SetActive(true);
+                return;
+            }
+
             QueryResponse queryResponse = await Lobbies.Instance.QueryLobbiesAsync(
                 new QueryLobbiesOptions
                 {
@@ -53,8 +62,10 @@ public class HostDetails : MonoBehaviour
 
             if (queryResponse.Results.Count > 0)
             {
-                inputCanvas.gameObject.SetActive(false);
-                popupCanvas.gameObject.SetActive(true);
+                popupCanvas.transform.Find("PopupManager").GetComponent<PopupHostManager>().SetErrorMessage(
+                    "There's already a lobby with that name!"
+                    );
+                popupCanvas.SetActive(true);
                 return;
             }
 
@@ -79,6 +90,11 @@ public class HostDetails : MonoBehaviour
 
             SceneManager.LoadScene("MainMenu");
         });
+    }
+
+    private bool InputsAreEmpty()
+    {
+        return string.IsNullOrEmpty(LobbyNameInput.text) || string.IsNullOrEmpty(NicknameInput.text);
     }
 
     // Start is called before the first frame update
