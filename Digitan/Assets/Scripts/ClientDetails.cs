@@ -18,6 +18,7 @@ public class ClientDetails : MonoBehaviour
     [SerializeField] private Canvas popupCanvas;
     [SerializeField] private Canvas inputCanvas;
     [SerializeField] private GameObject Lobby;
+    private int SelectedInput;
 
     private async void Awake()
     {
@@ -96,5 +97,33 @@ public class ClientDetails : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyUp(KeyCode.Tab))
+        {
+            SelectedInput++;
+            if (SelectedInput > 1)
+                SelectedInput = 0;
+            SelectInputField(SelectedInput);
+        }
+
+        if (Input.GetKeyUp(KeyCode.Return))
+        {
+            connectButton.Select();
+        }
     }
+
+    void SelectInputField(int selectedInputNumber)
+    {
+        switch (selectedInputNumber)
+        {
+            case 0:
+                LobbyNameInput.Select();
+                break;
+            case 1:
+                NicknameInput.Select();
+                break;
+        }
+    }
+
+    public void LobbyNameSelected() => SelectedInput = 0;
+    public void NicknameSelected() => SelectedInput = 1;
 }

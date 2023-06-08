@@ -10,6 +10,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Windows;
+using Input = UnityEngine.Input;
 
 public class HostDetails : MonoBehaviour
 {
@@ -20,6 +21,7 @@ public class HostDetails : MonoBehaviour
     [SerializeField] private GameObject hostLobby;
     [SerializeField] private Canvas popupCanvas;
     [SerializeField] private Canvas inputCanvas;
+    private int SelectedInput;
 
     private void Awake()
     {
@@ -88,6 +90,31 @@ public class HostDetails : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyUp(KeyCode.Tab))
+        {
+            SelectedInput++;
+            if (SelectedInput > 1) 
+                SelectedInput = 0;
+            SelectInputField(SelectedInput);
+        }
 
+        if (Input.GetKeyUp(KeyCode.Return))
+        {
+            hostButton.Select();
+        }
     }
+
+    void SelectInputField(int selectedInputNumber)
+    {
+        switch(selectedInputNumber)
+        {
+            case 0: LobbyNameInput.Select();
+                break;
+            case 1: NicknameInput.Select(); 
+                break;
+        }
+    }
+
+    public void LobbyNameSelected() => SelectedInput = 0;
+    public void NicknameSelected() => SelectedInput = 1;
 }
