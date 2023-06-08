@@ -46,6 +46,15 @@ public class HostDetails : MonoBehaviour
                 return;
             }
 
+            if (InputsAreTooBig(30))
+            {
+                popupCanvas.transform.Find("PopupManager").GetComponent<PopupHostManager>().SetErrorMessage(
+                    "The introduced words are too long!"
+                    );
+                popupCanvas.SetActive(true);
+                return;
+            }
+
             QueryResponse queryResponse = await Lobbies.Instance.QueryLobbiesAsync(
                 new QueryLobbiesOptions
                 {
@@ -63,7 +72,7 @@ public class HostDetails : MonoBehaviour
             if (queryResponse.Results.Count > 0)
             {
                 popupCanvas.transform.Find("PopupManager").GetComponent<PopupHostManager>().SetErrorMessage(
-                    "There's already a lobby with that name!"
+                    "Lobby name already taken!"
                     );
                 popupCanvas.SetActive(true);
                 return;
@@ -133,4 +142,9 @@ public class HostDetails : MonoBehaviour
 
     public void LobbyNameSelected() => SelectedInput = 0;
     public void NicknameSelected() => SelectedInput = 1;
+
+    private bool InputsAreTooBig(int maxLength)
+    {
+        return LobbyNameInput.text.Length > maxLength || NicknameInput.text.Length > maxLength;
+    }
 }

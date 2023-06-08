@@ -15,8 +15,7 @@ public class ClientDetails : MonoBehaviour
     [SerializeField] private Button backButton;
     [SerializeField] private TMP_InputField LobbyNameInput;
     [SerializeField] private TMP_InputField NicknameInput;
-    [SerializeField] private Canvas popupCanvas;
-    [SerializeField] private Canvas inputCanvas;
+    [SerializeField] private GameObject popupCanvas;
     [SerializeField] private GameObject Lobby;
     private int SelectedInput;
 
@@ -36,6 +35,24 @@ public class ClientDetails : MonoBehaviour
     {
         connectButton.onClick.AddListener(async () =>
         {
+            if (InputsAreEmpty())
+            {
+                popupCanvas.transform.Find("PopupManager").GetComponent<PopupHostManager>().SetErrorMessage(
+                    "You can not leave the fields empty!"
+                    );
+                popupCanvas.SetActive(true);
+                return;
+            }
+
+            if (InputsAreTooBig(30))
+            {
+                popupCanvas.transform.Find("PopupManager").GetComponent<PopupHostManager>().SetErrorMessage(
+                    "The introduced words are too long!"
+                    );
+                popupCanvas.SetActive(true);
+                return;
+            }
+
             QueryResponse queryResponse = await Lobbies.Instance.QueryLobbiesAsync(
                 new QueryLobbiesOptions
                 {
@@ -52,8 +69,10 @@ public class ClientDetails : MonoBehaviour
 
             if (queryResponse.Results.Count == 0)
             {
-                inputCanvas.gameObject.SetActive(false);
-                popupCanvas.gameObject.SetActive(true);
+                popupCanvas.transform.Find("PopupManager").GetComponent<PopupHostManager>().SetErrorMessage(
+                    "No lobby with such name!"
+                    );
+                popupCanvas.SetActive(true);
                 return;
             }
 
@@ -126,4 +145,14 @@ public class ClientDetails : MonoBehaviour
 
     public void LobbyNameSelected() => SelectedInput = 0;
     public void NicknameSelected() => SelectedInput = 1;
+
+    private bool InputsAreEmpty()
+    {
+        return string.IsNullOrEmpty(LobbyNameInput.text) || string.IsNullOrEmpty(NicknameInput.text);
+    }
+
+    private bool InputsAreTooBig(int maxLength)
+    {
+        return LobbyNameInput.text.Length > maxLength || NicknameInput.text.Length > maxLength;
+    }
 }
