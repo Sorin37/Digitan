@@ -12,6 +12,7 @@ using Unity.Services.Authentication;
 public class ClientDetails : MonoBehaviour
 {
     [SerializeField] private Button connectButton;
+    [SerializeField] private Button backButton;
     [SerializeField] private TMP_InputField LobbyNameInput;
     [SerializeField] private TMP_InputField NicknameInput;
     [SerializeField] private Canvas popupCanvas;
@@ -21,9 +22,17 @@ public class ClientDetails : MonoBehaviour
     private async void Awake()
     {
         await UnityServices.InitializeAsync();
+        if (!AuthenticationService.Instance.IsSignedIn)
+        {
+            await AuthenticationService.Instance.SignInAnonymouslyAsync();
+        }
 
-        await AuthenticationService.Instance.SignInAnonymouslyAsync();
+        InitConnectButton();
+        InitBackButton();
+    }
 
+    private void InitConnectButton()
+    {
         connectButton.onClick.AddListener(async () =>
         {
             QueryResponse queryResponse = await Lobbies.Instance.QueryLobbiesAsync(
@@ -52,7 +61,7 @@ public class ClientDetails : MonoBehaviour
                 Player = new Unity.Services.Lobbies.Models.Player
                 {
                     Data = new Dictionary<string, PlayerDataObject> {
-                    { 
+                    {
                         "PlayerName", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Public, NicknameInput.text) }
                     }
                 }
@@ -61,6 +70,20 @@ public class ClientDetails : MonoBehaviour
             Lobby.GetComponent<LobbyDetails>().lobby = await Lobbies.Instance.JoinLobbyByIdAsync(queryResponse.Results[0].Id, options);
 
             SceneManager.LoadScene("Lobby");
+        });
+    }
+
+    private void InitBackButton()
+    {
+        backButton.onClick.AddListener(() =>
+        {
+            var go = new GameObject("Sacrificial Lamb");
+            DontDestroyOnLoad(go);
+
+            foreach (var root in go.scene.GetRootGameObjects())
+                Destroy(root);
+
+            SceneManager.LoadScene("MainMenu");
         });
     }
 

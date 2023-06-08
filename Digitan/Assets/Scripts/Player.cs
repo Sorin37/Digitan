@@ -15,7 +15,6 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class Player : NetworkBehaviour
 {
@@ -123,8 +122,6 @@ public class Player : NetworkBehaviour
         }
 
         int communicated = CommunicatedAboutDiscardingCount();
-
-        print("Jucatori care au comunicat: " + communicated);
 
         if (communicated == player.nrOfMaxPlayers)
         {
@@ -1038,10 +1035,8 @@ public class Player : NetworkBehaviour
         {
             if (IsOwnedByServer)
             {
-                print("Acum ma fac sa astept");
                 hostPlayer.PlayerWaitingServerRpc(new ServerRpcParams());
                 hostPlayer.PlayerCommunicatedServerRpc(new ServerRpcParams());
-                //Resources.FindObjectsOfTypeAll<DiscardWaitingManager>()[0].transform.parent.gameObject.SetActive(true);
                 hostPlayer.FinishedDiscardingServerRpc();
             }
         }
@@ -1905,7 +1900,6 @@ public class Player : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void PlayerWaitingServerRpc(ServerRpcParams srp)
     {
-        print("Jucatorul cu id va astepta: " + srp.Receive.SenderClientId);
         GetPlayerWithId(srp.Receive.SenderClientId).isWaiting.Value = true;
     }
 

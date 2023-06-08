@@ -1,5 +1,7 @@
+using Newtonsoft.Json.Bson;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 using TMPro;
 using Unity.Services.Lobbies;
@@ -12,6 +14,7 @@ using UnityEngine.Windows;
 public class HostDetails : MonoBehaviour
 {
     [SerializeField] private Button hostButton;
+    [SerializeField] private Button backButton;
     [SerializeField] public TMP_InputField LobbyNameInput;
     [SerializeField] public TMP_InputField NicknameInput;
     [SerializeField] private GameObject hostLobby;
@@ -22,6 +25,14 @@ public class HostDetails : MonoBehaviour
     {
         hostButton.interactable = false;
 
+        InitHostButton();
+        InitBackButton();
+
+        hostLobby.GetComponent<HostLobby>().InitializeUnityServices();
+    }
+
+    private void InitHostButton()
+    {
         hostButton.onClick.AddListener(async () =>
         {
             QueryResponse queryResponse = await Lobbies.Instance.QueryLobbiesAsync(
@@ -38,7 +49,7 @@ public class HostDetails : MonoBehaviour
                 }
             );
 
-            if(queryResponse.Results.Count > 0)
+            if (queryResponse.Results.Count > 0)
             {
                 inputCanvas.gameObject.SetActive(false);
                 popupCanvas.gameObject.SetActive(true);
@@ -52,8 +63,20 @@ public class HostDetails : MonoBehaviour
 
             SceneManager.LoadScene("Lobby");
         });
+    }
 
-        hostLobby.GetComponent<HostLobby>().InitializeUnityServices();
+    private void InitBackButton()
+    {
+        backButton.onClick.AddListener(() =>
+        {
+            var go = new GameObject("Sacrificial Lamb");
+            DontDestroyOnLoad(go);
+
+            foreach (var root in go.scene.GetRootGameObjects())
+                Destroy(root);
+
+            SceneManager.LoadScene("MainMenu");
+        });
     }
 
     // Start is called before the first frame update
