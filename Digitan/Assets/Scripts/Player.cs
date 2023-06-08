@@ -123,8 +123,6 @@ public class Player : NetworkBehaviour
 
         int communicated = CommunicatedAboutDiscardingCount();
 
-        print("Jucatori care au comunicat: " + communicated);
-
         if (communicated == player.nrOfMaxPlayers)
         {
             var players = GameObject.FindGameObjectsWithTag("Player");
@@ -1037,10 +1035,8 @@ public class Player : NetworkBehaviour
         {
             if (IsOwnedByServer)
             {
-                print("Acum ma fac sa astept");
                 hostPlayer.PlayerWaitingServerRpc(new ServerRpcParams());
                 hostPlayer.PlayerCommunicatedServerRpc(new ServerRpcParams());
-                //Resources.FindObjectsOfTypeAll<DiscardWaitingManager>()[0].transform.parent.gameObject.SetActive(true);
                 hostPlayer.FinishedDiscardingServerRpc();
             }
         }
@@ -1904,7 +1900,6 @@ public class Player : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void PlayerWaitingServerRpc(ServerRpcParams srp)
     {
-        print("Jucatorul cu id va astepta: " + srp.Receive.SenderClientId);
         GetPlayerWithId(srp.Receive.SenderClientId).isWaiting.Value = true;
     }
 

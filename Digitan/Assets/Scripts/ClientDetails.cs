@@ -12,20 +12,47 @@ using Unity.Services.Authentication;
 public class ClientDetails : MonoBehaviour
 {
     [SerializeField] private Button connectButton;
+    [SerializeField] private Button backButton;
     [SerializeField] private TMP_InputField LobbyNameInput;
     [SerializeField] private TMP_InputField NicknameInput;
-    [SerializeField] private Canvas popupCanvas;
-    [SerializeField] private Canvas inputCanvas;
+    [SerializeField] private GameObject popupCanvas;
     [SerializeField] private GameObject Lobby;
+    private int SelectedInput;
 
     private async void Awake()
     {
         await UnityServices.InitializeAsync();
+        if (!AuthenticationService.Instance.IsSignedIn)
+        {
+            await AuthenticationService.Instance.SignInAnonymouslyAsync();
+        }
 
-        await AuthenticationService.Instance.SignInAnonymouslyAsync();
+        InitConnectButton();
+        InitBackButton();
+    }
 
+    private void InitConnectButton()
+    {
         connectButton.onClick.AddListener(async () =>
         {
+            if (InputsAreEmpty())
+            {
+                popupCanvas.transform.Find("PopupManager").GetComponent<PopupHostManager>().SetErrorMessage(
+                    "You can not leave the fields empty!"
+                    );
+                popupCanvas.SetActive(true);
+                return;
+            }
+
+            if (InputsAreTooBig(30))
+            {
+                popupCanvas.transform.Find("PopupManager").GetComponent<PopupHostManager>().SetErrorMessage(
+                    "The introduced words are too long!"
+                    );
+                popupCanvas.SetActive(true);
+                return;
+            }
+
             QueryResponse queryResponse = await Lobbies.Instance.QueryLobbiesAsync(
                 new QueryLobbiesOptions
                 {
@@ -42,8 +69,10 @@ public class ClientDetails : MonoBehaviour
 
             if (queryResponse.Results.Count == 0)
             {
-                inputCanvas.gameObject.SetActive(false);
-                popupCanvas.gameObject.SetActive(true);
+                popupCanvas.transform.Find("PopupManager").GetComponent<PopupHostManager>().SetErrorMessage(
+                    "No lobby with such name!"
+                    );
+                popupCanvas.SetActive(true);
                 return;
             }
 
@@ -52,7 +81,7 @@ public class ClientDetails : MonoBehaviour
                 Player = new Unity.Services.Lobbies.Models.Player
                 {
                     Data = new Dictionary<string, PlayerDataObject> {
-                    { 
+                    {
                         "PlayerName", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Public, NicknameInput.text) }
                     }
                 }
@@ -61,6 +90,20 @@ public class ClientDetails : MonoBehaviour
             Lobby.GetComponent<LobbyDetails>().lobby = await Lobbies.Instance.JoinLobbyByIdAsync(queryResponse.Results[0].Id, options);
 
             SceneManager.LoadScene("Lobby");
+        });
+    }
+
+    private void InitBackButton()
+    {
+        backButton.onClick.AddListener(() =>
+        {
+            var go = new GameObject("Sacrificial Lamb");
+            DontDestroyOnLoad(go);
+
+            foreach (var root in go.scene.GetRootGameObjects())
+                Destroy(root);
+
+            SceneManager.LoadScene("MainMenu");
         });
     }
 
@@ -73,5 +116,43 @@ public class ClientDetails : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyUp(KeyCode.Tab))
+        {
+            SelectedInput++;
+            if (SelectedInput > 1)
+                SelectedInput = 0;
+            SelectInputField(SelectedInput);
+        }
+
+        if (Input.GetKeyUp(KeyCode.Return))
+        {
+            connectButton.Select();
+        }
+    }
+
+    void SelectInputField(int selectedInputNumber)
+    {
+        switch (selectedInputNumber)
+        {
+            case 0:
+                LobbyNameInput.Select();
+                break;
+            case 1:
+                NicknameInput.Select();
+                break;
+        }
+    }
+
+    public void LobbyNameSelected() => SelectedInput = 0;
+    public void NicknameSelected() => SelectedInput = 1;
+
+    private bool InputsAreEmpty()
+    {
+        return string.IsNullOrEmpty(LobbyNameInput.text) || string.IsNullOrEmpty(NicknameInput.text);
+    }
+
+    private bool InputsAreTooBig(int maxLength)
+    {
+        return LobbyNameInput.text.Length > maxLength || NicknameInput.text.Length > maxLength;
     }
 }

@@ -1,20 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class PopupHostManager : MonoBehaviour
 {
     [SerializeField] private Button okButton;
-    [SerializeField] private Canvas popupCanvas;
-    [SerializeField] private Canvas inputCanvas;
+    [SerializeField] private GameObject popupCanvas;
+    [SerializeField] private TextMeshProUGUI message;
 
     private void Awake()
     {
         okButton.onClick.AddListener(() =>
         {
             popupCanvas.gameObject.SetActive(false);
-            inputCanvas.gameObject.SetActive(true);
         });
     }
 
@@ -28,5 +28,10 @@ public class PopupHostManager : MonoBehaviour
     void Update()
     {
 
+    }
+
+    public void SetErrorMessage(string message)
+    {
+        this.message.text = message;
     }
 }

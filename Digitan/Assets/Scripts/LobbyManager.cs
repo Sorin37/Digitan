@@ -24,6 +24,7 @@ public class LobbyManager : MonoBehaviour
     [SerializeField] private GameObject ListPanel;
     [SerializeField] private GameObject PlayerDetails;
     [SerializeField] private Button PlayButton;
+    [SerializeField] private Button MenuButton;
     public Lobby lobby;
     private int currentNumberOfPlayers = 0;
     private float updateTimer = 5;
@@ -32,14 +33,34 @@ public class LobbyManager : MonoBehaviour
 
     private void Awake()
     {
+        InitPlayButton();
+        InitMenuButton();
+        tag = "Lobby";
+        DontDestroyOnLoad(transform.parent.gameObject);
+    }
+
+    private void InitPlayButton()
+    {
         PlayButton.onClick.AddListener(async () =>
         {
             string joinCode = await CreateRelay();
             await UpdateLobbyRelayCode(joinCode);
             SceneManager.LoadScene("Game");
         });
-        tag = "Lobby";
-        DontDestroyOnLoad(transform.parent.gameObject);
+    }
+
+    private void InitMenuButton()
+    {
+        MenuButton.onClick.AddListener(() =>
+        {
+            var go = new GameObject("Sacrificial Lamb");
+            DontDestroyOnLoad(go);
+
+            foreach (var root in go.scene.GetRootGameObjects())
+                Destroy(root);
+
+            SceneManager.LoadScene("MainMenu");
+        });
     }
 
     // Start is called before the first frame update
