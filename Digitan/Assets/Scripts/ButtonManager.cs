@@ -32,6 +32,7 @@ public class ButtonManager : MonoBehaviour
     [SerializeField] private GameObject placeRoadPrefab;
     [SerializeField] private GameObject placeSettlementPrefab;
     [SerializeField] private GameObject placeCityPrefab;
+    [SerializeField] private GameObject noMorePiecesPrefab;
 
     private bool hasRolledDice = false;
 
@@ -148,6 +149,13 @@ public class ButtonManager : MonoBehaviour
                 return;
             }
 
+            if (GetMyPlayer().nrOfPlacedCities == 4)
+            {
+                var message = Instantiate(noMorePiecesPrefab, settlementButton.transform);
+                message.GetComponent<RedMessage>().SetStartPosition(settlementButton.transform);
+                return;
+            }
+
             Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Settlement Circle"));
             GetMyPlayer().hasToPlaceSettlement = true;
         });
@@ -173,6 +181,13 @@ public class ButtonManager : MonoBehaviour
             if (!HasRoadResources())
             {
                 var message = Instantiate(notEnoughResourcesPrefab, roadButton.transform);
+                message.GetComponent<RedMessage>().SetStartPosition(roadButton.transform);
+                return;
+            }
+
+            if (GetMyPlayer().nrOfPlacedRoads == 15)
+            {
+                var message = Instantiate(noMorePiecesPrefab, roadButton.transform);
                 message.GetComponent<RedMessage>().SetStartPosition(roadButton.transform);
                 return;
             }

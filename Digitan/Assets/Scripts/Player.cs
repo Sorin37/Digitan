@@ -83,6 +83,9 @@ public class Player : NetworkBehaviour
     public bool hasToPlaceRoad = false;
     public bool hasToPlaceSettlement = false;
     public bool hasToPlaceCity = false;
+    public int nrOfPlacedRoads = 0;
+    public int nrOfPlacedSettlement = 0;
+    public int nrOfPlacedCities = 0;
 
     public List<string> developments = new List<string>();
     private List<string> developmentsDeck;
@@ -331,7 +334,9 @@ public class Player : NetworkBehaviour
         if (!roadGrid.GetComponent<RoadGrid>().usedRoadBuilding)
         {
             Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("Road Circle"));
-            GetMyPlayer().hasToPlaceRoad = false;
+            var myPlayer = GetMyPlayer();
+            myPlayer.hasToPlaceRoad = false;
+            myPlayer.nrOfPlacedRoads++;
         }
         else
         {
@@ -431,7 +436,9 @@ public class Player : NetworkBehaviour
 
         //make the settlement circles invisible
         Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("Settlement Circle"));
-        GetMyPlayer().hasToPlaceSettlement = false;
+        var myPlayer = GetMyPlayer();
+        myPlayer.hasToPlaceSettlement = false;
+        myPlayer.nrOfPlacedSettlement++;
 
         CalculateLongestRoad();
     }
@@ -833,7 +840,10 @@ public class Player : NetworkBehaviour
             material.color = color;
         }
 
-        GetMyPlayer().hasToPlaceCity = false;
+        var myPlayer = GetMyPlayer();
+        myPlayer.hasToPlaceCity = false;
+        myPlayer.nrOfPlacedCities++;
+        myPlayer.nrOfPlacedSettlement--;
     }
 
     private void DestroyNearbySetllements(Vector3 position)

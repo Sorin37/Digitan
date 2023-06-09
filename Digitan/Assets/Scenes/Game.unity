@@ -30092,6 +30092,7 @@ MonoBehaviour:
   placeRoadPrefab: {fileID: 2029533581559911318, guid: 8e91954d64db00f4087bf1b01cdb1f1e, type: 3}
   placeSettlementPrefab: {fileID: 2029533581559911318, guid: f11d351c4d8e07e43b36c69c493d08e6, type: 3}
   placeCityPrefab: {fileID: 2029533581559911318, guid: e7dca6fa9391c9249a1cc6722fb00eec, type: 3}
+  noMorePiecesPrefab: {fileID: 2029533581559911318, guid: 063b09dec4cf18041adb04a525ab5418, type: 3}
 --- !u!1 &1926444571
 GameObject:
   m_ObjectHideFlags: 0
