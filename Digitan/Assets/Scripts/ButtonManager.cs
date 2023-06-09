@@ -18,10 +18,13 @@ public class ButtonManager : MonoBehaviour
     [SerializeField] private Button developmentButton;
     [SerializeField] private Button chatButton;
     [SerializeField] private Button tipsButton;
+
     [SerializeField] private Canvas tradeCanvas;
     [SerializeField] private GameObject tradeManager;
     [SerializeField] private GameObject chat;
     [SerializeField] private GameObject tips;
+
+    [SerializeField] private GameObject notEnoughResourcesPrefab;
     private bool hasRolledDice = false;
 
     private void Awake()
@@ -98,7 +101,7 @@ public class ButtonManager : MonoBehaviour
             }
             else
             {
-                print("You don't have enough resources for a road!");
+                Instantiate(notEnoughResourcesPrefab, transform);
             }
         });
     }

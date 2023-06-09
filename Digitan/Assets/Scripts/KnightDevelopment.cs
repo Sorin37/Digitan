@@ -24,6 +24,15 @@ public class KnightDevelopment : MonoBehaviour
     {
         button.onClick.AddListener(() =>
         {
+            var myPlayer = GetMyPlayer();
+
+            if (myPlayer.playedDevelopmentThisRound)
+            {
+                return;
+            }
+
+            myPlayer.playedDevelopmentThisRound = true;
+
             var player = GetHostPlayer();
             RemoveDevelopment("KnightDeck");
             player.UsedKnightServerRpc(new Unity.Netcode.ServerRpcParams());
@@ -35,7 +44,6 @@ public class KnightDevelopment : MonoBehaviour
     {
         //find the deck
         var deckGroup = Resources.FindObjectsOfTypeAll<DeckGroup>()[0];
-
 
         GameObject deck = null;
 
@@ -81,6 +89,19 @@ public class KnightDevelopment : MonoBehaviour
         foreach (var p in players)
         {
             if (p.GetComponent<Player>().IsOwnedByServer)
+                return p.GetComponent<Player>();
+        }
+
+        return null;
+    }
+
+    private Player GetMyPlayer()
+    {
+        var players = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (var p in players)
+        {
+            if (p.GetComponent<Player>().IsOwner)
                 return p.GetComponent<Player>();
         }
 

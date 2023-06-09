@@ -78,6 +78,7 @@ public class Player : NetworkBehaviour
     public int nrOfMaxPlayers;
     public int nrOfDeclinedTrades = 0;
     public Color color;
+    public bool playedDevelopmentThisRound = false;
 
     public List<string> developments = new List<string>();
     private List<string> developmentsDeck;
@@ -638,6 +639,7 @@ public class Player : NetworkBehaviour
     public void PassTurnServerRpc()
     {
         currentPlayerTurn.Value = (currentPlayerTurn.Value + 1) % nrOfMaxPlayers;
+        ResetDevelopmentPlayedClientRpc();
         ChangeCurrentPlayerDetailsColorClientRpc((ulong)currentPlayerTurn.Value);
         ChangeCurrentPlayerDetailsNameClientRpc(
             GetPlayerWithId((ulong)currentPlayerTurn.Value).nickName.Value.ToString()
@@ -1907,5 +1909,11 @@ public class Player : NetworkBehaviour
     public void PlayerCommunicatedServerRpc(ServerRpcParams srp)
     {
         GetPlayerWithId(srp.Receive.SenderClientId).hasCommunicatedAboutDiscarding.Value = true;
+    }
+
+    [ClientRpc]
+    public void ResetDevelopmentPlayedClientRpc()
+    {
+        GetMyPlayer().playedDevelopmentThisRound = false;
     }
 }
