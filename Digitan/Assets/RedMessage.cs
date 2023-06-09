@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class RedMessage : MonoBehaviour
 {
+    private bool positionSet = false;
+    private Vector3 targetPosition;
     // Start is called before the first frame update
     void Start()
     {
@@ -14,7 +16,10 @@ public class RedMessage : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (positionSet)
+        {
+            FadeAway();
+        }
     }
 
     public void SetStartPosition(Transform caller)
@@ -30,10 +35,29 @@ public class RedMessage : MonoBehaviour
         if (messageRectTransform.sizeDelta.x / 2 + gameObject.transform.position.x > 1920)
         {
             gameObject.transform.position = new Vector3(
-            gameObject.transform.position.x - (messageRectTransform.sizeDelta.x / 2 + gameObject.transform.position.x - 1920),
-            gameObject.transform.position.y,
+                gameObject.transform.position.x - (messageRectTransform.sizeDelta.x / 2 + gameObject.transform.position.x - 1920),
+                gameObject.transform.position.y,
+                gameObject.transform.position.z
+            );
+        }
+
+        targetPosition = new Vector3(
+            gameObject.transform.position.x,
+            gameObject.transform.position.y + 360,
             gameObject.transform.position.z
         );
-        }
+
+        positionSet = true;
+    }
+
+    private void FadeAway()
+    {
+        gameObject.transform.position = Vector3.MoveTowards(
+            gameObject.transform.position,
+            targetPosition,
+            100 * Time.deltaTime
+        );
+        if (gameObject.transform.position == targetPosition)
+            Destroy(gameObject);
     }
 }
