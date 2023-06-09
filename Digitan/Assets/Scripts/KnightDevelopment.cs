@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -7,6 +8,8 @@ using UnityEngine.UI;
 public class KnightDevelopment : MonoBehaviour
 {
     [SerializeField] private Button button;
+    [SerializeField] private GameObject oneDevelopmentPrefab;
+    [SerializeField] private GameObject notYourTurnPrefab;
 
     // Start is called before the first frame update
     void Start()
@@ -24,6 +27,24 @@ public class KnightDevelopment : MonoBehaviour
     {
         button.onClick.AddListener(() =>
         {
+            if (!IsMyTurn())
+            {
+                var message = Instantiate(notYourTurnPrefab, button.transform);
+                message.GetComponent<RedMessage>().SetStartPosition(button.transform);
+                return;
+            }
+
+            var myPlayer = GetMyPlayer();
+
+            if (myPlayer.playedDevelopmentThisRound)
+            {
+                var message = Instantiate(oneDevelopmentPrefab, button.transform);
+                message.GetComponent<RedMessage>().SetStartPosition(button.transform);
+                return;
+            }
+
+            myPlayer.playedDevelopmentThisRound = true;
+
             var player = GetHostPlayer();
             RemoveDevelopment("KnightDeck");
             player.UsedKnightServerRpc(new Unity.Netcode.ServerRpcParams());
@@ -35,7 +56,6 @@ public class KnightDevelopment : MonoBehaviour
     {
         //find the deck
         var deckGroup = Resources.FindObjectsOfTypeAll<DeckGroup>()[0];
-
 
         GameObject deck = null;
 
@@ -85,5 +105,23 @@ public class KnightDevelopment : MonoBehaviour
         }
 
         return null;
+    }
+
+    private Player GetMyPlayer()
+    {
+        var players = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (var p in players)
+        {
+            if (p.GetComponent<Player>().IsOwner)
+                return p.GetComponent<Player>();
+        }
+
+        return null;
+    }
+
+    private bool IsMyTurn()
+    {
+        return GetHostPlayer().currentPlayerTurn.Value == (int)NetworkManager.Singleton.LocalClientId;
     }
 }

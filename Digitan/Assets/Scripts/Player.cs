@@ -78,6 +78,14 @@ public class Player : NetworkBehaviour
     public int nrOfMaxPlayers;
     public int nrOfDeclinedTrades = 0;
     public Color color;
+    public bool playedDevelopmentThisRound = false;
+    public bool hasToMoveThief = false;
+    public bool hasToPlaceRoad = false;
+    public bool hasToPlaceSettlement = false;
+    public bool hasToPlaceCity = false;
+    public int nrOfPlacedRoads = 0;
+    public int nrOfPlacedSettlement = 0;
+    public int nrOfPlacedCities = 0;
 
     public List<string> developments = new List<string>();
     private List<string> developmentsDeck;
@@ -326,6 +334,9 @@ public class Player : NetworkBehaviour
         if (!roadGrid.GetComponent<RoadGrid>().usedRoadBuilding)
         {
             Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("Road Circle"));
+            var myPlayer = GetMyPlayer();
+            myPlayer.hasToPlaceRoad = false;
+            myPlayer.nrOfPlacedRoads++;
         }
         else
         {
@@ -333,6 +344,7 @@ public class Player : NetworkBehaviour
         }
 
         CalculateLongestRoad();
+
     }
 
     private Quaternion GetRotationFromPos((int x, int y) pos)
@@ -424,6 +436,9 @@ public class Player : NetworkBehaviour
 
         //make the settlement circles invisible
         Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("Settlement Circle"));
+        var myPlayer = GetMyPlayer();
+        myPlayer.hasToPlaceSettlement = false;
+        myPlayer.nrOfPlacedSettlement++;
 
         CalculateLongestRoad();
     }
@@ -638,6 +653,7 @@ public class Player : NetworkBehaviour
     public void PassTurnServerRpc()
     {
         currentPlayerTurn.Value = (currentPlayerTurn.Value + 1) % nrOfMaxPlayers;
+        ResetDevelopmentPlayedClientRpc();
         ChangeCurrentPlayerDetailsColorClientRpc((ulong)currentPlayerTurn.Value);
         ChangeCurrentPlayerDetailsNameClientRpc(
             GetPlayerWithId((ulong)currentPlayerTurn.Value).nickName.Value.ToString()
@@ -823,6 +839,11 @@ public class Player : NetworkBehaviour
         {
             material.color = color;
         }
+
+        var myPlayer = GetMyPlayer();
+        myPlayer.hasToPlaceCity = false;
+        myPlayer.nrOfPlacedCities++;
+        myPlayer.nrOfPlacedSettlement--;
     }
 
     private void DestroyNearbySetllements(Vector3 position)
@@ -1056,6 +1077,7 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void DisplayThiefCirclesClientRpc(ClientRpcParams clientRpcParams)
     {
+        GetMyPlayer().hasToMoveThief = true;
         Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Thief Circle"));
     }
 
@@ -1907,5 +1929,11 @@ public class Player : NetworkBehaviour
     public void PlayerCommunicatedServerRpc(ServerRpcParams srp)
     {
         GetPlayerWithId(srp.Receive.SenderClientId).hasCommunicatedAboutDiscarding.Value = true;
+    }
+
+    [ClientRpc]
+    public void ResetDevelopmentPlayedClientRpc()
+    {
+        GetMyPlayer().playedDevelopmentThisRound = false;
     }
 }

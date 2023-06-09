@@ -7867,6 +7867,7 @@ MonoBehaviour:
   addGetOre: {fileID: 85050637}
   subtractGetWool: {fileID: 1114040582}
   addGetWool: {fileID: 1728787460}
+  badRatioPrefab: {fileID: 2029533581559911318, guid: d853d2602939bfc40957e727e40be74c, type: 3}
 --- !u!1 &560302931
 GameObject:
   m_ObjectHideFlags: 0
@@ -17894,6 +17895,7 @@ MonoBehaviour:
   getLumberLabel: {fileID: 1693131603}
   getOreLabel: {fileID: 494951895}
   getWoolLabel: {fileID: 1975519963}
+  notEnoughResourcesPrefab: {fileID: 4232334064842841675, guid: e69e7b99d59669a4da20750975904bec, type: 3}
   tradeMakerId: 0
 --- !u!1 &1128536939
 GameObject:
@@ -30082,6 +30084,15 @@ MonoBehaviour:
   tradeManager: {fileID: 553074305}
   chat: {fileID: 1161026333}
   tips: {fileID: 1574699438}
+  notEnoughResourcesPrefab: {fileID: 4232334064842841675, guid: e69e7b99d59669a4da20750975904bec, type: 3}
+  notYourTurnPrefab: {fileID: 8025744905677544603, guid: 6d454e51ac2778d4a8d8ca18b21499e0, type: 3}
+  rollTheDicePrefab: {fileID: 2029533581559911318, guid: 62f95ac6b2d856347bbf634d1c777ef4, type: 3}
+  alreadyRolledPrefab: {fileID: 1088109427262066136, guid: cb4c5c03492e5024a8ba9a6c956525cc, type: 3}
+  moveThiefPrefab: {fileID: 2029533581559911318, guid: 7fdef3737f8a1b244be2767e620c4081, type: 3}
+  placeRoadPrefab: {fileID: 2029533581559911318, guid: 8e91954d64db00f4087bf1b01cdb1f1e, type: 3}
+  placeSettlementPrefab: {fileID: 2029533581559911318, guid: f11d351c4d8e07e43b36c69c493d08e6, type: 3}
+  placeCityPrefab: {fileID: 2029533581559911318, guid: e7dca6fa9391c9249a1cc6722fb00eec, type: 3}
+  noMorePiecesPrefab: {fileID: 2029533581559911318, guid: 063b09dec4cf18041adb04a525ab5418, type: 3}
 --- !u!1 &1926444571
 GameObject:
   m_ObjectHideFlags: 0

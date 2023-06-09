@@ -19,6 +19,7 @@ public class TradeOfferManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI getLumberLabel;
     [SerializeField] private TextMeshProUGUI getOreLabel;
     [SerializeField] private TextMeshProUGUI getWoolLabel;
+    [SerializeField] private GameObject notEnoughResourcesPrefab;
 
     public Dictionary<string, int> giveDict = new Dictionary<string, int>();
     public Dictionary<string, int> getDict = new Dictionary<string, int>();
@@ -51,8 +52,8 @@ public class TradeOfferManager : MonoBehaviour
                 playerHand["Wool Resource"] < giveDict["Wool"]
                 )
             {
-                //todo implement a pop-up to display that the player does not have the necessary resources
-                Debug.LogError("You do not have the necessary resources");
+                var message = Instantiate(notEnoughResourcesPrefab, acceptTradeButton.transform);
+                message.GetComponent<RedMessage>().SetStartPosition(acceptTradeButton.transform);
                 return;
             }
 

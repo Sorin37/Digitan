@@ -30,6 +30,8 @@ public class ThiefCircle : MonoBehaviour
 
         Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("Thief Circle"));
 
+        GetMyPlayer().hasToMoveThief = true;
+
         var hostPlayer = GetHostPlayer().GetComponent<Player>();
 
         //add previously blocked resource to the dict
@@ -213,5 +215,18 @@ public class ThiefCircle : MonoBehaviour
             hostPlayer.ModifyResourceDictServerRpc("Block", number, resource, city.GetComponent<CityPiece>().playerId);
             hostPlayer.ModifyResourceDictServerRpc("Block", number, resource, city.GetComponent<CityPiece>().playerId);
         }
+    }
+
+    private Player GetMyPlayer()
+    {
+        var players = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (var p in players)
+        {
+            if (p.GetComponent<Player>().IsOwner)
+                return p.GetComponent<Player>();
+        }
+
+        return null;
     }
 }
