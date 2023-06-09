@@ -7867,6 +7867,7 @@ MonoBehaviour:
   addGetOre: {fileID: 85050637}
   subtractGetWool: {fileID: 1114040582}
   addGetWool: {fileID: 1728787460}
+  badRatioPrefab: {fileID: 2029533581559911318, guid: d853d2602939bfc40957e727e40be74c, type: 3}
 --- !u!1 &560302931
 GameObject:
   m_ObjectHideFlags: 0

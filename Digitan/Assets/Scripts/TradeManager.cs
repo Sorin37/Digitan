@@ -44,6 +44,7 @@ public class TradeManager : MonoBehaviour
     [SerializeField] private Button addGetOre;
     [SerializeField] private Button subtractGetWool;
     [SerializeField] private Button addGetWool;
+    [SerializeField] private GameObject badRatioPrefab;
 
     public Dictionary<string, int> giveDict = new Dictionary<string, int>();
     public Dictionary<string, int> getDict = new Dictionary<string, int>();
@@ -118,6 +119,12 @@ public class TradeManager : MonoBehaviour
                 {
                     playerHand[key + " Resource"] += getDict[key];
                 }
+            }
+            else
+            {
+                var message = Instantiate(badRatioPrefab, tradeBankButton.transform);
+                message.GetComponent<RedMessage>().SetStartPosition(tradeBankButton.transform);
+                return;
             }
 
             player.UpdateHand();
