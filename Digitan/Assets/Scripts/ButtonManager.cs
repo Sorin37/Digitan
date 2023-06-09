@@ -25,6 +25,9 @@ public class ButtonManager : MonoBehaviour
     [SerializeField] private GameObject tips;
 
     [SerializeField] private GameObject notEnoughResourcesPrefab;
+    [SerializeField] private GameObject notYourTurnPrefab;
+    [SerializeField] private GameObject rollTheDicePrefab;
+    [SerializeField] private GameObject alreadyRolledPrefab;
     private bool hasRolledDice = false;
 
     private void Awake()
@@ -44,8 +47,17 @@ public class ButtonManager : MonoBehaviour
     {
         rollDiceButton.onClick.AddListener(() =>
         {
-            if (!IsMyTurn() || hasRolledDice)
+            if (!IsMyTurn())
             {
+                var message = Instantiate(notYourTurnPrefab, rollDiceButton.transform);
+                message.GetComponent<RedMessage>().SetStartPosition(rollDiceButton.transform);
+                return;
+            }
+
+            if (hasRolledDice)
+            {
+                var message = Instantiate(alreadyRolledPrefab, rollDiceButton.transform);
+                message.GetComponent<RedMessage>().SetStartPosition(rollDiceButton.transform);
                 return;
             }
 
@@ -59,8 +71,19 @@ public class ButtonManager : MonoBehaviour
     {
         endTurnButton.onClick.AddListener(() =>
         {
-            if (!IsMyTurn() || !hasRolledDice)
+            if (!IsMyTurn())
+            {
+                var message = Instantiate(notYourTurnPrefab, endTurnButton.transform);
+                message.GetComponent<RedMessage>().SetStartPosition(endTurnButton.transform);
                 return;
+            }
+
+            if (!hasRolledDice)
+            {
+                var message = Instantiate(rollTheDicePrefab, endTurnButton.transform);
+                message.GetComponent<RedMessage>().SetStartPosition(endTurnButton.transform);
+                return;
+            }
 
             hasRolledDice = false;
 
@@ -71,49 +94,78 @@ public class ButtonManager : MonoBehaviour
     {
         settlementButton.onClick.AddListener(() =>
         {
-            if (!IsMyTurn() || !hasRolledDice)
+            if (!IsMyTurn())
             {
+                var message = Instantiate(notYourTurnPrefab, settlementButton.transform);
+                message.GetComponent<RedMessage>().SetStartPosition(settlementButton.transform);
                 return;
             }
 
-            if (HasSettlementResources())
+            if (!hasRolledDice)
             {
-                Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Settlement Circle"));
+                var message = Instantiate(rollTheDicePrefab, settlementButton.transform);
+                message.GetComponent<RedMessage>().SetStartPosition(settlementButton.transform);
+                return;
             }
-            else
+
+            if (!HasSettlementResources())
             {
-                print("You don't have enough resources for a settlement!");
+                var message = Instantiate(notEnoughResourcesPrefab, settlementButton.transform);
+                message.GetComponent<RedMessage>().SetStartPosition(settlementButton.transform);
+                return;
             }
+
+            Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Settlement Circle"));
+
         });
     }
     private void InitRoadButton()
     {
         roadButton.onClick.AddListener(() =>
         {
-            if (!IsMyTurn() || !hasRolledDice)
+            if (!IsMyTurn())
             {
+                var message = Instantiate(notYourTurnPrefab, roadButton.transform);
+                message.GetComponent<RedMessage>().SetStartPosition(roadButton.transform);
                 return;
             }
 
-            if (HasRoadResources())
+            if (!hasRolledDice)
             {
-                Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Road Circle"));
+                var message = Instantiate(rollTheDicePrefab, roadButton.transform);
+                message.GetComponent<RedMessage>().SetStartPosition(roadButton.transform);
+                return;
             }
-            else
+
+            if (!HasRoadResources())
             {
                 var message = Instantiate(notEnoughResourcesPrefab, roadButton.transform);
                 message.GetComponent<RedMessage>().SetStartPosition(roadButton.transform);
+                return;
             }
+
+            Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Road Circle"));
+
         });
     }
     private void InitTradeButton()
     {
         tradeButton.onClick.AddListener(() =>
         {
-            if (!IsMyTurn() || !hasRolledDice)
+            if (!IsMyTurn())
             {
+                var message = Instantiate(notYourTurnPrefab, tradeButton.transform);
+                message.GetComponent<RedMessage>().SetStartPosition(tradeButton.transform);
                 return;
             }
+
+            if (!hasRolledDice)
+            {
+                var message = Instantiate(rollTheDicePrefab, tradeButton.transform);
+                message.GetComponent<RedMessage>().SetStartPosition(tradeButton.transform);
+                return;
+            }
+
             ResetTrade();
             tradeCanvas.gameObject.SetActive(true);
         });
@@ -122,21 +174,29 @@ public class ButtonManager : MonoBehaviour
     {
         cityButton.onClick.AddListener(() =>
         {
-            if (!IsMyTurn() || !hasRolledDice)
+            if (!IsMyTurn())
             {
+                var message = Instantiate(notYourTurnPrefab, cityButton.transform);
+                message.GetComponent<RedMessage>().SetStartPosition(cityButton.transform);
                 return;
             }
 
-            if (HasCityResources())
+            if (!hasRolledDice)
             {
-                Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("City Place"));
-                Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("My Settlement"));
+                var message = Instantiate(rollTheDicePrefab, cityButton.transform);
+                message.GetComponent<RedMessage>().SetStartPosition(cityButton.transform);
+                return;
             }
-            else
+
+            if (!HasCityResources())
             {
-                //todo: implement an error message or smth
-                print("You don't have enough resources for a road!");
+                var message = Instantiate(notEnoughResourcesPrefab, cityButton.transform);
+                message.GetComponent<RedMessage>().SetStartPosition(cityButton.transform);
+                return;
             }
+
+            Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("City Place"));
+            Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("My Settlement"));
         });
     }
 
@@ -146,13 +206,17 @@ public class ButtonManager : MonoBehaviour
         {
             if (!IsMyTurn())
             {
+                var message = Instantiate(notYourTurnPrefab, developmentButton.transform);
+                message.GetComponent<RedMessage>().SetStartPosition(developmentButton.transform);
                 return;
             }
 
-            //if(!HasDevelopmentResources())
-            //{
-            //    return;
-            //}
+            if (!HasDevelopmentResources())
+            {
+                var message = Instantiate(notEnoughResourcesPrefab, developmentButton.transform);
+                message.GetComponent<RedMessage>().SetStartPosition(developmentButton.transform);
+                return;
+            }
 
             GetHostPlayer().GetDevelopmentServerRpc(new ServerRpcParams());
         });

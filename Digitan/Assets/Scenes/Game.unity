@@ -30083,6 +30083,9 @@ MonoBehaviour:
   chat: {fileID: 1161026333}
   tips: {fileID: 1574699438}
   notEnoughResourcesPrefab: {fileID: 4232334064842841675, guid: e69e7b99d59669a4da20750975904bec, type: 3}
+  notYourTurnPrefab: {fileID: 8025744905677544603, guid: 6d454e51ac2778d4a8d8ca18b21499e0, type: 3}
+  rollTheDicePrefab: {fileID: 2029533581559911318, guid: 62f95ac6b2d856347bbf634d1c777ef4, type: 3}
+  alreadyRolledPrefab: {fileID: 1088109427262066136, guid: cb4c5c03492e5024a8ba9a6c956525cc, type: 3}
 --- !u!1 &1926444571
 GameObject:
   m_ObjectHideFlags: 0

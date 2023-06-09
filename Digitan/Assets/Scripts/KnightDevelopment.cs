@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class KnightDevelopment : MonoBehaviour
 {
     [SerializeField] private Button button;
+    [SerializeField] private GameObject oneDevelopmentPrefab;
 
     // Start is called before the first frame update
     void Start()
@@ -28,6 +29,8 @@ public class KnightDevelopment : MonoBehaviour
 
             if (myPlayer.playedDevelopmentThisRound)
             {
+                var message = Instantiate(oneDevelopmentPrefab, button.transform);
+                message.GetComponent<RedMessage>().SetStartPosition(button.transform);
                 return;
             }
 
