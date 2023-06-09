@@ -30082,6 +30082,7 @@ MonoBehaviour:
   tradeManager: {fileID: 553074305}
   chat: {fileID: 1161026333}
   tips: {fileID: 1574699438}
+  notEnoughResourcesPrefab: {fileID: 4232334064842841675, guid: e69e7b99d59669a4da20750975904bec, type: 3}
 --- !u!1 &1926444571
 GameObject:
   m_ObjectHideFlags: 0

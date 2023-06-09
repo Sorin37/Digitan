@@ -101,7 +101,8 @@ public class ButtonManager : MonoBehaviour
             }
             else
             {
-                Instantiate(notEnoughResourcesPrefab, transform);
+                var message = Instantiate(notEnoughResourcesPrefab, roadButton.transform);
+                message.GetComponent<RedMessage>().SetStartPosition(roadButton.transform);
             }
         });
     }
