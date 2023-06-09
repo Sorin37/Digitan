@@ -28,6 +28,11 @@ public class ButtonManager : MonoBehaviour
     [SerializeField] private GameObject notYourTurnPrefab;
     [SerializeField] private GameObject rollTheDicePrefab;
     [SerializeField] private GameObject alreadyRolledPrefab;
+    [SerializeField] private GameObject moveThiefPrefab;
+    [SerializeField] private GameObject placeRoadPrefab;
+    [SerializeField] private GameObject placeSettlementPrefab;
+    [SerializeField] private GameObject placeCityPrefab;
+
     private bool hasRolledDice = false;
 
     private void Awake()
@@ -85,6 +90,34 @@ public class ButtonManager : MonoBehaviour
                 return;
             }
 
+            if (GetMyPlayer().hasToMoveThief)
+            {
+                var message = Instantiate(moveThiefPrefab, endTurnButton.transform);
+                message.GetComponent<RedMessage>().SetStartPosition(endTurnButton.transform);
+                return;
+            }
+
+            if (GetMyPlayer().hasToPlaceRoad)
+            {
+                var message = Instantiate(placeRoadPrefab, endTurnButton.transform);
+                message.GetComponent<RedMessage>().SetStartPosition(endTurnButton.transform);
+                return;
+            }
+
+            if (GetMyPlayer().hasToPlaceSettlement)
+            {
+                var message = Instantiate(placeSettlementPrefab, endTurnButton.transform);
+                message.GetComponent<RedMessage>().SetStartPosition(endTurnButton.transform);
+                return;
+            }
+
+            if (GetMyPlayer().hasToPlaceCity)
+            {
+                var message = Instantiate(placeCityPrefab, endTurnButton.transform);
+                message.GetComponent<RedMessage>().SetStartPosition(endTurnButton.transform);
+                return;
+            }
+
             hasRolledDice = false;
 
             GetHostPlayer().PassTurnServerRpc();
@@ -116,7 +149,7 @@ public class ButtonManager : MonoBehaviour
             }
 
             Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Settlement Circle"));
-
+            GetMyPlayer().hasToPlaceSettlement = true;
         });
     }
     private void InitRoadButton()
@@ -144,8 +177,9 @@ public class ButtonManager : MonoBehaviour
                 return;
             }
 
-            Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Road Circle"));
+            GetMyPlayer().hasToPlaceRoad = true;
 
+            Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Road Circle"));
         });
     }
     private void InitTradeButton()
@@ -197,6 +231,7 @@ public class ButtonManager : MonoBehaviour
 
             Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("City Place"));
             Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("My Settlement"));
+            GetMyPlayer().hasToPlaceCity = true;
         });
     }
 
@@ -242,7 +277,7 @@ public class ButtonManager : MonoBehaviour
 
     private bool HasSettlementResources()
     {
-        var playerHand = GetMyPlayer().GetComponent<Player>().playerHand;
+        var playerHand = GetMyPlayer().playerHand;
         if (playerHand["Brick Resource"] > 0 &&
             playerHand["Grain Resource"] > 0 &&
             playerHand["Lumber Resource"] > 0 &&
@@ -253,7 +288,7 @@ public class ButtonManager : MonoBehaviour
             playerHand["Lumber Resource"]--;
             playerHand["Wool Resource"]--;
 
-            GetMyPlayer().GetComponent<Player>().UpdateHand();
+            GetMyPlayer().UpdateHand();
 
             return true;
         }
@@ -263,14 +298,14 @@ public class ButtonManager : MonoBehaviour
 
     private bool HasRoadResources()
     {
-        var playerHand = GetMyPlayer().GetComponent<Player>().playerHand;
+        var playerHand = GetMyPlayer().playerHand;
 
         if (playerHand["Brick Resource"] > 0 && playerHand["Lumber Resource"] > 0)
         {
             playerHand["Brick Resource"]--;
             playerHand["Lumber Resource"]--;
 
-            GetMyPlayer().GetComponent<Player>().UpdateHand();
+            GetMyPlayer().UpdateHand();
 
             return true;
         }
@@ -280,14 +315,14 @@ public class ButtonManager : MonoBehaviour
 
     private bool HasCityResources()
     {
-        var playerHand = GetMyPlayer().GetComponent<Player>().playerHand;
+        var playerHand = GetMyPlayer().playerHand;
 
         if (playerHand["Ore Resource"] > 2 && playerHand["Grain Resource"] > 1)
         {
             playerHand["Ore Resource"] -= 3;
             playerHand["Grain Resource"] -= 2;
 
-            GetMyPlayer().GetComponent<Player>().UpdateHand();
+            GetMyPlayer().UpdateHand();
 
             return true;
         }
@@ -308,14 +343,14 @@ public class ButtonManager : MonoBehaviour
         return null;
     }
 
-    private GameObject GetMyPlayer()
+    private Player GetMyPlayer()
     {
         var players = GameObject.FindGameObjectsWithTag("Player");
 
         foreach (var p in players)
         {
             if (p.GetComponent<Player>().IsOwner)
-                return p;
+                return p.GetComponent<Player>();
         }
 
         return null;
@@ -351,7 +386,7 @@ public class ButtonManager : MonoBehaviour
 
     private bool HasDevelopmentResources()
     {
-        var playerHand = GetMyPlayer().GetComponent<Player>().playerHand;
+        var playerHand = GetMyPlayer().playerHand;
 
         if (playerHand["Grain Resource"] > 0 &&
             playerHand["Ore Resource"] > 0 &&
@@ -361,7 +396,7 @@ public class ButtonManager : MonoBehaviour
             playerHand["Ore Resource"]--;
             playerHand["Wool Resource"]--;
 
-            GetMyPlayer().GetComponent<Player>().UpdateHand();
+            GetMyPlayer().UpdateHand();
 
             return true;
         }

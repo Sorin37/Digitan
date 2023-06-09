@@ -79,6 +79,10 @@ public class Player : NetworkBehaviour
     public int nrOfDeclinedTrades = 0;
     public Color color;
     public bool playedDevelopmentThisRound = false;
+    public bool hasToMoveThief = false;
+    public bool hasToPlaceRoad = false;
+    public bool hasToPlaceSettlement = false;
+    public bool hasToPlaceCity = false;
 
     public List<string> developments = new List<string>();
     private List<string> developmentsDeck;
@@ -327,6 +331,7 @@ public class Player : NetworkBehaviour
         if (!roadGrid.GetComponent<RoadGrid>().usedRoadBuilding)
         {
             Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("Road Circle"));
+            GetMyPlayer().hasToPlaceRoad = false;
         }
         else
         {
@@ -334,6 +339,7 @@ public class Player : NetworkBehaviour
         }
 
         CalculateLongestRoad();
+
     }
 
     private Quaternion GetRotationFromPos((int x, int y) pos)
@@ -425,6 +431,7 @@ public class Player : NetworkBehaviour
 
         //make the settlement circles invisible
         Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("Settlement Circle"));
+        GetMyPlayer().hasToPlaceSettlement = false;
 
         CalculateLongestRoad();
     }
@@ -825,6 +832,8 @@ public class Player : NetworkBehaviour
         {
             material.color = color;
         }
+
+        GetMyPlayer().hasToPlaceCity = false;
     }
 
     private void DestroyNearbySetllements(Vector3 position)
@@ -1058,6 +1067,7 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void DisplayThiefCirclesClientRpc(ClientRpcParams clientRpcParams)
     {
+        GetMyPlayer().hasToMoveThief = true;
         Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Thief Circle"));
     }
 
