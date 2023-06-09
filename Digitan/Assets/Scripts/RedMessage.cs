@@ -7,6 +7,7 @@ public class RedMessage : MonoBehaviour
 {
     private bool positionSet = false;
     private Vector3 targetPosition;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -32,10 +33,21 @@ public class RedMessage : MonoBehaviour
             caller.position.z
         );
 
+        //align right
         if (messageRectTransform.sizeDelta.x / 2 + gameObject.transform.position.x > 1920)
         {
             gameObject.transform.position = new Vector3(
                 gameObject.transform.position.x - (messageRectTransform.sizeDelta.x / 2 + gameObject.transform.position.x - 1920),
+                gameObject.transform.position.y,
+                gameObject.transform.position.z
+            );
+        }
+
+        //align left
+        if (gameObject.transform.position.x - messageRectTransform.sizeDelta.x / 2 < 0)
+        {
+            gameObject.transform.position = new Vector3(
+                gameObject.transform.position.x - (gameObject.transform.position.x - messageRectTransform.sizeDelta.x / 2),
                 gameObject.transform.position.y,
                 gameObject.transform.position.z
             );
@@ -57,7 +69,10 @@ public class RedMessage : MonoBehaviour
             targetPosition,
             100 * Time.deltaTime
         );
-        if (gameObject.transform.position == targetPosition)
+
+        if (targetPosition.y - gameObject.transform.position.y < 1)
+        {
             Destroy(gameObject);
+        }
     }
 }

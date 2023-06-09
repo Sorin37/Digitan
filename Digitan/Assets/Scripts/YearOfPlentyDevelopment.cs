@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class YearOfPlentyDevelopment : MonoBehaviour
 {
     [SerializeField] private Button button;
+    [SerializeField] private GameObject oneDevelopmentPrefab;
+    [SerializeField] private GameObject notYourTurnPrefab;
 
     // Start is called before the first frame update
     void Start()
@@ -23,6 +26,24 @@ public class YearOfPlentyDevelopment : MonoBehaviour
     {
         button.onClick.AddListener(() =>
         {
+            if (!IsMyTurn())
+            {
+                var message = Instantiate(notYourTurnPrefab, button.transform);
+                message.GetComponent<RedMessage>().SetStartPosition(button.transform);
+                return;
+            }
+
+            var myPlayer = GetMyPlayer();
+
+            if (myPlayer.playedDevelopmentThisRound)
+            {
+                var message = Instantiate(oneDevelopmentPrefab, button.transform);
+                message.GetComponent<RedMessage>().SetStartPosition(button.transform);
+                return;
+            }
+
+            myPlayer.playedDevelopmentThisRound = true;
+
             RemoveDevelopment("YearOfPlentyDeck");
             Resources.FindObjectsOfTypeAll<YearOfPlentyManager>()[0].transform.parent.gameObject.SetActive(true);
         });
@@ -69,5 +90,36 @@ public class YearOfPlentyDevelopment : MonoBehaviour
         }
 
         deckRectTransform.sizeDelta = new Vector2(deckRectTransform.sizeDelta.x + width, deckRectTransform.sizeDelta.y);
+    }
+
+    private Player GetMyPlayer()
+    {
+        var players = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (var p in players)
+        {
+            if (p.GetComponent<Player>().IsOwner)
+                return p.GetComponent<Player>();
+        }
+
+        return null;
+    }
+
+    private bool IsMyTurn()
+    {
+        return GetHostPlayer().currentPlayerTurn.Value == (int)NetworkManager.Singleton.LocalClientId;
+    }
+
+    private Player GetHostPlayer()
+    {
+        var players = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (var p in players)
+        {
+            if (p.GetComponent<Player>().IsOwnedByServer)
+                return p.GetComponent<Player>();
+        }
+
+        return null;
     }
 }

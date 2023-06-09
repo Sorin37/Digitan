@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -8,6 +9,7 @@ public class KnightDevelopment : MonoBehaviour
 {
     [SerializeField] private Button button;
     [SerializeField] private GameObject oneDevelopmentPrefab;
+    [SerializeField] private GameObject notYourTurnPrefab;
 
     // Start is called before the first frame update
     void Start()
@@ -25,6 +27,13 @@ public class KnightDevelopment : MonoBehaviour
     {
         button.onClick.AddListener(() =>
         {
+            if (!IsMyTurn())
+            {
+                var message = Instantiate(notYourTurnPrefab, button.transform);
+                message.GetComponent<RedMessage>().SetStartPosition(button.transform);
+                return;
+            }
+
             var myPlayer = GetMyPlayer();
 
             if (myPlayer.playedDevelopmentThisRound)
@@ -109,5 +118,10 @@ public class KnightDevelopment : MonoBehaviour
         }
 
         return null;
+    }
+
+    private bool IsMyTurn()
+    {
+        return GetHostPlayer().currentPlayerTurn.Value == (int)NetworkManager.Singleton.LocalClientId;
     }
 }
