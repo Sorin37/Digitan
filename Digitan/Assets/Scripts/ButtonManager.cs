@@ -19,12 +19,13 @@ public class ButtonManager : MonoBehaviour
     [SerializeField] private Button chatButton;
     [SerializeField] private Button tipsButton;
     [SerializeField] private Button playersInfoButton;
-    [SerializeField] private Button recipesButton;
+    [SerializeField] private Button recipeButton;
 
     [SerializeField] private Canvas tradeCanvas;
     [SerializeField] private GameObject tradeManager;
     [SerializeField] private GameObject chat;
     [SerializeField] private GameObject tips;
+    [SerializeField] private GameObject recipeCanvas;
 
     [SerializeField] private GameObject notEnoughResourcesPrefab;
     [SerializeField] private GameObject notYourTurnPrefab;
@@ -49,6 +50,8 @@ public class ButtonManager : MonoBehaviour
         InitDevelopmentButton();
         InitChatButton();
         InitTipsButton();
+        InitRecipesButton();
+        //InitTipsButton();
     }
 
     private void InitRollDiceButton()
@@ -419,5 +422,13 @@ public class ButtonManager : MonoBehaviour
         }
 
         return false;
+    }
+
+    private void InitRecipesButton()
+    {
+        recipeButton.onClick.AddListener(() =>
+        {
+            recipeCanvas.SetActive(true);
+        });
     }
 }

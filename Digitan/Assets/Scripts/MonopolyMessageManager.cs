@@ -21,7 +21,7 @@ public class MonopolyMessageManager : MonoBehaviour
         
     }
 
-    void InitCloseButton()
+    private void InitCloseButton()
     {
         closeButton.onClick.AddListener(() =>
         {
