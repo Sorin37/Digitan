@@ -18,6 +18,8 @@ public class ButtonManager : MonoBehaviour
     [SerializeField] private Button developmentButton;
     [SerializeField] private Button chatButton;
     [SerializeField] private Button tipsButton;
+    [SerializeField] private Button playersInfoButton;
+    [SerializeField] private Button recipesButton;
 
     [SerializeField] private Canvas tradeCanvas;
     [SerializeField] private GameObject tradeManager;
