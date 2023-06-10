@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Unity.Services.Core;
 using Unity.Services.Authentication;
+using System;
 
 public class ClientDetails : MonoBehaviour
 {
@@ -17,14 +18,28 @@ public class ClientDetails : MonoBehaviour
     [SerializeField] private TMP_InputField NicknameInput;
     [SerializeField] private GameObject popupCanvas;
     [SerializeField] private GameObject Lobby;
+    [SerializeField] private GameObject lobbyExceptionCanvas;
+
     private int SelectedInput;
 
     private async void Awake()
     {
         await UnityServices.InitializeAsync();
-        if (!AuthenticationService.Instance.IsSignedIn)
+
+        try
         {
-            await AuthenticationService.Instance.SignInAnonymouslyAsync();
+            if (!AuthenticationService.Instance.IsSignedIn)
+            {
+                await AuthenticationService.Instance.SignInAnonymouslyAsync();
+            }
+        }
+        catch (Exception)
+        {
+            lobbyExceptionCanvas.transform.Find("LobbyExceptionManager").GetComponent<LobbyExceptionManager>().SetErrorMessage(
+                "No internet connection!"
+                );
+            lobbyExceptionCanvas.SetActive(true);
+            return;
         }
 
         InitConnectButton();

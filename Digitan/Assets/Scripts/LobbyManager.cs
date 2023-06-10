@@ -25,6 +25,7 @@ public class LobbyManager : MonoBehaviour
     [SerializeField] private GameObject PlayerDetails;
     [SerializeField] private Button PlayButton;
     [SerializeField] private Button MenuButton;
+    [SerializeField] private GameObject lobbyExceptionCanvas;
     public Lobby lobby;
     private int currentNumberOfPlayers = 0;
     private float updateTimer = 5;
@@ -123,8 +124,17 @@ public class LobbyManager : MonoBehaviour
         }
         catch (LobbyServiceException)
         {
-
-            Debug.LogWarning("LSE in PollLobby (GetLobbyAsync) in LobbyManager");
+            lobbyExceptionCanvas.transform.Find("LobbyExceptionManager").GetComponent<LobbyExceptionManager>().SetErrorMessage(
+                "Poor internet connection, please try again!"
+            );
+            lobbyExceptionCanvas.SetActive(true);
+        }
+        catch (Exception)
+        {
+            lobbyExceptionCanvas.transform.Find("LobbyExceptionManager").GetComponent<LobbyExceptionManager>().SetErrorMessage(
+               "No internet connection!"
+           );
+            lobbyExceptionCanvas.SetActive(true);
         }
     }
 
@@ -171,9 +181,20 @@ public class LobbyManager : MonoBehaviour
 
             return joinCode;
         }
-        catch (RelayServiceException ex)
+        catch (RelayServiceException)
         {
-            Debug.LogError(ex.Message);
+            lobbyExceptionCanvas.transform.Find("LobbyExceptionManager").GetComponent<LobbyExceptionManager>().SetErrorMessage(
+                "Poor internet connection. Please try again!"
+            );
+            lobbyExceptionCanvas.SetActive(true);
+            throw;
+        }
+        catch (Exception)
+        {
+            lobbyExceptionCanvas.transform.Find("LobbyExceptionManager").GetComponent<LobbyExceptionManager>().SetErrorMessage(
+                "No internet connection!"
+            );
+            lobbyExceptionCanvas.SetActive(true);
             throw;
         }
     }
@@ -183,7 +204,7 @@ public class LobbyManager : MonoBehaviour
         if (joined)
             return;
         try
-        {   
+        {
             joined = true;
             Debug.Log("Joining Relay with " + relayCode);
             var joinAllocation = await RelayService.Instance.JoinAllocationAsync(relayCode);
@@ -194,9 +215,19 @@ public class LobbyManager : MonoBehaviour
             NetworkManager.Singleton.StartClient();
 
         }
-        catch (RelayServiceException ex)
+        catch (RelayServiceException)
         {
-            Debug.LogError(ex.Message);
+            lobbyExceptionCanvas.transform.Find("LobbyExceptionManager").GetComponent<LobbyExceptionManager>().SetErrorMessage(
+                "Poor internet connection!"
+            );
+            lobbyExceptionCanvas.SetActive(true);
+        }
+        catch (Exception)
+        {
+            lobbyExceptionCanvas.transform.Find("LobbyExceptionManager").GetComponent<LobbyExceptionManager>().SetErrorMessage(
+                "No internet conenction!"
+            );
+            lobbyExceptionCanvas.SetActive(true);
         }
     }
 
@@ -224,7 +255,17 @@ public class LobbyManager : MonoBehaviour
         }
         catch (LobbyServiceException)
         {
-            Debug.LogWarning("Lobby Service Error in CheckStartLobby (JoinStartLobby) in Lobby Manager");
+            lobbyExceptionCanvas.transform.Find("LobbyExceptionManager").GetComponent<LobbyExceptionManager>().SetErrorMessage(
+                "Poor internet connection. Please try again!"
+            );
+            lobbyExceptionCanvas.SetActive(true);
+        }
+        catch (Exception)
+        {
+            lobbyExceptionCanvas.transform.Find("LobbyExceptionManager").GetComponent<LobbyExceptionManager>().SetErrorMessage(
+                "No internet conenction!"
+            );
+            lobbyExceptionCanvas.SetActive(true);
         }
     }
 
@@ -242,7 +283,17 @@ public class LobbyManager : MonoBehaviour
         }
         catch (LobbyServiceException)
         {
-            Debug.LogWarning("Lobby Service Error in UpdateLobbyRelayCode (UpdateLobbyAsync) in LobbyManager");
+            lobbyExceptionCanvas.transform.Find("LobbyExceptionManager").GetComponent<LobbyExceptionManager>().SetErrorMessage(
+                "Poor internet connection. Please try again!"
+            );
+            lobbyExceptionCanvas.SetActive(true);
+        }
+        catch (Exception)
+        {
+            lobbyExceptionCanvas.transform.Find("LobbyExceptionManager").GetComponent<LobbyExceptionManager>().SetErrorMessage(
+                "No internet conenction!"
+            );
+            lobbyExceptionCanvas.SetActive(true);
         }
     }
 
