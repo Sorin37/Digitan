@@ -52,8 +52,13 @@ public class LobbyManager : MonoBehaviour
 
     private void InitMenuButton()
     {
-        MenuButton.onClick.AddListener(() =>
+        MenuButton.onClick.AddListener(async () =>
         {
+            if (!await LeaveLobby())
+            {
+                return;
+            }
+
             var go = new GameObject("Sacrificial Lamb");
             DontDestroyOnLoad(go);
 
@@ -322,6 +327,33 @@ public class LobbyManager : MonoBehaviour
         else
         {
             return GameObject.FindGameObjectsWithTag("Lobby")[0].GetComponent<LobbyDetails>().lobby;
+        }
+    }
+
+    private async Task<bool> LeaveLobby()
+    {
+        try
+        {
+            string playerId = AuthenticationService.Instance.PlayerId;
+            string lobbyId = lobby.Id;
+            await LobbyService.Instance.RemovePlayerAsync(lobbyId, playerId);
+            return true;
+        }
+        catch (LobbyServiceException)
+        {
+            lobbyExceptionCanvas.transform.Find("LobbyExceptionManager").GetComponent<LobbyExceptionManager>().SetErrorMessage(
+                "poor internet connection. Please try again!"
+                );
+            lobbyExceptionCanvas.SetActive(true);
+            return false;
+        }
+        catch (Exception)
+        {
+            lobbyExceptionCanvas.transform.Find("LobbyExceptionManager").GetComponent<LobbyExceptionManager>().SetErrorMessage(
+                "No internet connection!"
+                );
+            lobbyExceptionCanvas.SetActive(true);
+            return false;
         }
     }
 }

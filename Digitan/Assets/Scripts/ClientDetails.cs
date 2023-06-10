@@ -9,6 +9,8 @@ using UnityEngine.UI;
 using Unity.Services.Core;
 using Unity.Services.Authentication;
 using System;
+using System.Threading.Tasks;
+using static UnityEditor.Progress;
 
 public class ClientDetails : MonoBehaviour
 {
