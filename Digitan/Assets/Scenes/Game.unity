@@ -24599,7 +24599,7 @@ GameObject:
   - component: {fileID: 1326239396}
   - component: {fileID: 1326239395}
   m_Layer: 5
-  m_Name: RecipesCanvas
+  m_Name: PlayersInfoCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28694,7 +28694,7 @@ GameObject:
   - component: {fileID: 1555501924}
   - component: {fileID: 1555501923}
   m_Layer: 5
-  m_Name: PlayersInfoCanvas
+  m_Name: RecipeCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31449,7 +31449,7 @@ GameObject:
   - component: {fileID: 1698867351}
   - component: {fileID: 1698867350}
   m_Layer: 5
-  m_Name: TradeBoard
+  m_Name: Board
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -36256,7 +36256,7 @@ GameObject:
   - component: {fileID: 1951524433}
   - component: {fileID: 1951524434}
   m_Layer: 5
-  m_Name: TradeOfferManager
+  m_Name: PlayersInfoManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -36294,24 +36294,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1951524432}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: baefbbac32488054282d8be0b4b6f776, type: 3}
+  m_Script: {fileID: 11500000, guid: ab0168a85cb1dd44a877fddff3a65e99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tradeOfferCanvas: {fileID: 1326239397}
-  acceptTradeButton: {fileID: 272901967}
-  declineTradeButton: {fileID: 1283221415}
-  giveBrickLabel: {fileID: 248326200}
-  giveGrainLabel: {fileID: 523820218}
-  giveLumberLabel: {fileID: 2077634359}
-  giveOreLabel: {fileID: 705354474}
-  giveWoolLabel: {fileID: 1288037878}
-  getBrickLabel: {fileID: 1132573481}
-  getGrainLabel: {fileID: 930092297}
-  getLumberLabel: {fileID: 1456208961}
-  getOreLabel: {fileID: 1127757401}
-  getWoolLabel: {fileID: 1084760338}
-  notEnoughResourcesPrefab: {fileID: 4232334064842841675, guid: e69e7b99d59669a4da20750975904bec, type: 3}
-  tradeMakerId: 0
 --- !u!1 &1953386109
 GameObject:
   m_ObjectHideFlags: 0
@@ -38627,7 +38612,7 @@ GameObject:
   - component: {fileID: 2062165720}
   - component: {fileID: 2062165721}
   m_Layer: 5
-  m_Name: PlayersInfoManager
+  m_Name: RecipeManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -38663,7 +38648,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2062165719}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab0168a85cb1dd44a877fddff3a65e99, type: 3}
+  m_Script: {fileID: 11500000, guid: a65139dd814b56642a33557bbbec83f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &2062235691
