@@ -39,30 +39,32 @@ public class RoadCircle : MonoBehaviour
             return;
         }
 
-        if (!isOccupied)
+        if (isOccupied)
         {
-            var indexes = getIndexesOfElem(gameObject, roadGrid);
+            return;
+        }
 
-            var myPlayer = getMyPlayer().GetComponent<Player>();
+        var indexes = getIndexesOfElem(gameObject, roadGrid);
 
-            turnNearbyCirclesAvailable();
+        var myPlayer = getMyPlayer().GetComponent<Player>();
 
-            if (myPlayer.GetIsHost())
-            {
-                getHostPlayer().GetComponent<Player>().PlaceRoadClientRpc(
-                    indexes.x,
-                    indexes.y,
-                    myPlayer.color
-                );
-            }
-            else
-            {
-                getHostPlayer().GetComponent<Player>().PlaceRoadServerRpc(
-                    indexes.x,
-                    indexes.y,
-                    myPlayer.color
-                );
-            }
+        turnNearbyCirclesAvailable();
+
+        if (myPlayer.GetIsHost())
+        {
+            getHostPlayer().GetComponent<Player>().PlaceRoadClientRpc(
+                indexes.x,
+                indexes.y,
+                myPlayer.color
+            );
+        }
+        else
+        {
+            getHostPlayer().GetComponent<Player>().PlaceRoadServerRpc(
+                indexes.x,
+                indexes.y,
+                myPlayer.color
+            );
         }
 
         if (settlementGrid.GetComponent<SettlementGrid>().isStartPhase)
