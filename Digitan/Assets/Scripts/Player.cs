@@ -949,12 +949,14 @@ public class Player : NetworkBehaviour
 
             newThief.name = "Thief";
 
+            newThief.GetComponent<RoadCircle>().isOccupied = true;
 
             //hide the circle the thief is placed on
             var colliders = Physics.OverlapSphere(
                 newThief.transform.position,
                 1f,
-                (int)Mathf.Pow(2, LayerMask.NameToLayer("Thief Circle")));
+                (int)Mathf.Pow(2, LayerMask.NameToLayer("Thief Circle"))
+            );
 
             foreach (var collider in colliders)
             {
