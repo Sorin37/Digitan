@@ -16,6 +16,7 @@ using UnityEditor;
 public class HostLobby : MonoBehaviour
 {
     [SerializeField] private Button hostButton;
+    [SerializeField] private GameObject lobbyExceptionCanvas;
 
     public Lobby lobby;
     private float heartbeatTimer;
@@ -37,17 +38,28 @@ public class HostLobby : MonoBehaviour
     {
         await UnityServices.InitializeAsync();
 
-        AuthenticationService.Instance.SignedIn += () =>
+        try
         {
-            Debug.LogError("Sign in " + AuthenticationService.Instance.PlayerId);
-        };
 
-        if (!AuthenticationService.Instance.IsSignedIn)
-        {
-            await AuthenticationService.Instance.SignInAnonymouslyAsync();
+            AuthenticationService.Instance.SignedIn += () =>
+            {
+                Debug.LogError("Sign in " + AuthenticationService.Instance.PlayerId);
+            };
+
+            if (!AuthenticationService.Instance.IsSignedIn)
+            {
+                await AuthenticationService.Instance.SignInAnonymouslyAsync();
+            }
+
+            hostButton.interactable = true;
         }
-
-        hostButton.interactable = true;
+        catch (Exception)
+        {
+            lobbyExceptionCanvas.transform.Find("LobbyExceptionManager").GetComponent<LobbyExceptionManager>().SetErrorMessage(
+                    "No internet conenction!"
+                    );
+            lobbyExceptionCanvas.SetActive(true);
+        }
     }
 
     public async Task CreateLobby(string lobbyName, string nickname)

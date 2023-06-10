@@ -9,6 +9,7 @@ public class LobbyDetails : MonoBehaviour
 {
     public Lobby lobby;
     private float pollTimer;
+    [SerializeField] GameObject lobbyExceptionCanvas;
 
     // Start is called before the first frame update
     void Start()
@@ -36,9 +37,13 @@ public class LobbyDetails : MonoBehaviour
                 try
                 {
                     lobby = await LobbyService.Instance.GetLobbyAsync(lobby.Id);
-                }catch(LobbyServiceException)
+                }
+                catch (LobbyServiceException)
                 {
-                    Debug.LogWarning("Lobby Service Error when pooling (GetLobbyAsync) in LobbyDetails");
+                    lobbyExceptionCanvas.transform.Find("LobbyExceptionManager").GetComponent<LobbyExceptionManager>().SetErrorMessage(
+                    "Poor internet connection, please try again!"
+                    );
+                    lobbyExceptionCanvas.SetActive(true);
                 }
             }
         }
