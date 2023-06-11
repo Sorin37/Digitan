@@ -448,6 +448,8 @@ public class ButtonManager : MonoBehaviour
             DisplayPlayersInfo();
 
             playersInfoCanvas.SetActive(true);
+            print(playersInfoCanvas.active);
+
         });
     }
 
