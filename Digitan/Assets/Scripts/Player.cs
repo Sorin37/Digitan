@@ -201,8 +201,6 @@ public class Player : NetworkBehaviour
 
     private void VictoryPointsChangedEvent(int oldValue, int newValue)
     {
-        print("Am schimbat punctele victorioase: " + newValue);
-
         if (newValue > 9)
         {
             GetHostPlayer().VictoryServerRpc(GetMyPlayer().nickName.Value.ToString());
