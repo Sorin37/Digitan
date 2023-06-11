@@ -675,7 +675,7 @@ public class Player : NetworkBehaviour
             labelGO.GetComponent<TextMeshProUGUI>().SetText("x " + card.Value.ToString());
         }
 
-        GetHostPlayer().UpdateCardCountServerRpc(new ServerRpcParams());
+        GetMyPlayer().UpdateCardCountServerRpc(new ServerRpcParams());
     }
 
     [ClientRpc]
