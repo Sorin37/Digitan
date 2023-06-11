@@ -1190,6 +1190,8 @@ public class Player : NetworkBehaviour
         string development = developmentsDeck[randomIndex];
         developmentsDeck.RemoveAt(randomIndex);
 
+        GetPlayerWithId(srp.Receive.SenderClientId).numberOfDevelopments.Value++;
+
         GetHostPlayer().GetDevelopmentClientRpc(
             development,
             new ClientRpcParams
@@ -1282,6 +1284,8 @@ public class Player : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void MonopolyServerRpc(string resource, ServerRpcParams srp)
     {
+        GetPlayerWithId(srp.Receive.SenderClientId).numberOfDevelopments.Value--;
+
         List<ulong> ids = new List<ulong>();
 
         for (ulong i = 0; i < (ulong)GetHostPlayer().nrOfMaxPlayers; i++)
@@ -1389,6 +1393,8 @@ public class Player : NetworkBehaviour
     public void UsedKnightServerRpc(ServerRpcParams srp)
     {
         GetPlayerWithId(srp.Receive.SenderClientId).nrOfUsedKnights.Value++;
+
+        GetPlayerWithId(srp.Receive.SenderClientId).numberOfDevelopments.Value--;
 
         List<(ulong id, int usedKnights)> players = new List<(ulong id, int usedKnights)>();
 
@@ -1954,4 +1960,9 @@ public class Player : NetworkBehaviour
         GetPlayerWithId(srp.Receive.SenderClientId).numberOfCards.Value = numberOfCards;
     }
 
+    [ServerRpc(RequireOwnership = false)]
+    public void UsedDevelopmentServerRpc(ServerRpcParams srp)
+    {
+        GetPlayerWithId(srp.Receive.SenderClientId).numberOfDevelopments.Value--;
+    }
 }

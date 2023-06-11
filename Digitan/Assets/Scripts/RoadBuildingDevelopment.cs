@@ -44,6 +44,8 @@ public class RoadBuildingDevelopment : MonoBehaviour
 
             myPlayer.playedDevelopmentThisRound = true;
 
+            GetHostPlayer().UsedDevelopmentServerRpc(new ServerRpcParams());
+
             RemoveDevelopment("RoadBuildingDeck");
             GameObject.Find("AvailableRoadsGrid").GetComponent<RoadGrid>().usedRoadBuilding = true;
             Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Road Circle"));
