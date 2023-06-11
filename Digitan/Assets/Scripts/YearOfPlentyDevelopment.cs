@@ -44,6 +44,8 @@ public class YearOfPlentyDevelopment : MonoBehaviour
 
             myPlayer.playedDevelopmentThisRound = true;
 
+            GetHostPlayer().UsedDevelopmentServerRpc(new ServerRpcParams());
+
             RemoveDevelopment("YearOfPlentyDeck");
             Resources.FindObjectsOfTypeAll<YearOfPlentyManager>()[0].transform.parent.gameObject.SetActive(true);
         });
