@@ -440,32 +440,40 @@ public class ButtonManager : MonoBehaviour
     {
         playersInfoButton.onClick.AddListener(() =>
         {
+            //unity bug unfortunately, that's a work around
+            playersInfoCanvas.SetActive(true);
+            playersInfoCanvas.SetActive(false);
 
-            var nrOfmaxPlayers = (ulong)GetHostPlayer().nrOfMaxPlayers;
-
-            var playerInfoBoard = playersInfoCanvas.transform.Find("Board");
-
-            //to get all children
-            foreach(Transform child in playerInfoBoard.transform)
-            {
-                if(child.gameObject.name == "Player Info")
-                {
-                    Destroy(child.gameObject);
-                }
-            }
-
-            for (ulong i = 0; i < nrOfmaxPlayers; i++)
-            {
-                var playerInfoGO = Instantiate(playerInfoPrefab);
-
-                playerInfoGO.GetComponent<PlayerInfo>().SetInfo(i);
-
-                playerInfoGO.name = "Player Info";
-
-                playerInfoGO.transform.SetParent(playerInfoBoard);
-            }
+            DisplayPlayersInfo();
 
             playersInfoCanvas.SetActive(true);
         });
+    }
+
+    private void DisplayPlayersInfo()
+    {
+        var nrOfmaxPlayers = (ulong)GetHostPlayer().nrOfMaxPlayers;
+
+        var playerInfoBoard = playersInfoCanvas.transform.Find("Board");
+
+        //to get all children
+        foreach (Transform child in playerInfoBoard.transform)
+        {
+            if (child.gameObject.name == "Player Info")
+            {
+                Destroy(child.gameObject);
+            }
+        }
+
+        for (ulong i = 0; i < nrOfmaxPlayers; i++)
+        {
+            var playerInfoGO = Instantiate(playerInfoPrefab);
+
+            playerInfoGO.GetComponent<PlayerInfo>().SetInfo(i);
+
+            playerInfoGO.name = "Player Info";
+
+            playerInfoGO.transform.SetParent(playerInfoBoard);
+        }
     }
 }
