@@ -26,6 +26,7 @@ public class ButtonManager : MonoBehaviour
     [SerializeField] private GameObject chat;
     [SerializeField] private GameObject tips;
     [SerializeField] private GameObject recipeCanvas;
+    [SerializeField] private GameObject playersInfoCanvas;
 
     [SerializeField] private GameObject notEnoughResourcesPrefab;
     [SerializeField] private GameObject notYourTurnPrefab;
@@ -36,6 +37,9 @@ public class ButtonManager : MonoBehaviour
     [SerializeField] private GameObject placeSettlementPrefab;
     [SerializeField] private GameObject placeCityPrefab;
     [SerializeField] private GameObject noMorePiecesPrefab;
+
+    [SerializeField] private GameObject playerInfoPrefab;
+
 
     private bool hasRolledDice = false;
 
@@ -51,7 +55,7 @@ public class ButtonManager : MonoBehaviour
         InitChatButton();
         InitTipsButton();
         InitRecipesButton();
-        //InitTipsButton();
+        InitPlayerInfoButton();
     }
 
     private void InitRollDiceButton()
@@ -429,6 +433,27 @@ public class ButtonManager : MonoBehaviour
         recipeButton.onClick.AddListener(() =>
         {
             recipeCanvas.SetActive(true);
+        });
+    }
+
+    private void InitPlayerInfoButton()
+    {
+        playersInfoButton.onClick.AddListener(() =>
+        {
+            var nrOfmaxPlayers = (ulong)GetHostPlayer().nrOfMaxPlayers;
+
+            var playerInfoBoard = playersInfoCanvas.transform.Find("Board");
+
+            for (ulong i = 0; i < nrOfmaxPlayers; i++)
+            {
+                var playerInfoGO = Instantiate(playerInfoPrefab);
+
+                playerInfoGO.GetComponent<PlayerInfo>().SetInfo(i);
+
+                playerInfoGO.transform.SetParent(playerInfoBoard);
+            }
+
+            playersInfoCanvas.SetActive(true);
         });
     }
 }
