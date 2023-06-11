@@ -440,6 +440,7 @@ public class ButtonManager : MonoBehaviour
     {
         playersInfoButton.onClick.AddListener(() =>
         {
+            print("pareri?");
             //unity bug unfortunately, that's a work around
             playersInfoCanvas.SetActive(true);
             playersInfoCanvas.SetActive(false);
