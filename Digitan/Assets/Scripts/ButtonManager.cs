@@ -18,11 +18,15 @@ public class ButtonManager : MonoBehaviour
     [SerializeField] private Button developmentButton;
     [SerializeField] private Button chatButton;
     [SerializeField] private Button tipsButton;
+    [SerializeField] private Button playersInfoButton;
+    [SerializeField] private Button recipeButton;
 
     [SerializeField] private Canvas tradeCanvas;
     [SerializeField] private GameObject tradeManager;
     [SerializeField] private GameObject chat;
     [SerializeField] private GameObject tips;
+    [SerializeField] private GameObject recipeCanvas;
+    [SerializeField] private GameObject playersInfoCanvas;
 
     [SerializeField] private GameObject notEnoughResourcesPrefab;
     [SerializeField] private GameObject notYourTurnPrefab;
@@ -33,6 +37,9 @@ public class ButtonManager : MonoBehaviour
     [SerializeField] private GameObject placeSettlementPrefab;
     [SerializeField] private GameObject placeCityPrefab;
     [SerializeField] private GameObject noMorePiecesPrefab;
+
+    [SerializeField] private GameObject playerInfoPrefab;
+
 
     private bool hasRolledDice = false;
 
@@ -47,6 +54,8 @@ public class ButtonManager : MonoBehaviour
         InitDevelopmentButton();
         InitChatButton();
         InitTipsButton();
+        InitRecipesButton();
+        InitPlayerInfoButton();
     }
 
     private void InitRollDiceButton()
@@ -417,5 +426,55 @@ public class ButtonManager : MonoBehaviour
         }
 
         return false;
+    }
+
+    private void InitRecipesButton()
+    {
+        recipeButton.onClick.AddListener(() =>
+        {
+            recipeCanvas.SetActive(true);
+        });
+    }
+
+    private void InitPlayerInfoButton()
+    {
+        playersInfoButton.onClick.AddListener(() =>
+        {
+            //unity bug unfortunately, that's a work around
+            playersInfoCanvas.SetActive(true);
+            playersInfoCanvas.SetActive(false);
+
+            DisplayPlayersInfo();
+
+            playersInfoCanvas.SetActive(true);
+
+        });
+    }
+
+    private void DisplayPlayersInfo()
+    {
+        var nrOfmaxPlayers = (ulong)GetMyPlayer().nrOfMaxPlayers;
+
+        var playerInfoBoard = playersInfoCanvas.transform.Find("Board");
+
+        //to get all children
+        foreach (Transform child in playerInfoBoard.transform)
+        {
+            if (child.gameObject.name == "Player Info")
+            {
+                Destroy(child.gameObject);
+            }
+        }
+
+        for (ulong i = 0; i < nrOfmaxPlayers; i++)
+        {
+            var playerInfoGO = Instantiate(playerInfoPrefab);
+
+            playerInfoGO.GetComponent<PlayerInfo>().SetInfo(i);
+
+            playerInfoGO.name = "Player Info";
+
+            playerInfoGO.transform.SetParent(playerInfoBoard);
+        }
     }
 }

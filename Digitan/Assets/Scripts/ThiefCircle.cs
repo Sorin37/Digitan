@@ -30,7 +30,7 @@ public class ThiefCircle : MonoBehaviour
 
         Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("Thief Circle"));
 
-        GetMyPlayer().hasToMoveThief = true;
+        GetMyPlayer().hasToMoveThief = false;
 
         var hostPlayer = GetHostPlayer().GetComponent<Player>();
 

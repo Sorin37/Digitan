@@ -1,13 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MonopolyMessageManager : MonoBehaviour
+public class RecipeManager : MonoBehaviour
 {
     [SerializeField] private Button closeButton;
-    [SerializeField] private TextMeshProUGUI message;
+    [SerializeField] private GameObject recipeCanvas;
 
     // Start is called before the first frame update
     void Start()
@@ -25,12 +24,7 @@ public class MonopolyMessageManager : MonoBehaviour
     {
         closeButton.onClick.AddListener(() =>
         {
-            gameObject.SetActive(false);
+            recipeCanvas.SetActive(false);
         });
-    }
-
-    public void SetMessage(string playerName, string resource)
-    {
-        message.text = playerName + " established a monopoly on the " + resource;
     }
 }

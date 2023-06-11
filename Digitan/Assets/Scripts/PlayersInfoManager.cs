@@ -1,13 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MonopolyMessageManager : MonoBehaviour
+public class PlayersInfoManager : MonoBehaviour
 {
     [SerializeField] private Button closeButton;
-    [SerializeField] private TextMeshProUGUI message;
 
     // Start is called before the first frame update
     void Start()
@@ -27,10 +25,5 @@ public class MonopolyMessageManager : MonoBehaviour
         {
             gameObject.SetActive(false);
         });
-    }
-
-    public void SetMessage(string playerName, string resource)
-    {
-        message.text = playerName + " established a monopoly on the " + resource;
     }
 }

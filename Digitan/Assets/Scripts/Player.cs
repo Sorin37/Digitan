@@ -69,6 +69,8 @@ public class Player : NetworkBehaviour
     public NetworkVariable<bool> hasLargestArmy = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<int> longestRoad = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     public NetworkVariable<bool> hasLongestRoad = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<int> numberOfCards = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    public NetworkVariable<int> numberOfDevelopments = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
 
     public Dictionary<string, List<string>> resourcesDict;
@@ -199,8 +201,6 @@ public class Player : NetworkBehaviour
 
     private void VictoryPointsChangedEvent(int oldValue, int newValue)
     {
-        print("Am schimbat punctele victorioase: " + newValue);
-
         if (newValue > 9)
         {
             GetHostPlayer().VictoryServerRpc(GetMyPlayer().nickName.Value.ToString());
@@ -672,6 +672,15 @@ public class Player : NetworkBehaviour
 
             labelGO.GetComponent<TextMeshProUGUI>().SetText("x " + card.Value.ToString());
         }
+
+        int cardsCount = 0;
+
+        foreach (var count in playerHand.Values)
+        {
+            cardsCount += count;
+        }
+
+        GetMyPlayer().UpdateCardCountServerRpc(cardsCount, new ServerRpcParams());
     }
 
     [ClientRpc]
@@ -1938,4 +1947,11 @@ public class Player : NetworkBehaviour
     {
         GetMyPlayer().playedDevelopmentThisRound = false;
     }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void UpdateCardCountServerRpc(int numberOfCards, ServerRpcParams srp)
+    {
+        GetPlayerWithId(srp.Receive.SenderClientId).numberOfCards.Value = numberOfCards;
+    }
+
 }
