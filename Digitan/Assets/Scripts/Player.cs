@@ -675,7 +675,14 @@ public class Player : NetworkBehaviour
             labelGO.GetComponent<TextMeshProUGUI>().SetText("x " + card.Value.ToString());
         }
 
-        GetMyPlayer().UpdateCardCountServerRpc(new ServerRpcParams());
+        int cardsCount = 0;
+
+        foreach (var count in playerHand.Values)
+        {
+            cardsCount += count;
+        }
+
+        GetMyPlayer().UpdateCardCountServerRpc(cardsCount, new ServerRpcParams());
     }
 
     [ClientRpc]
@@ -1944,20 +1951,9 @@ public class Player : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void UpdateCardCountServerRpc(ServerRpcParams srp)
+    public void UpdateCardCountServerRpc(int numberOfCards, ServerRpcParams srp)
     {
-        var targetPlayer = GetPlayerWithId(srp.Receive.SenderClientId);
-
-        var playerHand = targetPlayer.playerHand;
-
-        int cardsCount = 0;
-
-        foreach(var count in playerHand.Values)
-        {
-            cardsCount += count;
-        }
-
-        targetPlayer.numberOfCards.Value = cardsCount;
+        GetPlayerWithId(srp.Receive.SenderClientId).numberOfCards.Value = numberOfCards;
     }
 
 }
