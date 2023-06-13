@@ -63,9 +63,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameGridPrefab: {fileID: 7912111142282129415, guid: 0f6d5643a8b3c4648a206e97d42a40ba, type: 3}
   numbersGridPrefab: {fileID: 1875331112309333599, guid: b63d941a97a26e744ad503bee6465de9, type: 3}
-  roadPrefab: {fileID: 6736439349771075845, guid: 02679582dec926d4d8240c367004d820, type: 3}
-  settlementPrefab: {fileID: 4748187627253956761, guid: a0ab8d06dc4f50e449063604a25218bd, type: 3}
-  cityPrefab: {fileID: 1114969853857197570, guid: c6391f64d5a181e4495ed46752d4eabd, type: 3}
+  roadPrefab: {fileID: 1870962490828137116, guid: 39528c316c0831949b451070f7e937bd, type: 3}
+  settlementPrefab: {fileID: 4825667161057426524, guid: 5dde74a85f6c222478e39ae702ccfc72, type: 3}
+  cityPrefab: {fileID: 6966039108639652194, guid: 36783827aa2e87048a25e229d50207bb, type: 3}
   thiefPrefab: {fileID: 2344186312042310433, guid: 55d0565b14f7dbc4c89ac69b16fbe2a5, type: 3}
   chapelPrefab: {fileID: 4907788587833267494, guid: eaf37121a64ec904794b12c4c6a26d7c, type: 3}
   greatHallPrefab: {fileID: 1621548675605153821, guid: b55d37d0536995a43b0ba2e606091611, type: 3}
@@ -304,13 +304,33 @@ MonoBehaviour:
     m_InternalValue: -1
   nrOfFinishedDiscards:
     m_InternalValue: -1
+  isWaiting:
+    m_InternalValue: 0
+  hasCommunicatedAboutDiscarding:
+    m_InternalValue: 0
   nrOfVictoryPoints:
     m_InternalValue: 0
   nrOfUsedKnights:
     m_InternalValue: 0
   hasLargestArmy:
     m_InternalValue: 0
+  longestRoad:
+    m_InternalValue: 0
+  hasLongestRoad:
+    m_InternalValue: 0
+  numberOfCards:
+    m_InternalValue: 0
+  numberOfDevelopments:
+    m_InternalValue: 0
   nrOfMaxPlayers: 0
   nrOfDeclinedTrades: 0
   color: {r: 0, g: 0, b: 0.80784315, a: 0}
+  playedDevelopmentThisRound: 0
+  hasToMoveThief: 0
+  hasToPlaceRoad: 0
+  hasToPlaceSettlement: 0
+  hasToPlaceCity: 0
+  nrOfPlacedRoads: 0
+  nrOfPlacedSettlement: 0
+  nrOfPlacedCities: 0
   developments: []
