@@ -313,7 +313,11 @@ public class Player : NetworkBehaviour
 
         //create the model
         GameObject roadObject = Instantiate(roadPrefab,
-                                            pressedCircle.transform.position,
+                                            new Vector3(
+                                                pressedCircle.transform.position.x,
+                                                0.15f,
+                                                pressedCircle.transform.position.z + 0.01f
+                                            ),
                                             GetRotationFromPos((x, y)));
 
         roadGrid.GetComponent<RoadGrid>().roadGrid[x][y] = roadObject;
@@ -321,7 +325,7 @@ public class Player : NetworkBehaviour
         roadObject.name = x + " " + y + " Road";
 
         //change the color
-        roadObject.GetComponent<Renderer>().material.color = color;
+        roadObject.transform.Find("default").GetComponent<Renderer>().material.color = color;
         roadObject.GetComponent<RoadDetails>().color = color;
 
         //neccessary piece of code so that the nearby circles know that it got occupied
@@ -349,11 +353,11 @@ public class Player : NetworkBehaviour
 
     private Quaternion GetRotationFromPos((int x, int y) pos)
     {
-        int y = 0;
+        int y = 90;
 
         if (pos.x % 2 == 0)
         {
-            y = 60;
+            y = 150;
 
             if (pos.y % 2 == 1)
             {
@@ -363,7 +367,7 @@ public class Player : NetworkBehaviour
 
         if (pos.x % 2 == 0 && pos.x > 5)
         {
-            y = -60;
+            y = -150;
 
             if (pos.y % 2 == 1)
             {
@@ -371,7 +375,7 @@ public class Player : NetworkBehaviour
             }
         }
 
-        return Quaternion.Euler(-90, y, 0);
+        return Quaternion.Euler(180, y, 0);
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -1565,7 +1569,7 @@ public class Player : NetworkBehaviour
 
         TurnAllRoadsUnvisited(roadGrid);
 
-        //print("Longest road is: " + longestRoad);
+        print("Longest road is: " + longestRoad);
         GetHostPlayer().LongestRoadServerRpc(longestRoad, new ServerRpcParams());
     }
 
@@ -1595,7 +1599,7 @@ public class Player : NetworkBehaviour
 
             var nearbyRoads = Physics.OverlapSphere(
                 currentRoad.transform.position,
-                2,
+                2.5f,
                 (int)
                 Mathf.Pow(2, LayerMask.NameToLayer("Road"))
             );

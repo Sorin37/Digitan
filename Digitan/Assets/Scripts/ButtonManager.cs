@@ -270,12 +270,12 @@ public class ButtonManager : MonoBehaviour
                 return;
             }
 
-            if (!HasDevelopmentResources())
-            {
-                var message = Instantiate(notEnoughResourcesPrefab, developmentButton.transform);
-                message.GetComponent<RedMessage>().SetStartPosition(developmentButton.transform);
-                return;
-            }
+            //if (!HasDevelopmentResources())
+            //{
+            //    var message = Instantiate(notEnoughResourcesPrefab, developmentButton.transform);
+            //    message.GetComponent<RedMessage>().SetStartPosition(developmentButton.transform);
+            //    return;
+            //}
 
             GetHostPlayer().GetDevelopmentServerRpc(new ServerRpcParams());
         });
