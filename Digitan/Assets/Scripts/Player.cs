@@ -411,8 +411,12 @@ public class Player : NetworkBehaviour
         //create the model
         GameObject settlementObject = Instantiate(
             settlementPrefab,
-            pressedCircle.transform.position,
-            Quaternion.Euler(90, 0, 0)
+            new Vector3(
+                pressedCircle.transform.position.x,
+                0.15f,
+                pressedCircle.transform.position.z
+            ),
+            Quaternion.Euler(180, 0, 0)
         );
 
         settlementObject.name = x + " " + y + " Settlement";
@@ -431,7 +435,7 @@ public class Player : NetworkBehaviour
         }
 
         //change the color of the settlement
-        settlementObject.GetComponent<Renderer>().material.color = color;
+        settlementObject.transform.Find("default").GetComponent<Renderer>().material.color = color;
 
         //todo: change to settlement circle when getting a real settlement model
         // (since the current model has a road circle script attached to it)
@@ -440,6 +444,7 @@ public class Player : NetworkBehaviour
 
         //make the settlement circles invisible
         Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("Settlement Circle"));
+
         var myPlayer = GetMyPlayer();
         myPlayer.hasToPlaceSettlement = false;
         myPlayer.nrOfPlacedSettlement++;
