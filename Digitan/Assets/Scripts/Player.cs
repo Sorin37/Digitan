@@ -428,10 +428,12 @@ public class Player : NetworkBehaviour
         if (color == this.color)
         {
             settlementObject.layer = LayerMask.NameToLayer("My Settlement");
+            settlementObject.transform.Find("default").gameObject.layer = LayerMask.NameToLayer("My Settlement");
         }
         else
         {
             settlementObject.layer = LayerMask.NameToLayer("Settlement");
+            settlementObject.transform.Find("default").gameObject.layer = LayerMask.NameToLayer("Settlement");
         }
 
         //change the color of the settlement
@@ -843,8 +845,12 @@ public class Player : NetworkBehaviour
 
         var city = Instantiate(
             cityPrefab,
-            position,
-            Quaternion.Euler(0, 0, 0)
+            new Vector3(
+                position.x,
+                0.1f,
+                position.z
+            ),
+            Quaternion.Euler(180, 0, 0)
         );
 
         city.name = Math.Round(x, 2) + " " + Math.Round(z, 2) + " City";
@@ -853,10 +859,7 @@ public class Player : NetworkBehaviour
         city.GetComponent<CityPiece>().color = color;
 
         //change the color
-        foreach (var material in city.GetComponent<Renderer>().materials)
-        {
-            material.color = color;
-        }
+        city.transform.Find("default").GetComponent<Renderer>().material.color = color;
 
         var myPlayer = GetMyPlayer();
         myPlayer.hasToPlaceCity = false;
@@ -1574,7 +1577,7 @@ public class Player : NetworkBehaviour
 
         TurnAllRoadsUnvisited(roadGrid);
 
-        print("Longest road is: " + longestRoad);
+        //print("Longest road is: " + longestRoad);
         GetHostPlayer().LongestRoadServerRpc(longestRoad, new ServerRpcParams());
     }
 
