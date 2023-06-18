@@ -26,6 +26,7 @@ public class LobbyManager : MonoBehaviour
     [SerializeField] private Button PlayButton;
     [SerializeField] private Button MenuButton;
     [SerializeField] private GameObject lobbyExceptionCanvas;
+    [SerializeField] private GameObject loadingScreenCanvas;
     public Lobby lobby;
     private int currentNumberOfPlayers = 0;
     private float updateTimer = 5;
@@ -44,6 +45,7 @@ public class LobbyManager : MonoBehaviour
     {
         PlayButton.onClick.AddListener(async () =>
         {
+            loadingScreenCanvas.SetActive(true);
             string joinCode = await CreateRelay();
             await UpdateLobbyRelayCode(joinCode);
             SceneManager.LoadScene("Game");
