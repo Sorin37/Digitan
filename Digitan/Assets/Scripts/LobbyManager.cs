@@ -256,6 +256,9 @@ public class LobbyManager : MonoBehaviour
 
                 if (lobby.Data["RelayCode"].Value != "None")
                 {
+                    loadingScreenCanvas.GetComponent<LoadingScreenManager>().SetProgress(1, currentNumberOfPlayers);
+                    loadingScreenCanvas.SetActive(true);
+
                     await JoinRelay(lobby.Data["RelayCode"].Value);
                     SceneManager.LoadScene("Game");
                 }
