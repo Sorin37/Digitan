@@ -554,7 +554,8 @@ public class Player : NetworkBehaviour
     public void PlayerJoinedServerRpc()
     {
         currentNrOfPlayers.Value++;
-        print("Another one joi " + nrOfMaxPlayers + " ned" + currentNrOfPlayers.Value);
+        
+        UpdateLodingScreenBarClientRpc(currentNrOfPlayers.Value, nrOfMaxPlayers);
 
         OnPlayersJoined -= PlayersJoinedEvent;
         OnPlayersJoined += PlayersJoinedEvent;
@@ -565,6 +566,14 @@ public class Player : NetworkBehaviour
         }
     }
 
+    [ClientRpc]
+    public void UpdateLodingScreenBarClientRpc(int currentPlayer, int nrOfMaxPlayers)
+    {
+        Resources.FindObjectsOfTypeAll<LoadingScreenManager>()[0]
+            .GetComponent<LoadingScreenManager>()
+            .SetProgress(currentPlayer, nrOfMaxPlayers);
+    }
+
     private void PlayersJoinedEvent(object s, EventArgs e)
     {
         ChangeCurrentPlayerDetailsNameClientRpc(GetHostPlayer().nickName.Value.ToString());
@@ -572,6 +581,7 @@ public class Player : NetworkBehaviour
         {
             Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { 0 } }
         });
+        HideLoadingScreenClientRpc();
     }
 
     private void TurnCloseRoadsAvailable()
@@ -1976,5 +1986,11 @@ public class Player : NetworkBehaviour
     public void UsedDevelopmentServerRpc(ServerRpcParams srp)
     {
         GetPlayerWithId(srp.Receive.SenderClientId).numberOfDevelopments.Value--;
+    }
+
+    [ClientRpc]
+    public void HideLoadingScreenClientRpc()
+    {
+        Resources.FindObjectsOfTypeAll<LoadingScreenManager>()[0].gameObject.SetActive(false);
     }
 }
