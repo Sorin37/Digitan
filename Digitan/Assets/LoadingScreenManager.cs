@@ -21,6 +21,6 @@ public class LoadingScreenManager : MonoBehaviour
 
     public void SetProgress(int currentValue, int maxValue)
     {
-        loadingBar.value = (float)maxValue/currentValue;
+        loadingBar.value = (float)currentValue / maxValue;
     }
 }

@@ -554,7 +554,8 @@ public class Player : NetworkBehaviour
     public void PlayerJoinedServerRpc()
     {
         currentNrOfPlayers.Value++;
-        print("Another one joi " + nrOfMaxPlayers + " ned" + currentNrOfPlayers.Value);
+        
+        UpdateLodingScreenBarClientRpc(currentNrOfPlayers.Value, nrOfMaxPlayers);
 
         OnPlayersJoined -= PlayersJoinedEvent;
         OnPlayersJoined += PlayersJoinedEvent;
@@ -563,6 +564,14 @@ public class Player : NetworkBehaviour
         {
             OnPlayersJoined?.Invoke(this, EventArgs.Empty);
         }
+    }
+
+    [ClientRpc]
+    public void UpdateLodingScreenBarClientRpc(int currentPlayer, int nrOfMaxPlayers)
+    {
+        Resources.FindObjectsOfTypeAll<LoadingScreenManager>()[0]
+            .GetComponent<LoadingScreenManager>()
+            .SetProgress(currentPlayer, nrOfMaxPlayers);
     }
 
     private void PlayersJoinedEvent(object s, EventArgs e)
