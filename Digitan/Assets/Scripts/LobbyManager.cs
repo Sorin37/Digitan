@@ -45,6 +45,7 @@ public class LobbyManager : MonoBehaviour
     {
         PlayButton.onClick.AddListener(async () =>
         {
+            loadingScreenCanvas.GetComponent<LoadingScreenManager>().SetProgress(1, currentNumberOfPlayers);
             loadingScreenCanvas.SetActive(true);
             string joinCode = await CreateRelay();
             await UpdateLobbyRelayCode(joinCode);
