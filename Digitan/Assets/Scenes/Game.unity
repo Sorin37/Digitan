@@ -33586,6 +33586,7 @@ MonoBehaviour:
   placeCityPrefab: {fileID: 2029533581559911318, guid: e7dca6fa9391c9249a1cc6722fb00eec, type: 3}
   noMorePiecesPrefab: {fileID: 2029533581559911318, guid: 063b09dec4cf18041adb04a525ab5418, type: 3}
   playerInfoPrefab: {fileID: 3985725645739295304, guid: 3032df2634a58ec4993e93ad9a9ebe24, type: 3}
+  hasRolledDice: 0
 --- !u!1 &1926444571
 GameObject:
   m_ObjectHideFlags: 0
@@ -36707,6 +36708,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2080844216}
   - component: {fileID: 2080844217}
+  - component: {fileID: 2080844218}
   m_Layer: 5
   m_Name: DicePanel
   m_TagString: Untagged
@@ -36754,7 +36756,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 0
-  m_Spacing: 15
+  m_Spacing: 25
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
@@ -36762,6 +36764,20 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &2080844218
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2080844215}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0fe3f4c074937848b5a1706bfbe663b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  redDice: {fileID: 726618130}
+  yellowDice: {fileID: 1041177335}
 --- !u!1 &2088452021
 GameObject:
   m_ObjectHideFlags: 0

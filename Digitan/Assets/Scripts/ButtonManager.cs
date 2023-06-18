@@ -40,8 +40,7 @@ public class ButtonManager : MonoBehaviour
 
     [SerializeField] private GameObject playerInfoPrefab;
 
-
-    private bool hasRolledDice = false;
+    public bool hasRolledDice = false;
 
     private void Awake()
     {
@@ -403,7 +402,7 @@ public class ButtonManager : MonoBehaviour
         tradeManager.DrawDicts();
     }
 
-    private bool IsMyTurn()
+    public bool IsMyTurn()
     {
         return GetHostPlayer().currentPlayerTurn.Value == (int)NetworkManager.Singleton.LocalClientId;
     }
