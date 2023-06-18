@@ -107,7 +107,7 @@ public class TipsManager : MonoBehaviour
 
         var nearbySettlements = Physics.OverlapSphere(
             pos,
-            2.5f,
+            3f,
             (int)
             (Mathf.Pow(2, LayerMask.NameToLayer("Settlement")) +
             Mathf.Pow(2, LayerMask.NameToLayer("My Settlement")) +
@@ -121,7 +121,7 @@ public class TipsManager : MonoBehaviour
 
         var colliders = Physics.OverlapSphere(
             pos,
-            2.5f,
+            2f,
             (int)Mathf.Pow(2, LayerMask.NameToLayer("Number"))
         );
 
@@ -204,7 +204,7 @@ public class TipsManager : MonoBehaviour
 
         var nearbySettlements = Physics.OverlapSphere(
             pos,
-            2.5f,
+            3f,
             (int)
             (Mathf.Pow(2, LayerMask.NameToLayer("Settlement")) +
             Mathf.Pow(2, LayerMask.NameToLayer("My Settlement")) +
