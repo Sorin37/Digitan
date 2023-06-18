@@ -1991,6 +1991,6 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void HideLoadingScreenClientRpc()
     {
-        print("i must be hideen");
+        Resources.FindObjectsOfTypeAll<LoadingScreenManager>()[0].gameObject.SetActive(false);
     }
 }
