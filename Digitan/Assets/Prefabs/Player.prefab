@@ -76,18 +76,18 @@ MonoBehaviour:
   roadBuildingPrefab: {fileID: 2330444736991331523, guid: 0f6b3526e62812141b32ff55a119f2d9, type: 3}
   universityPrefab: {fileID: 7240338853409535047, guid: 04092a8e11c2e4e4f8f10918990aa873, type: 3}
   yearOfPlentyPrefab: {fileID: 8551725448996108395, guid: c9e66d3997c899b48855458c6aa43bb0, type: 3}
-  redDice1: {fileID: 21300000, guid: 0275908927a84194dbd699f37eb363cf, type: 3}
-  redDice2: {fileID: 21300000, guid: ea4dad6936d461f47961a548b9b6cd6d, type: 3}
-  redDice3: {fileID: 21300000, guid: 8c4ace5619b3c6344b74a86560a9beaf, type: 3}
-  redDice4: {fileID: 21300000, guid: 26d220c6a60d20a46bd644423ff2ee50, type: 3}
-  redDice5: {fileID: 21300000, guid: 8b641713d255c754fae0c4f5daa3070e, type: 3}
-  redDice6: {fileID: 21300000, guid: 9503f34664dd1c74398be36597e6ac51, type: 3}
-  yellowDice1: {fileID: 21300000, guid: d071f4a3adf2a364fb3f656c28fcae44, type: 3}
-  yellowDice2: {fileID: 21300000, guid: 086302c187772e0489f9400e95675673, type: 3}
-  yellowDice3: {fileID: 21300000, guid: e7e6622dbb3d7e24ab1e52fefe7ee82b, type: 3}
-  yellowDice4: {fileID: 21300000, guid: 1ba62607700b25649a3f8bcb5154caf8, type: 3}
-  yellowDice5: {fileID: 21300000, guid: d5959e9b124314a498d3419b0dad60bd, type: 3}
-  yellowDice6: {fileID: 21300000, guid: 928e13e6c3e4dfa4e858afa25e947ba6, type: 3}
+  redDice1: {fileID: 21300000, guid: fc7d2feb269fd3f4abbaed8ffc2a86af, type: 3}
+  redDice2: {fileID: 21300000, guid: 4e1b58eb75c2503498b7fb7d86b202f9, type: 3}
+  redDice3: {fileID: 21300000, guid: aceb99111e1119d41bcf36f842bfb4f5, type: 3}
+  redDice4: {fileID: 21300000, guid: abce0d8e15ab16f4b81e63d4c6125317, type: 3}
+  redDice5: {fileID: 21300000, guid: 495db5f24aa6b624d923473d43710ebf, type: 3}
+  redDice6: {fileID: 21300000, guid: e6e520169b1e3b3498d030daf4563922, type: 3}
+  yellowDice1: {fileID: 21300000, guid: 33b8e8ad60dc55d46a4c869b5f331c3e, type: 3}
+  yellowDice2: {fileID: 21300000, guid: 7154a692aa61d0348a1106283cba4893, type: 3}
+  yellowDice3: {fileID: 21300000, guid: 3c9b579d1c3593e45b410a336202c4d0, type: 3}
+  yellowDice4: {fileID: 21300000, guid: 4ec51951109387c459823f513fe1b00f, type: 3}
+  yellowDice5: {fileID: 21300000, guid: d3654e0d11820e745a368c6a55469c6f, type: 3}
+  yellowDice6: {fileID: 21300000, guid: 00f42bfe5c0eeb44a88e98e3b0f81777, type: 3}
   messagePrefab: {fileID: 7519700150789999443, guid: 8449f2c6675b60846acdd7f5b0c3fae3, type: 3}
   resourcesCode:
     m_InternalValue:
