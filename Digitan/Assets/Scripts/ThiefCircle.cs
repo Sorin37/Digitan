@@ -37,7 +37,7 @@ public class ThiefCircle : MonoBehaviour
         //add previously blocked resource to the dict
         var numberObject = Physics.OverlapSphere(
             transform.position,
-            1f,
+            1.5f,
             (int)Mathf.Pow(2, LayerMask.NameToLayer("Number"))
         );
 
@@ -66,7 +66,7 @@ public class ThiefCircle : MonoBehaviour
 
         var colliders = Physics.OverlapSphere(
             transform.position,
-            2.5f,
+            3f,
             (int)(Mathf.Pow(2, LayerMask.NameToLayer("City")) +
             Mathf.Pow(2, LayerMask.NameToLayer("Settlement")))
         );

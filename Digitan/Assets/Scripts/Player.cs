@@ -957,7 +957,7 @@ public class Player : NetworkBehaviour
                 collider.gameObject.layer = LayerMask.NameToLayer("Thief Circle");
             }
 
-            thiefPiece.transform.position = new Vector3(newPosition.x, 0f, newPosition.z);
+            thiefPiece.transform.position = new Vector3(newPosition.x, 0.2f, newPosition.z);
 
             //hide the circle the thief is placed on
             colliders = Physics.OverlapSphere(
@@ -975,7 +975,7 @@ public class Player : NetworkBehaviour
         {
             var newThief = Instantiate(
                 thiefPrefab,
-                new Vector3(newPosition.x, 0f, newPosition.z),
+                new Vector3(newPosition.x, 0.2f, newPosition.z),
                 Quaternion.Euler(0, 0, 0));
 
             newThief.name = "Thief";
