@@ -3222,7 +3222,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   loadingBar: {fileID: 276730974}
-  failedToConnectCanvas: {fileID: 0}
+  failedToConnectCanvas: {fileID: 702055429}
 --- !u!1 &2076082851
 GameObject:
   m_ObjectHideFlags: 0

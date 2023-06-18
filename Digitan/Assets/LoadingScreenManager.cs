@@ -8,9 +8,9 @@ using UnityEngine.UI;
 public class LoadingScreenManager : MonoBehaviour
 {
     [SerializeField] private Slider loadingBar;
-    [SerializeField] private GameObject failedToConnectCanvas;
     private float checkStartTimer = 2;
     private float totalAmountOfTime = 0;
+    private bool displayedError = false;
 
     // Start is called before the first frame update
     void Start()
@@ -41,11 +41,14 @@ public class LoadingScreenManager : MonoBehaviour
 
             totalAmountOfTime += checkStartTimer;
 
-            if (totalAmountOfTime > 90)
+            if (totalAmountOfTime > 90 && !displayedError)
             {
-                failedToConnectCanvas.GetComponent<FailedToConnectManager>()
-                    .SetErrorMessage("One of the players failed to connect. Please try again!");
-                failedToConnectCanvas.SetActive(true);
+                displayedError = true;
+
+                var failedToConnect = Resources.FindObjectsOfTypeAll<FailedToConnectManager>()[0];
+
+                failedToConnect.SetErrorMessage("One of the players failed to connect. Please try again!");
+                failedToConnect.gameObject.SetActive(true);
 
                 gameObject.SetActive(false);
             }

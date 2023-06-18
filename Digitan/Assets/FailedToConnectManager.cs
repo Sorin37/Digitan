@@ -13,7 +13,6 @@ public class FailedToConnectManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        DontDestroyOnLoad(gameObject);
         okButton.onClick.AddListener(() =>
         {
             var go = new GameObject("Sacrificial Lamb");
