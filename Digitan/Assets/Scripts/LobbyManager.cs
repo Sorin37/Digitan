@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using static StealManager;
+using System.Linq;
 
 public class LobbyManager : MonoBehaviour
 {
@@ -29,6 +30,7 @@ public class LobbyManager : MonoBehaviour
     [SerializeField] private Button MenuButton;
     [SerializeField] private GameObject lobbyExceptionCanvas;
     [SerializeField] private GameObject loadingScreenCanvas;
+    [SerializeField] private GameObject kickCanvas;
     public Lobby lobby;
     private int currentNumberOfPlayers = 0;
     private float updateTimer = 5;
@@ -131,6 +133,7 @@ public class LobbyManager : MonoBehaviour
 
                     if (lobby.Players.Count != currentNumberOfPlayers)
                     {
+                        GetKickedOut();
                         DrawPlayers();
                         currentNumberOfPlayers = lobby.Players.Count;
                     }
@@ -177,8 +180,8 @@ public class LobbyManager : MonoBehaviour
 
                 playerDetails.transform.Find("KickButton")
                     .gameObject.GetComponent<Button>()
-                    .onClick.AddListener(() => {
-                        print("I may be clicked");
+                    .onClick.AddListener(async () => {
+                        await LobbyService.Instance.RemovePlayerAsync(lobby.Id, player.Id);
                 });
             }
             else
@@ -388,6 +391,21 @@ public class LobbyManager : MonoBehaviour
                 );
             lobbyExceptionCanvas.SetActive(true);
             return false;
+        }
+    }
+
+    private void GetKickedOut()
+    {
+        string playerId = AuthenticationService.Instance.PlayerId;
+
+        if (!lobby.Players.Select(p => p.Id).Contains(playerId))
+        {
+            print("gg i got kicked");
+            kickCanvas.SetActive(true);
+        }
+        else
+        {
+            print("Nu duci la linq");
         }
     }
 }
