@@ -344,7 +344,7 @@ public class NumbersGrid : MonoBehaviour
                 );
         numbersGrid[spaceI][spaceJ].transform.parent = transform;
         numbersGrid[spaceI][spaceJ].gameObject.name = number.name;
-        numbersGrid[spaceI][spaceJ].gameObject.GetComponent<Number>().resource = gameGrid[spaceJ][spaceJ].gameObject.name;
+        numbersGrid[spaceI][spaceJ].gameObject.GetComponent<Number>().resource = gameGrid[spaceI][spaceJ].gameObject.name;
     }
 
     private GameObject letterToNumber(string code)
