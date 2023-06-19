@@ -11,6 +11,7 @@ public class DiceManager : MonoBehaviour
     private ButtonManager buttonManager;
     private Vector3 pulseTarget = new Vector3(1.2f, 1.2f, 1);
     private bool isRising = true;
+    public bool shouldPulsate = false;
 
     void Awake()
     {
@@ -26,11 +27,17 @@ public class DiceManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         AnimateDices();
     }
 
     private void AnimateDices()
     {
+        if (!shouldPulsate)
+        {
+            return;
+        }
+
         if (!buttonManager.hasRolledDice && buttonManager.IsMyTurn())
         {
             PulsateDices();

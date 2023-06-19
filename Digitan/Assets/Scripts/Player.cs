@@ -582,6 +582,7 @@ public class Player : NetworkBehaviour
             Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { 0 } }
         });
         HideLoadingScreenClientRpc();
+        StartDicePulsingClientRpc();
     }
 
     private void TurnCloseRoadsAvailable()
@@ -1992,5 +1993,11 @@ public class Player : NetworkBehaviour
     public void HideLoadingScreenClientRpc()
     {
         Resources.FindObjectsOfTypeAll<LoadingScreenManager>()[0].gameObject.SetActive(false);
+    }
+
+    [ClientRpc]
+    public void StartDicePulsatingClientRpc()
+    {
+        Resources.FindObjectsOfTypeAll<DiceManager>()[0].shouldPulsate = true;
     }
 }
