@@ -400,12 +400,7 @@ public class LobbyManager : MonoBehaviour
 
         if (!lobby.Players.Select(p => p.Id).Contains(playerId))
         {
-            print("gg i got kicked");
             kickCanvas.SetActive(true);
-        }
-        else
-        {
-            print("Nu duci la linq");
         }
     }
 }
