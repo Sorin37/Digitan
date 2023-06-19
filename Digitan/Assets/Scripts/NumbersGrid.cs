@@ -160,14 +160,7 @@ public class NumbersGrid : MonoBehaviour
                     {
                         if (++tries == 10)
                         {
-                            //try
-                            //{
-                                findAvailableSpace(x, y, position, number);
-                            //}
-                            //catch (IndexOutOfRangeException)
-                            //{
-                            //    Debug.LogError("exceptie speciala");
-                            //}
+                            findAvailableSpace(x, y, position, number);
                             tries = 0;
                             continue;
                         }
