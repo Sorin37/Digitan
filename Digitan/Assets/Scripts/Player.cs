@@ -1996,7 +1996,7 @@ public class Player : NetworkBehaviour
     }
 
     [ClientRpc]
-    public void StartDicePulsatingClientRpc()
+    public void StartDicePulsingClientRpc()
     {
         Resources.FindObjectsOfTypeAll<DiceManager>()[0].shouldPulsate = true;
     }
