@@ -8,6 +8,8 @@ public class MenuManager : MonoBehaviour
 {
     [SerializeField] private Button hostButton;
     [SerializeField] private Button connectButton;
+    [SerializeField] private Button copyrightButton;
+    [SerializeField] private GameObject copyrightCanvas;
 
     private void Awake()
     {
@@ -19,6 +21,11 @@ public class MenuManager : MonoBehaviour
         connectButton.onClick.AddListener(() =>
         {
             SceneManager.LoadScene("Client");
+        });
+
+        copyrightButton.onClick.AddListener(() =>
+        {
+            copyrightCanvas.SetActive(true);
         });
     }
     // Start is called before the first frame update
