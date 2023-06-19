@@ -309,6 +309,8 @@ public class NumbersGrid : MonoBehaviour
     {
         List<(int, int)> availableSpaces = new List<(int, int)>();
 
+        var gameGrid = this.gameGrid.GetComponent<GameGrid>().gameGrid;
+
         for (int i = 0; i < numbersGrid.Length; i++)
         {
             for (int j = 0; j < numbersGrid[i].Length; j++)
@@ -329,17 +331,12 @@ public class NumbersGrid : MonoBehaviour
         Vector3 availableSpacePosition = numbersGrid[spaceI][spaceJ].gameObject.transform.position;
 
         //move the old number
-        numbersGrid[x][y] = Instantiate(
-                    numbersGrid[spaceI][spaceJ].gameObject,
-                    position,
-                    Quaternion.Euler(-90, -90, 90)
-        );
-        numbersGrid[x][y].transform.parent = transform;
-        numbersGrid[x][y].gameObject.name = numbersGrid[spaceI][spaceJ].gameObject.name;
-        numbersGrid[x][y].gameObject.GetComponent<Number>().resource = numbersGrid[spaceI][spaceJ].gameObject.GetComponent<Number>().resource;
+        numbersGrid[spaceI][spaceJ].gameObject.transform.position = position;
+
+        numbersGrid[x][y] = numbersGrid[spaceI][spaceJ];
+        numbersGrid[x][y].gameObject.GetComponent<Number>().resource = gameGrid[spaceI][spaceJ].gameObject.name;
 
         //instantiate the new number
-        Destroy(numbersGrid[spaceI][spaceJ]);
         numbersGrid[spaceI][spaceJ] = Instantiate(
                     number,
                     availableSpacePosition,
@@ -347,9 +344,8 @@ public class NumbersGrid : MonoBehaviour
                 );
         numbersGrid[spaceI][spaceJ].transform.parent = transform;
         numbersGrid[spaceI][spaceJ].gameObject.name = number.name;
-        numbersGrid[spaceI][spaceJ].gameObject.GetComponent<Number>().resource = gameGrid.GetComponent<GameGrid>().gameGrid[spaceJ][spaceJ].gameObject.name;
+        numbersGrid[spaceI][spaceJ].gameObject.GetComponent<Number>().resource = gameGrid[spaceJ][spaceJ].gameObject.name;
     }
-
 
     private GameObject letterToNumber(string code)
     {
@@ -379,7 +375,6 @@ public class NumbersGrid : MonoBehaviour
                 return null;
         }
     }
-
 
     private string prefabToLetter(GameObject numberPrefab)
     {
