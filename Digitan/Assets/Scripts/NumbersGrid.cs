@@ -160,14 +160,14 @@ public class NumbersGrid : MonoBehaviour
                     {
                         if (++tries == 10)
                         {
-                            try
-                            {
+                            //try
+                            //{
                                 findAvailableSpace(x, y, position, number);
-                            }
-                            catch (IndexOutOfRangeException)
-                            {
-                                Debug.LogError("exceptie speciala");
-                            }
+                            //}
+                            //catch (IndexOutOfRangeException)
+                            //{
+                            //    Debug.LogError("exceptie speciala");
+                            //}
                             tries = 0;
                             continue;
                         }
@@ -334,7 +334,7 @@ public class NumbersGrid : MonoBehaviour
         numbersGrid[spaceI][spaceJ].gameObject.transform.position = position;
 
         numbersGrid[x][y] = numbersGrid[spaceI][spaceJ];
-        numbersGrid[x][y].gameObject.GetComponent<Number>().resource = gameGrid[spaceI][spaceJ].gameObject.name;
+        numbersGrid[x][y].gameObject.GetComponent<Number>().resource = gameGrid[x][y].gameObject.name;
 
         //instantiate the new number
         numbersGrid[spaceI][spaceJ] = Instantiate(
