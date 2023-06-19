@@ -17,12 +17,14 @@ using Unity.Services.Core;
 using System.Threading.Tasks;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
+using static StealManager;
 
 public class LobbyManager : MonoBehaviour
 {
     [SerializeField] private GameObject LobbyName;
     [SerializeField] private GameObject ListPanel;
     [SerializeField] private GameObject PlayerDetails;
+    [SerializeField] private GameObject ClientDetailsPrefab;
     [SerializeField] private Button PlayButton;
     [SerializeField] private Button MenuButton;
     [SerializeField] private GameObject lobbyExceptionCanvas;
@@ -32,6 +34,7 @@ public class LobbyManager : MonoBehaviour
     private float updateTimer = 5;
     private float checkStartTimer = 5;
     private bool joined = false;
+    private bool isHost = false;
 
     private void Awake()
     {
@@ -98,6 +101,10 @@ public class LobbyManager : MonoBehaviour
         {
             PlayButton.gameObject.SetActive(false);
         }
+        else
+        {
+            isHost = true;
+        }
     }
 
 
@@ -156,17 +163,38 @@ public class LobbyManager : MonoBehaviour
         int i = 0;
         foreach (Unity.Services.Lobbies.Models.Player player in lobby.Players)
         {
-            PlayerDetails.transform.Find("PlayerName")
-                .gameObject.GetComponent<TextMeshProUGUI>()
-                .text = player.Data["PlayerName"].Value;
+            var playerName = player.Data["PlayerName"].Value;
 
-            GameObject playerDetails = Instantiate(
-                PlayerDetails,
-                new Vector3(0, i * -150 + 225, 0),
-                ListPanel.transform.rotation
-            );
+            GameObject playerDetails = null;
+
+            if (isHost && i != 0)
+            {
+                playerDetails = Instantiate(
+                    ClientDetailsPrefab,
+                    new Vector3(0, i * -150 + 225, 0),
+                    ListPanel.transform.rotation
+                );
+
+                playerDetails.transform.Find("KickButton")
+                    .gameObject.GetComponent<Button>()
+                    .onClick.AddListener(() => {
+                        print("I may be clicked");
+                });
+            }
+            else
+            {
+                playerDetails = Instantiate(
+                    PlayerDetails,
+                    new Vector3(0, i * -150 + 225, 0),
+                    ListPanel.transform.rotation
+                );
+            }
 
             playerDetails.transform.SetParent(ListPanel.transform, false);
+
+            playerDetails.transform.Find("PlayerName")
+                .gameObject.GetComponent<TextMeshProUGUI>()
+                .text = playerName;
 
             i++;
         }
