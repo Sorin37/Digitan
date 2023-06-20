@@ -704,12 +704,11 @@ public class Player : NetworkBehaviour
 
         if(cardsCount > 7)
         {
-            var tooManyCardsGO = GameObject.Find("WarningTooManyCards");
-
-            if (tooManyCardsGO != null)
-            {
-                tooManyCardsGO.SetActive(true);
-            }
+            Resources.FindObjectsOfTypeAll<WarningTooManyCards>()[0].gameObject.SetActive(true);
+        }
+        else
+        {
+            GameObject.Find("WarningTooManyCards")?.SetActive(false);
         }
 
         GetMyPlayer().UpdateCardCountServerRpc(cardsCount, new ServerRpcParams());
