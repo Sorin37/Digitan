@@ -702,6 +702,16 @@ public class Player : NetworkBehaviour
             cardsCount += count;
         }
 
+        if(cardsCount > 7)
+        {
+            var tooManyCardsGO = GameObject.Find("WarningTooManyCards");
+
+            if (tooManyCardsGO != null)
+            {
+                tooManyCardsGO.SetActive(true);
+            }
+        }
+
         GetMyPlayer().UpdateCardCountServerRpc(cardsCount, new ServerRpcParams());
     }
 
