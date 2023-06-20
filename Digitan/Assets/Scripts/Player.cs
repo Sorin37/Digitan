@@ -702,6 +702,15 @@ public class Player : NetworkBehaviour
             cardsCount += count;
         }
 
+        if(cardsCount > 7)
+        {
+            Resources.FindObjectsOfTypeAll<WarningTooManyCards>()[0].gameObject.SetActive(true);
+        }
+        else
+        {
+            GameObject.Find("WarningTooManyCards")?.SetActive(false);
+        }
+
         GetMyPlayer().UpdateCardCountServerRpc(cardsCount, new ServerRpcParams());
     }
 
