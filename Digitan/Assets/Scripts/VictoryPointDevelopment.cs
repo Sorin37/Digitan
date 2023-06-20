@@ -16,6 +16,13 @@ public class VictoryPointDevelopment : MonoBehaviour
         
     }
 
+    private void OnMouseOver()
+    {
+        if(Input.GetMouseButtonDown(1)){
+            print("Make me big");
+        }
+    }
+
     private Player GetHostPlayer()
     {
         var players = GameObject.FindGameObjectsWithTag("Player");
