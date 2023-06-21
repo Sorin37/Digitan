@@ -178,10 +178,13 @@ public class LobbyManager : MonoBehaviour
                     ListPanel.transform.rotation
                 );
 
-                playerDetails.transform.Find("KickButton")
-                    .gameObject.GetComponent<Button>()
-                    .onClick.AddListener(async () => {
-                        await LobbyService.Instance.RemovePlayerAsync(lobby.Id, player.Id);
+                var kickButton = playerDetails.transform.Find("KickButton")
+                    .gameObject.GetComponent<Button>();
+
+                kickButton.onClick.AddListener(async () =>
+                {
+                    kickButton.interactable = false;
+                    await LobbyService.Instance.RemovePlayerAsync(lobby.Id, player.Id);
                 });
             }
             else
