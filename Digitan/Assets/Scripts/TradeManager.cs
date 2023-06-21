@@ -64,6 +64,11 @@ public class TradeManager : MonoBehaviour
 
     }
 
+    private void OnEnable()
+    {
+        tradeBankButton.interactable = true;
+    }
+
     void InitCloseButton()
     {
         closeButton.onClick.AddListener(() =>
@@ -135,7 +140,8 @@ public class TradeManager : MonoBehaviour
     void InitTradePlayersButton()
     {
         tradePlayersButton.onClick.AddListener(() =>
-        {
+        {   
+            tradeBankButton.interactable = false;
             GetHostPlayer().GetComponent<Player>().DisplayTradeOfferServerRpc(
                 NetworkManager.Singleton.LocalClientId,
                 giveDict["Brick"], giveDict["Grain"], giveDict["Lumber"], giveDict["Ore"], giveDict["Wool"],
