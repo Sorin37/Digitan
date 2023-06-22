@@ -41,7 +41,7 @@ public class LoadingScreenManager : MonoBehaviour
 
             totalAmountOfTime += checkStartTimer;
 
-            if (totalAmountOfTime > 90 && !displayedError)
+            if (totalAmountOfTime > 60 && !displayedError)
             {
                 displayedError = true;
 
