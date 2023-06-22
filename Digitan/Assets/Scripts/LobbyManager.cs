@@ -119,41 +119,43 @@ public class LobbyManager : MonoBehaviour
 
     private async void PollLobby()
     {
-        try
+
+        if (lobby != null)
         {
-            if (lobby != null)
+            updateTimer -= Time.deltaTime;
+            if (updateTimer < 0f)
             {
-                updateTimer -= Time.deltaTime;
-                if (updateTimer < 0f)
+                float updateTimerMax = 5;
+                updateTimer = updateTimerMax;
+
+                try
                 {
-                    float updateTimerMax = 5;
-                    updateTimer = updateTimerMax;
-
                     lobby = await LobbyService.Instance.GetLobbyAsync(lobby.Id);
+                }
+                catch (LobbyServiceException)
+                {
+                    lobbyExceptionCanvas.transform.Find("LobbyExceptionManager").GetComponent<LobbyExceptionManager>().SetErrorMessage(
+                        "Poor internet connection, please try again!"
+                    );
+                    lobbyExceptionCanvas.SetActive(true);
+                }
+                catch (Exception)
+                {
+                    lobbyExceptionCanvas.transform.Find("LobbyExceptionManager").GetComponent<LobbyExceptionManager>().SetErrorMessage(
+                       "No internet connection!"
+                   );
+                    lobbyExceptionCanvas.SetActive(true);
+                }
 
-                    if (lobby.Players.Count != currentNumberOfPlayers)
-                    {
-                        GetKickedOut();
-                        DrawPlayers();
-                        currentNumberOfPlayers = lobby.Players.Count;
-                    }
+                if (lobby.Players.Count != currentNumberOfPlayers)
+                {
+                    GetKickedOut();
+                    DrawPlayers();
+                    currentNumberOfPlayers = lobby.Players.Count;
                 }
             }
         }
-        catch (LobbyServiceException)
-        {
-            lobbyExceptionCanvas.transform.Find("LobbyExceptionManager").GetComponent<LobbyExceptionManager>().SetErrorMessage(
-                "Poor internet connection, please try again!"
-            );
-            lobbyExceptionCanvas.SetActive(true);
-        }
-        catch (Exception)
-        {
-            lobbyExceptionCanvas.transform.Find("LobbyExceptionManager").GetComponent<LobbyExceptionManager>().SetErrorMessage(
-               "No internet connection!"
-           );
-            lobbyExceptionCanvas.SetActive(true);
-        }
+
     }
 
     private void DrawPlayers()
@@ -245,6 +247,7 @@ public class LobbyManager : MonoBehaviour
     {
         if (joined)
             return;
+
         try
         {
             joined = true;
@@ -382,7 +385,7 @@ public class LobbyManager : MonoBehaviour
         catch (LobbyServiceException)
         {
             lobbyExceptionCanvas.transform.Find("LobbyExceptionManager").GetComponent<LobbyExceptionManager>().SetErrorMessage(
-                "poor internet connection. Please try again!"
+                "Poor internet connection. Please try again!"
                 );
             lobbyExceptionCanvas.SetActive(true);
             return false;
