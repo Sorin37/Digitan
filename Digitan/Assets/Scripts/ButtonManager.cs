@@ -172,6 +172,8 @@ public class ButtonManager : MonoBehaviour
     {
         roadButton.onClick.AddListener(() =>
         {
+            var myPlayer = GetMyPlayer();
+
             if (!IsMyTurn())
             {
                 var message = Instantiate(notYourTurnPrefab, roadButton.transform);
@@ -193,14 +195,28 @@ public class ButtonManager : MonoBehaviour
                 return;
             }
 
-            if (GetMyPlayer().nrOfPlacedRoads == 15)
+            if (myPlayer.nrOfPlacedRoads == 15)
             {
                 var message = Instantiate(noMorePiecesPrefab, roadButton.transform);
                 message.GetComponent<RedMessage>().SetStartPosition(roadButton.transform);
                 return;
             }
 
-            GetMyPlayer().hasToPlaceRoad = true;
+            if (myPlayer.hasToPlaceRoad)
+            {
+                Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("Road Circle"));
+             
+                myPlayer.playerHand["Brick Resource"]++;
+                myPlayer.playerHand["Lumber Resource"]++;
+
+                myPlayer.UpdateHand();
+
+                myPlayer.hasToPlaceRoad = false;
+
+                return;
+            }
+
+            myPlayer.hasToPlaceRoad = true;
 
             Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Road Circle"));
         });

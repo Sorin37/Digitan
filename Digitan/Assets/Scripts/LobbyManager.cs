@@ -382,7 +382,7 @@ public class LobbyManager : MonoBehaviour
         catch (LobbyServiceException)
         {
             lobbyExceptionCanvas.transform.Find("LobbyExceptionManager").GetComponent<LobbyExceptionManager>().SetErrorMessage(
-                "poor internet connection. Please try again!"
+                "Poor internet connection. Please try again!"
                 );
             lobbyExceptionCanvas.SetActive(true);
             return false;
