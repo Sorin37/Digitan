@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using Unity.Netcode;
+using Unity.Services.Lobbies.Models;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -136,6 +137,8 @@ public class ButtonManager : MonoBehaviour
     {
         settlementButton.onClick.AddListener(() =>
         {
+            var myPlayer = GetMyPlayer();
+
             if (!IsMyTurn())
             {
                 var message = Instantiate(notYourTurnPrefab, settlementButton.transform);
@@ -150,6 +153,21 @@ public class ButtonManager : MonoBehaviour
                 return;
             }
 
+            if (myPlayer.hasToPlaceSettlement)
+            {
+                Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("Settlement Circle"));
+
+                myPlayer.playerHand["Brick Resource"]++;
+                myPlayer.playerHand["Grain Resource"]++;
+                myPlayer.playerHand["Lumber Resource"]++;
+                myPlayer.playerHand["Wool Resource"]++;
+                myPlayer.UpdateHand();
+
+                myPlayer.hasToPlaceSettlement = false;
+
+                return;
+            }
+
             if (!HasSettlementResources())
             {
                 var message = Instantiate(notEnoughResourcesPrefab, settlementButton.transform);
@@ -157,7 +175,7 @@ public class ButtonManager : MonoBehaviour
                 return;
             }
 
-            if (GetMyPlayer().nrOfPlacedCities == 4)
+            if (myPlayer.nrOfPlacedCities == 4)
             {
                 var message = Instantiate(noMorePiecesPrefab, settlementButton.transform);
                 message.GetComponent<RedMessage>().SetStartPosition(settlementButton.transform);
@@ -165,7 +183,7 @@ public class ButtonManager : MonoBehaviour
             }
 
             Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Settlement Circle"));
-            GetMyPlayer().hasToPlaceSettlement = true;
+            myPlayer.hasToPlaceSettlement = true;
         });
     }
     private void InitRoadButton()
@@ -188,6 +206,20 @@ public class ButtonManager : MonoBehaviour
                 return;
             }
 
+            if (myPlayer.hasToPlaceRoad)
+            {
+                Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("Road Circle"));
+
+                myPlayer.playerHand["Brick Resource"]++;
+                myPlayer.playerHand["Lumber Resource"]++;
+
+                myPlayer.UpdateHand();
+
+                myPlayer.hasToPlaceRoad = false;
+
+                return;
+            }
+
             if (!HasRoadResources())
             {
                 var message = Instantiate(notEnoughResourcesPrefab, roadButton.transform);
@@ -199,20 +231,6 @@ public class ButtonManager : MonoBehaviour
             {
                 var message = Instantiate(noMorePiecesPrefab, roadButton.transform);
                 message.GetComponent<RedMessage>().SetStartPosition(roadButton.transform);
-                return;
-            }
-
-            if (myPlayer.hasToPlaceRoad)
-            {
-                Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("Road Circle"));
-             
-                myPlayer.playerHand["Brick Resource"]++;
-                myPlayer.playerHand["Lumber Resource"]++;
-
-                myPlayer.UpdateHand();
-
-                myPlayer.hasToPlaceRoad = false;
-
                 return;
             }
 
@@ -247,6 +265,8 @@ public class ButtonManager : MonoBehaviour
     {
         cityButton.onClick.AddListener(() =>
         {
+            var myPlayer = GetMyPlayer();
+
             if (!IsMyTurn())
             {
                 var message = Instantiate(notYourTurnPrefab, cityButton.transform);
@@ -261,6 +281,20 @@ public class ButtonManager : MonoBehaviour
                 return;
             }
 
+            if (myPlayer.hasToPlaceCity)
+            {
+                Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("City Place"));
+                Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("My Settlement"));
+
+                myPlayer.playerHand["Grain Resource"] += 2;
+                myPlayer.playerHand["Ore Resource"] += 3;
+                myPlayer.UpdateHand();
+
+                myPlayer.hasToPlaceCity = false;
+
+                return;
+            }
+
             if (!HasCityResources())
             {
                 var message = Instantiate(notEnoughResourcesPrefab, cityButton.transform);
@@ -270,7 +304,8 @@ public class ButtonManager : MonoBehaviour
 
             Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("City Place"));
             Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("My Settlement"));
-            GetMyPlayer().hasToPlaceCity = true;
+
+            myPlayer.hasToPlaceCity = true;
         });
     }
 
