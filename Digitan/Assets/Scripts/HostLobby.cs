@@ -56,7 +56,7 @@ public class HostLobby : MonoBehaviour
         catch (Exception)
         {
             lobbyExceptionCanvas.transform.Find("LobbyExceptionManager").GetComponent<LobbyExceptionManager>().SetErrorMessage(
-                    "No internet conenction!"
+                    "No internet connection!"
                     );
             lobbyExceptionCanvas.SetActive(true);
         }
@@ -77,7 +77,17 @@ public class HostLobby : MonoBehaviour
             }
         };
 
-        lobby = await LobbyService.Instance.CreateLobbyAsync(lobbyName, 4, options);
+        try
+        {
+            lobby = await LobbyService.Instance.CreateLobbyAsync(lobbyName, 4, options);
+        }
+        catch (Exception)
+        {
+            lobbyExceptionCanvas.transform.Find("LobbyExceptionManager").GetComponent<LobbyExceptionManager>().SetErrorMessage(
+                    "Poor internet connection, please try again!"
+                    );
+            lobbyExceptionCanvas.SetActive(true);
+        }
     }
 
     // Update is called once per frame
