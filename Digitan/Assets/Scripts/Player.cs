@@ -554,7 +554,7 @@ public class Player : NetworkBehaviour
     public void PlayerJoinedServerRpc()
     {
         currentNrOfPlayers.Value++;
-        
+
         UpdateLodingScreenBarClientRpc(currentNrOfPlayers.Value, nrOfMaxPlayers);
 
         OnPlayersJoined -= PlayersJoinedEvent;
@@ -582,7 +582,6 @@ public class Player : NetworkBehaviour
             Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { 0 } }
         });
         HideLoadingScreenClientRpc();
-        StartDicePulsingClientRpc();
     }
 
     private void TurnCloseRoadsAvailable()
@@ -680,6 +679,11 @@ public class Player : NetworkBehaviour
         ChangeCurrentPlayerDetailsNameClientRpc(
             GetPlayerWithId((ulong)currentPlayerTurn.Value).nickName.Value.ToString()
         );
+        StartDicePulsingClientRpc(new ClientRpcParams { 
+            Send = new ClientRpcSendParams { 
+                TargetClientIds = new List<ulong> { (ulong)currentPlayerTurn.Value } 
+            } 
+        });
     }
     public void UpdateHand()
     {
@@ -702,7 +706,7 @@ public class Player : NetworkBehaviour
             cardsCount += count;
         }
 
-        if(cardsCount > 7)
+        if (cardsCount > 7)
         {
             Resources.FindObjectsOfTypeAll<WarningTooManyCards>()[0].gameObject.SetActive(true);
         }
@@ -2005,7 +2009,7 @@ public class Player : NetworkBehaviour
     }
 
     [ClientRpc]
-    public void StartDicePulsingClientRpc()
+    public void StartDicePulsingClientRpc(ClientRpcParams crp)
     {
         Resources.FindObjectsOfTypeAll<DiceManager>()[0].shouldPulsate = true;
     }

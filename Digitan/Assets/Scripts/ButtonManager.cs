@@ -40,6 +40,7 @@ public class ButtonManager : MonoBehaviour
     [SerializeField] private GameObject noMorePiecesPrefab;
 
     [SerializeField] private GameObject playerInfoPrefab;
+    [SerializeField] private GameObject dicePanel;
 
     public bool hasRolledDice = false;
 
@@ -77,6 +78,8 @@ public class ButtonManager : MonoBehaviour
             }
 
             hasRolledDice = true;
+
+            dicePanel.GetComponent<DiceManager>().shouldPulsate = false;
 
             GetHostPlayer().RollDiceServerRpc();
         });
