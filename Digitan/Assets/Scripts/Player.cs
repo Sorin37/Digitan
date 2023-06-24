@@ -673,16 +673,26 @@ public class Player : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void PassTurnServerRpc()
     {
+        var lastPlayer = currentPlayerTurn.Value;
         currentPlayerTurn.Value = (currentPlayerTurn.Value + 1) % nrOfMaxPlayers;
         ResetDevelopmentPlayedClientRpc();
         ChangeCurrentPlayerDetailsColorClientRpc((ulong)currentPlayerTurn.Value);
         ChangeCurrentPlayerDetailsNameClientRpc(
             GetPlayerWithId((ulong)currentPlayerTurn.Value).nickName.Value.ToString()
         );
-        StartDicePulsingClientRpc(new ClientRpcParams { 
-            Send = new ClientRpcSendParams { 
-                TargetClientIds = new List<ulong> { (ulong)currentPlayerTurn.Value } 
-            } 
+        ResetDicePulsingClientRpc(new ClientRpcParams
+        {
+            Send = new ClientRpcSendParams
+            {
+                TargetClientIds = new List<ulong> { (ulong)currentPlayerTurn.Value }
+            }
+        });
+        StartDicePulsingClientRpc(new ClientRpcParams
+        {
+            Send = new ClientRpcSendParams
+            {
+                TargetClientIds = new List<ulong> { (ulong)currentPlayerTurn.Value }
+            }
         });
     }
     public void UpdateHand()
@@ -2012,5 +2022,12 @@ public class Player : NetworkBehaviour
     public void StartDicePulsingClientRpc(ClientRpcParams crp)
     {
         Resources.FindObjectsOfTypeAll<DiceManager>()[0].shouldPulsate = true;
+    }
+
+
+    [ClientRpc]
+    public void ResetDicePulsingClientRpc(ClientRpcParams crp)
+    {
+        Resources.FindObjectsOfTypeAll<DiceManager>()[0].ResetDices();
     }
 }

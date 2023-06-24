@@ -71,7 +71,7 @@ public class DiceManager : MonoBehaviour
 
     }
 
-    private void ResetDices()
+    public void ResetDices()
     {
         redDice.transform.localScale = Vector3.one;
         yellowDice.transform.localScale = Vector3.one;
