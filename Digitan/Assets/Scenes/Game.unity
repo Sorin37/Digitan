@@ -34520,6 +34520,7 @@ MonoBehaviour:
   placeCityPrefab: {fileID: 2029533581559911318, guid: e7dca6fa9391c9249a1cc6722fb00eec, type: 3}
   noMorePiecesPrefab: {fileID: 2029533581559911318, guid: 063b09dec4cf18041adb04a525ab5418, type: 3}
   playerInfoPrefab: {fileID: 3985725645739295304, guid: 3032df2634a58ec4993e93ad9a9ebe24, type: 3}
+  dicePanel: {fileID: 2080844215}
   hasRolledDice: 0
 --- !u!1 &1926444571
 GameObject:
@@ -37642,8 +37643,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2080844216}
-  - component: {fileID: 2080844217}
   - component: {fileID: 2080844218}
+  - component: {fileID: 2080844217}
   m_Layer: 5
   m_Name: DicePanel
   m_TagString: Untagged
