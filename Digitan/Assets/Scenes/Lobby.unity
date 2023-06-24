@@ -2987,7 +2987,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LobbyName: {fileID: 1364239653}
   ListPanel: {fileID: 1607050257}
-  PlayerDetails: {fileID: 7527175852860821717, guid: f13c70eabb053564185a3f6f2b847d82, type: 3}
+  PlayerDetails: {fileID: 7527175852860821717, guid: fd39c2d7d3032e04ba97bf7cf96556d2, type: 3}
   ClientDetailsPrefab: {fileID: 7527175852860821717, guid: 4f1a29641c87ae048aca407e226a95d6, type: 3}
   PlayButton: {fileID: 1878546748}
   MenuButton: {fileID: 1222820258}
