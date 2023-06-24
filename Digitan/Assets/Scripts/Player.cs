@@ -627,6 +627,10 @@ public class Player : NetworkBehaviour
             settlementGrid.GetComponent<SettlementGrid>().endStartPhase = true;
             ChangeCurrentPlayerDetailsColorClientRpc(0);
             ChangeCurrentPlayerDetailsNameClientRpc(GetHostPlayer().nickName.Value.ToString());
+            StartDicePulsingClientRpc(new ClientRpcParams
+            {
+                Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { 0 } }
+            });
         }
 
         ChangeCurrentPlayerDetailsColorClientRpc((ulong)((int)OwnerClientId + player.order.Value));
@@ -684,7 +688,7 @@ public class Player : NetworkBehaviour
         {
             Send = new ClientRpcSendParams
             {
-                TargetClientIds = new List<ulong> { (ulong)currentPlayerTurn.Value }
+                TargetClientIds = new List<ulong> { (ulong)lastPlayer }
             }
         });
         StartDicePulsingClientRpc(new ClientRpcParams
