@@ -50,6 +50,16 @@ public class LobbyManager : MonoBehaviour
     {
         PlayButton.onClick.AddListener(async () =>
         {
+            if (currentNumberOfPlayers == 1)
+            {
+                lobbyExceptionCanvas.transform.Find("LobbyExceptionManager").
+                    GetComponent<LobbyExceptionManager>().SetErrorMessage(
+                        "You can not play by yourself!"
+                    );
+                lobbyExceptionCanvas.SetActive(true);
+                return;
+            }
+
             loadingScreenCanvas.GetComponent<LoadingScreenManager>().SetProgress(1, currentNumberOfPlayers);
             loadingScreenCanvas.SetActive(true);
             string joinCode = await CreateRelay();
