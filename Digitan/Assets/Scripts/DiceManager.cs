@@ -38,7 +38,7 @@ public class DiceManager : MonoBehaviour
             return;
         }
 
-        if (!buttonManager.hasRolledDice)
+        if (!buttonManager.hasRolledDice && buttonManager.IsMyTurn())
         {
             PulsateDices();
         }
