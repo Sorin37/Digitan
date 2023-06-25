@@ -155,14 +155,6 @@ public class LobbyManager : MonoBehaviour
                         lobbyExceptionManager.GetComponent<LobbyExceptionManager>().SetErrorMessage(
                             "The host left the lobby!"
                         );
-
-                        //var okButton = lobbyExceptionManager.transform.Find("Panel").transform.Find("OkButton").GetComponent<Button>();
-
-                        //okButton.onClick.RemoveAllListeners();
-                        //okButton.onClick.AddListener(() =>
-                        //{
-
-                        //});
                     }
                     else
                     {
@@ -268,8 +260,9 @@ public class LobbyManager : MonoBehaviour
             lobbyExceptionCanvas.SetActive(true);
             throw;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            print(ex.Message);
             lobbyExceptionCanvas.transform.Find("LobbyExceptionManager").GetComponent<LobbyExceptionManager>().SetErrorMessage(
                 "No internet connection!"
             );
@@ -364,8 +357,9 @@ public class LobbyManager : MonoBehaviour
                 }
             });
         }
-        catch (LobbyServiceException)
+        catch (LobbyServiceException ex)
         {
+            print(ex.Message);
             lobbyExceptionCanvas.transform.Find("LobbyExceptionManager").GetComponent<LobbyExceptionManager>().SetErrorMessage(
                 "Poor internet connection. Please try again!"
             );
