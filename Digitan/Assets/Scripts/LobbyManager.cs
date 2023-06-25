@@ -37,6 +37,7 @@ public class LobbyManager : MonoBehaviour
     private float checkStartTimer = 5;
     private bool joined = false;
     private bool isHost = false;
+    private bool hostLeft = false;
 
     private void Awake()
     {
@@ -129,6 +130,8 @@ public class LobbyManager : MonoBehaviour
 
     private async void PollLobby()
     {
+        if (hostLeft)
+            return;
 
         if (lobby != null)
         {
@@ -142,11 +145,33 @@ public class LobbyManager : MonoBehaviour
                 {
                     lobby = await LobbyService.Instance.GetLobbyAsync(lobby.Id);
                 }
-                catch (LobbyServiceException)
+                catch (LobbyServiceException ex)
                 {
-                    lobbyExceptionCanvas.transform.Find("LobbyExceptionManager").GetComponent<LobbyExceptionManager>().SetErrorMessage(
-                        "Poor internet connection, please try again!"
-                    );
+                    if (ex.Message == "lobby not found")
+                    {
+                        hostLeft = true;
+
+                        var lobbyExceptionManager = lobbyExceptionCanvas.transform.Find("LobbyExceptionManager");
+                        lobbyExceptionManager.GetComponent<LobbyExceptionManager>().SetErrorMessage(
+                            "The host left the lobby!"
+                        );
+
+                        //var okButton = lobbyExceptionManager.transform.Find("Panel").transform.Find("OkButton").GetComponent<Button>();
+
+                        //okButton.onClick.RemoveAllListeners();
+                        //okButton.onClick.AddListener(() =>
+                        //{
+
+                        //});
+                    }
+                    else
+                    {
+                        lobbyExceptionCanvas.transform.Find("LobbyExceptionManager")
+                            .GetComponent<LobbyExceptionManager>().SetErrorMessage(
+                            "Poor internet connection, please try again!"
+                        );
+                    }
+
                     lobbyExceptionCanvas.SetActive(true);
                 }
                 catch (Exception)
