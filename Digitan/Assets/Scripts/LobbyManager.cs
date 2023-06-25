@@ -389,11 +389,20 @@ public class LobbyManager : MonoBehaviour
         {
             string playerId = AuthenticationService.Instance.PlayerId;
             string lobbyId = lobby.Id;
-            await LobbyService.Instance.RemovePlayerAsync(lobbyId, playerId);
+            if (isHost)
+            {
+                await Lobbies.Instance.DeleteLobbyAsync(lobbyId);
+            }
+            else
+            {
+                await LobbyService.Instance.RemovePlayerAsync(lobbyId, playerId);
+            }
+
             return true;
         }
-        catch (LobbyServiceException)
+        catch (LobbyServiceException ex)
         {
+            print("Message:" + ex.Message);
             lobbyExceptionCanvas.transform.Find("LobbyExceptionManager").GetComponent<LobbyExceptionManager>().SetErrorMessage(
                 "Poor internet connection. Please try again!"
                 );
