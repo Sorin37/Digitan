@@ -82,7 +82,15 @@ public class LobbyManager : MonoBehaviour
             DontDestroyOnLoad(go);
 
             foreach (var root in go.scene.GetRootGameObjects())
+            {
+                if(root.gameObject.name == "NetworkManager")
+                {
+                    continue;
+                }
+
                 Destroy(root);
+            }
+
 
             SceneManager.LoadScene("MainMenu");
         });
@@ -259,8 +267,9 @@ public class LobbyManager : MonoBehaviour
 
             RelayServerData relayServerData = new RelayServerData(allocation, "dtls");
 
-            NetworkManager.Singleton.GetComponent<UnityTransport>().
-                SetRelayServerData(relayServerData);
+            var xd = NetworkManager.Singleton;
+            var xd2 = xd.GetComponent<UnityTransport>();
+            xd2.SetRelayServerData(relayServerData);
 
             NetworkManager.Singleton.StartHost();
 
@@ -276,7 +285,7 @@ public class LobbyManager : MonoBehaviour
         }
         catch (Exception ex)
         {
-            print(ex.Message);
+            print(ex.StackTrace);
             lobbyExceptionCanvas.transform.Find("LobbyExceptionManager").GetComponent<LobbyExceptionManager>().SetErrorMessage(
                 "No internet connection!"
             );
