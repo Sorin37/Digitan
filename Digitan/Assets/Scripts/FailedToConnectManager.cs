@@ -19,7 +19,13 @@ public class FailedToConnectManager : MonoBehaviour
             DontDestroyOnLoad(go);
 
             foreach (var root in go.scene.GetRootGameObjects())
+            {
+                if (root.gameObject.name == "NetworkManager")
+                {
+                    continue;
+                }
                 Destroy(root);
+            }
 
             SceneManager.LoadScene("MainMenu");
         });

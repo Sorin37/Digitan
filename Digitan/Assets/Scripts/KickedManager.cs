@@ -19,6 +19,10 @@ public class KickedManager : MonoBehaviour
             if (root.name == "KickCanvas")
                 continue;
 
+            if (root.gameObject.name == "NetworkManager")
+            {
+                continue;
+            }
             Destroy(root);
         }
 
