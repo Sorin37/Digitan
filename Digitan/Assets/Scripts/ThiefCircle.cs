@@ -198,7 +198,6 @@ public class ThiefCircle : MonoBehaviour
             (int)(Mathf.Pow(2, LayerMask.NameToLayer("My Settlement")) +
             Mathf.Pow(2, LayerMask.NameToLayer("Settlement")))
         );
-        print("constructii: " + settlements.Length);
 
         foreach (var settlement in settlements)
         {
