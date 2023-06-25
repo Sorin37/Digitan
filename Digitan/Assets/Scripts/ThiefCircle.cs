@@ -165,7 +165,7 @@ public class ThiefCircle : MonoBehaviour
         var settlements = Physics.OverlapSphere(
             thief.transform.position,
             3f,
-            (int)(Mathf.Pow(2, LayerMask.NameToLayer("MySettlement")) +
+            (int)(Mathf.Pow(2, LayerMask.NameToLayer("My Settlement")) +
             Mathf.Pow(2, LayerMask.NameToLayer("Settlement")))
         );
 
@@ -195,9 +195,10 @@ public class ThiefCircle : MonoBehaviour
         var settlements = Physics.OverlapSphere(
             transform.position,
             3f,
-            (int)(Mathf.Pow(2, LayerMask.NameToLayer("MySettlement")) +
+            (int)(Mathf.Pow(2, LayerMask.NameToLayer("My Settlement")) +
             Mathf.Pow(2, LayerMask.NameToLayer("Settlement")))
         );
+        print("constructii: " + settlements.Length);
 
         foreach (var settlement in settlements)
         {
