@@ -66,7 +66,7 @@ public class ThiefCircle : MonoBehaviour
 
         var colliders = Physics.OverlapSphere(
             transform.position,
-            3f,
+            3.5f,
             (int)(Mathf.Pow(2, LayerMask.NameToLayer("City")) +
             Mathf.Pow(2, LayerMask.NameToLayer("Settlement")))
         );
