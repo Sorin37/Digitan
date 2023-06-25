@@ -1004,7 +1004,7 @@ public class Player : NetworkBehaviour
             var newThief = Instantiate(
                 thiefPrefab,
                 new Vector3(newPosition.x, 0.2f, newPosition.z),
-                Quaternion.Euler(0, 0, 0));
+                Quaternion.Euler(0, 180, 0));
 
             newThief.name = "Thief";
 
