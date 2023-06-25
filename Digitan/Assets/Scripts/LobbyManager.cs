@@ -160,11 +160,12 @@ public class LobbyManager : MonoBehaviour
                     {
                         hostLeft = true;
 
-                        print("A plceat");
                         var lobbyExceptionManager = lobbyExceptionCanvas.transform.Find("LobbyExceptionManager");
                         lobbyExceptionManager.GetComponent<LobbyExceptionManager>().SetErrorMessage(
                             "The host left the lobby!"
                         );
+
+                        lobbyExceptionCanvas.SetActive(true);
                         return;
                     }
 
@@ -172,17 +173,10 @@ public class LobbyManager : MonoBehaviour
                 }
                 catch (LobbyServiceException ex)
                 {
-                    if (ex.Message == "lobby not found")
-                    {
-
-                    }
-                    else
-                    {
-                        lobbyExceptionCanvas.transform.Find("LobbyExceptionManager")
-                            .GetComponent<LobbyExceptionManager>().SetErrorMessage(
-                            "Poor internet connection, please try again!"
-                        );
-                    }
+                    lobbyExceptionCanvas.transform.Find("LobbyExceptionManager")
+                        .GetComponent<LobbyExceptionManager>().SetErrorMessage(
+                        "Poor internet connection, please try again!"
+                    );
 
                     lobbyExceptionCanvas.SetActive(true);
                 }
