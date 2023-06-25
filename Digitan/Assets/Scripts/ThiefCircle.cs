@@ -164,7 +164,7 @@ public class ThiefCircle : MonoBehaviour
 
         var settlements = Physics.OverlapSphere(
             thief.transform.position,
-            2.5f,
+            3f,
             (int)(Mathf.Pow(2, LayerMask.NameToLayer("MySettlement")) +
             Mathf.Pow(2, LayerMask.NameToLayer("Settlement")))
         );
@@ -176,7 +176,7 @@ public class ThiefCircle : MonoBehaviour
 
         var cities = Physics.OverlapSphere(
             thief.transform.position,
-            2.5f,
+            3f,
             (int)Mathf.Pow(2, LayerMask.NameToLayer("City"))
         );
 
@@ -194,7 +194,7 @@ public class ThiefCircle : MonoBehaviour
 
         var settlements = Physics.OverlapSphere(
             transform.position,
-            2.5f,
+            3f,
             (int)(Mathf.Pow(2, LayerMask.NameToLayer("MySettlement")) +
             Mathf.Pow(2, LayerMask.NameToLayer("Settlement")))
         );
@@ -206,7 +206,7 @@ public class ThiefCircle : MonoBehaviour
 
         var cities = Physics.OverlapSphere(
             transform.position,
-            2.5f,
+            3f,
             (int)Mathf.Pow(2, LayerMask.NameToLayer("City"))
         );
 
