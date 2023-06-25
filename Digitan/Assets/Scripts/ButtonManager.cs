@@ -178,7 +178,7 @@ public class ButtonManager : MonoBehaviour
                 return;
             }
 
-            if (myPlayer.nrOfPlacedCities == 4)
+            if (myPlayer.nrOfPlacedSettlement > 5)
             {
                 var message = Instantiate(noMorePiecesPrefab, settlementButton.transform);
                 message.GetComponent<RedMessage>().SetStartPosition(settlementButton.transform);
