@@ -35,6 +35,7 @@ public class DiceManager : MonoBehaviour
     {
         if (!shouldPulsate)
         {
+            ResetDices();
             return;
         }
 
