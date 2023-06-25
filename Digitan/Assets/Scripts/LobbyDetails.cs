@@ -38,8 +38,9 @@ public class LobbyDetails : MonoBehaviour
                 {
                     lobby = await LobbyService.Instance.GetLobbyAsync(lobby.Id);
                 }
-                catch (LobbyServiceException)
+                catch (LobbyServiceException ex)
                 {
+                    print("Message:" + ex.Message);
                     lobbyExceptionCanvas.transform.Find("LobbyExceptionManager").GetComponent<LobbyExceptionManager>().SetErrorMessage(
                     "Poor internet connection, please try again!"
                     );
