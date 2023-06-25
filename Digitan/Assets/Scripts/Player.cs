@@ -970,17 +970,42 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void MoveThiefClientRpc(Vector3 newPosition)
     {
+        //add previously blocked resource to the dict
+        var numberObject = Physics.OverlapSphere(
+            transform.position,
+            1.5f,
+            (int)Mathf.Pow(2, LayerMask.NameToLayer("Number"))
+        );
+
+
+        string number;
+        string resource;
+
+        if (numberObject.Count() == 0)
+        {
+            number = null;
+            resource = null;
+        }
+        else
+        {
+            number = numberObject[0].gameObject.name;
+            resource = numberObject[0].GetComponent<Number>().resource;
+        }
+
+        FreeResource(GetHostPlayer(), number, resource);
+
+        #region move thief logic
         var thiefPiece = GameObject.Find("Thief");
 
         if (thiefPiece != null)
         {
             //display the circle the thief is taken from
-            var colliders = Physics.OverlapSphere(
+            var circleColliders = Physics.OverlapSphere(
                 thiefPiece.transform.position,
                 1f,
                 (int)Mathf.Pow(2, LayerMask.NameToLayer("Unvisible Thief Circle")));
 
-            foreach (var collider in colliders)
+            foreach (var collider in circleColliders)
             {
                 collider.gameObject.layer = LayerMask.NameToLayer("Thief Circle");
             }
@@ -988,12 +1013,12 @@ public class Player : NetworkBehaviour
             thiefPiece.transform.position = new Vector3(newPosition.x, 0.2f, newPosition.z);
 
             //hide the circle the thief is placed on
-            colliders = Physics.OverlapSphere(
+            circleColliders = Physics.OverlapSphere(
                 thiefPiece.transform.position,
                 1f,
                 (int)Mathf.Pow(2, LayerMask.NameToLayer("Thief Circle")));
 
-            foreach (var collider in colliders)
+            foreach (var collider in circleColliders)
             {
                 collider.gameObject.layer = LayerMask.NameToLayer("Unvisible Thief Circle");
             }
@@ -1011,17 +1036,21 @@ public class Player : NetworkBehaviour
             newThief.GetComponent<RoadCircle>().isOccupied = true;
 
             //hide the circle the thief is placed on
-            var colliders = Physics.OverlapSphere(
+            var circleColliders = Physics.OverlapSphere(
                 newThief.transform.position,
                 1f,
                 (int)Mathf.Pow(2, LayerMask.NameToLayer("Thief Circle"))
             );
 
-            foreach (var collider in colliders)
+            foreach (var collider in circleColliders)
             {
                 collider.gameObject.layer = LayerMask.NameToLayer("Unvisible Thief Circle");
             }
         }
+        #endregion
+
+        //block the new resource
+        BlockResource(GetHostPlayer(), number, resource);
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -2034,4 +2063,72 @@ public class Player : NetworkBehaviour
     {
         Resources.FindObjectsOfTypeAll<DiceManager>()[0].ResetDices();
     }
+
+    private void FreeResource(Player hostPlayer, string number, string resource)
+    {
+        if (number == null)
+            return;
+
+        var thief = GameObject.Find("Thief");
+
+        if (thief == null)
+        {
+            return;
+        }
+
+        var settlements = Physics.OverlapSphere(
+            thief.transform.position,
+            2.5f,
+            (int)(Mathf.Pow(2, LayerMask.NameToLayer("MySettlement")) +
+            Mathf.Pow(2, LayerMask.NameToLayer("Settlement")))
+        );
+
+        foreach (var settlement in settlements)
+        {
+            hostPlayer.ModifyResourceDictServerRpc("Free", number, resource, settlement.GetComponent<SettlementPiece>().playerId);
+        }
+
+        var cities = Physics.OverlapSphere(
+            thief.transform.position,
+            2.5f,
+            (int)Mathf.Pow(2, LayerMask.NameToLayer("City"))
+        );
+
+        foreach (var city in cities)
+        {
+            hostPlayer.ModifyResourceDictServerRpc("Free", number, resource, city.GetComponent<CityPiece>().playerId);
+            hostPlayer.ModifyResourceDictServerRpc("Free", number, resource, city.GetComponent<CityPiece>().playerId);
+        }
+    }
+
+    private void BlockResource(Player hostPlayer, string number, string resource)
+    {
+        if (number == null)
+            return;
+
+        var settlements = Physics.OverlapSphere(
+            transform.position,
+            2.5f,
+            (int)(Mathf.Pow(2, LayerMask.NameToLayer("MySettlement")) +
+            Mathf.Pow(2, LayerMask.NameToLayer("Settlement")))
+        );
+
+        foreach (var settlement in settlements)
+        {
+            hostPlayer.ModifyResourceDictServerRpc("Block", number, resource, settlement.GetComponent<SettlementPiece>().playerId);
+        }
+
+        var cities = Physics.OverlapSphere(
+            transform.position,
+            2.5f,
+            (int)Mathf.Pow(2, LayerMask.NameToLayer("City"))
+        );
+
+        foreach (var city in cities)
+        {
+            hostPlayer.ModifyResourceDictServerRpc("Block", number, resource, city.GetComponent<CityPiece>().playerId);
+            hostPlayer.ModifyResourceDictServerRpc("Block", number, resource, city.GetComponent<CityPiece>().playerId);
+        }
+    }
+
 }
