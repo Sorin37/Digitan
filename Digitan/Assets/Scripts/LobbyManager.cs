@@ -143,18 +143,38 @@ public class LobbyManager : MonoBehaviour
 
                 try
                 {
+                    QueryResponse queryResponse = await Lobbies.Instance.QueryLobbiesAsync(
+                    new QueryLobbiesOptions
+                    {
+                        Filters = new List<QueryFilter>
+                        {
+                            new QueryFilter(
+                                QueryFilter.FieldOptions.Name,
+                                lobby.Name,
+                                QueryFilter.OpOptions.EQ
+                            )
+                        }
+                    });
+
+                    if (queryResponse.Results.Count == 0)
+                    {
+                        hostLeft = true;
+
+                        print("A plceat");
+                        var lobbyExceptionManager = lobbyExceptionCanvas.transform.Find("LobbyExceptionManager");
+                        lobbyExceptionManager.GetComponent<LobbyExceptionManager>().SetErrorMessage(
+                            "The host left the lobby!"
+                        );
+                        return;
+                    }
+
                     lobby = await LobbyService.Instance.GetLobbyAsync(lobby.Id);
                 }
                 catch (LobbyServiceException ex)
                 {
                     if (ex.Message == "lobby not found")
                     {
-                        hostLeft = true;
 
-                        var lobbyExceptionManager = lobbyExceptionCanvas.transform.Find("LobbyExceptionManager");
-                        lobbyExceptionManager.GetComponent<LobbyExceptionManager>().SetErrorMessage(
-                            "The host left the lobby!"
-                        );
                     }
                     else
                     {
@@ -329,7 +349,7 @@ public class LobbyManager : MonoBehaviour
                 }
             }
         }
-        catch (LobbyServiceException)
+        catch (LobbyServiceException ex)
         {
             lobbyExceptionCanvas.transform.Find("LobbyExceptionManager").GetComponent<LobbyExceptionManager>().SetErrorMessage(
                 "Poor internet connection. Please try again!"
