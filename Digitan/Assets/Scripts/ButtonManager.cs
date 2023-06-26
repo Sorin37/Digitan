@@ -89,6 +89,8 @@ public class ButtonManager : MonoBehaviour
     {
         endTurnButton.onClick.AddListener(() =>
         {
+            var myPlayer = GetMyPlayer();
+
             if (!IsMyTurn())
             {
                 var message = Instantiate(notYourTurnPrefab, endTurnButton.transform);
@@ -103,28 +105,28 @@ public class ButtonManager : MonoBehaviour
                 return;
             }
 
-            if (GetMyPlayer().hasToMoveThief)
+            if (myPlayer.hasToMoveThief)
             {
                 var message = Instantiate(moveThiefPrefab, endTurnButton.transform);
                 message.GetComponent<RedMessage>().SetStartPosition(endTurnButton.transform);
                 return;
             }
 
-            if (GetMyPlayer().hasToPlaceRoad)
+            if (myPlayer.hasToPlaceRoad)
             {
                 var message = Instantiate(placeRoadPrefab, endTurnButton.transform);
                 message.GetComponent<RedMessage>().SetStartPosition(endTurnButton.transform);
                 return;
             }
 
-            if (GetMyPlayer().hasToPlaceSettlement)
+            if (myPlayer.hasToPlaceSettlement)
             {
                 var message = Instantiate(placeSettlementPrefab, endTurnButton.transform);
                 message.GetComponent<RedMessage>().SetStartPosition(endTurnButton.transform);
                 return;
             }
 
-            if (GetMyPlayer().hasToPlaceCity)
+            if (myPlayer.hasToPlaceCity)
             {
                 var message = Instantiate(placeCityPrefab, endTurnButton.transform);
                 message.GetComponent<RedMessage>().SetStartPosition(endTurnButton.transform);
@@ -132,6 +134,8 @@ public class ButtonManager : MonoBehaviour
             }
 
             hasRolledDice = false;
+
+            myPlayer.boughtDevelopmentsThisRound = new List<string>();
 
             GetHostPlayer().PassTurnServerRpc();
         });

@@ -91,6 +91,7 @@ public class Player : NetworkBehaviour
 
     public List<string> developments = new List<string>();
     private List<string> developmentsDeck;
+    public List<string> boughtDevelopmentsThisRound = new List<string>();
 
     public event EventHandler OnPlayersJoined;
     public event EventHandler OnFinishDiscardChanged;
@@ -1279,6 +1280,8 @@ public class Player : NetworkBehaviour
         var developmentGO = GameObject.Instantiate(DevelopmentToPrefab(development));
 
         developmentGO.transform.SetParent(deck.transform);
+
+        GetMyPlayer().boughtDevelopmentsThisRound.Add(development);
 
         //resize the deck
         var deckRectTransform = deck.transform as RectTransform;
