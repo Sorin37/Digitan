@@ -323,6 +323,13 @@ public class ButtonManager : MonoBehaviour
                 return;
             }
 
+            if (!hasRolledDice)
+            {
+                var message = Instantiate(rollTheDicePrefab, developmentButton.transform);
+                message.GetComponent<RedMessage>().SetStartPosition(developmentButton.transform);
+                return;
+            }
+
             if (!HasDevelopmentResources())
             {
                 var message = Instantiate(notEnoughResourcesPrefab, developmentButton.transform);

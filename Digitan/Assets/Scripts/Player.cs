@@ -2019,6 +2019,7 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void HideLoadingScreenClientRpc()
     {
+        System.Threading.Thread.Sleep(2000);
         Resources.FindObjectsOfTypeAll<LoadingScreenManager>()[0].gameObject.SetActive(false);
     }
 
