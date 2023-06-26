@@ -9,6 +9,7 @@ public class YearOfPlentyDevelopment : MonoBehaviour
     [SerializeField] private Button button;
     [SerializeField] private GameObject oneDevelopmentPrefab;
     [SerializeField] private GameObject notYourTurnPrefab;
+    [SerializeField] private GameObject newDevelopmentPrefab;
 
     // Start is called before the first frame update
     void Start()
@@ -40,6 +41,16 @@ public class YearOfPlentyDevelopment : MonoBehaviour
                 var message = Instantiate(oneDevelopmentPrefab, button.transform);
                 message.GetComponent<RedMessage>().SetStartPosition(button.transform);
                 return;
+            }
+
+            if (gameObject.transform.parent.transform.childCount == 1)
+            {
+                if (GetMyPlayer().boughtDevelopmentsThisRound.Contains("YearOfPlenty"))
+                {
+                    var message = Instantiate(newDevelopmentPrefab, button.transform);
+                    message.GetComponent<RedMessage>().SetStartPosition(button.transform);
+                    return;
+                }
             }
 
             myPlayer.playedDevelopmentThisRound = true;

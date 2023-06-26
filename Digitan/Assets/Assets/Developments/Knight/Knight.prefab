@@ -352,3 +352,4 @@ MonoBehaviour:
   button: {fileID: 6496919203399646254}
   oneDevelopmentPrefab: {fileID: 1088109427262066136, guid: 362a5ed81f3aa6a41b39495a025863c3, type: 3}
   notYourTurnPrefab: {fileID: 8025744905677544603, guid: 6d454e51ac2778d4a8d8ca18b21499e0, type: 3}
+  newDevelopmentPrefab: {fileID: 2029533581559911318, guid: 9cf599fbc0413384fb1d4fb37cf6c94d, type: 3}

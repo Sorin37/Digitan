@@ -91,6 +91,7 @@ public class Player : NetworkBehaviour
 
     public List<string> developments = new List<string>();
     private List<string> developmentsDeck;
+    public List<string> boughtDevelopmentsThisRound = new List<string>();
 
     public event EventHandler OnPlayersJoined;
     public event EventHandler OnFinishDiscardChanged;
@@ -439,8 +440,6 @@ public class Player : NetworkBehaviour
         //change the color of the settlement
         settlementObject.transform.Find("default").GetComponent<Renderer>().material.color = color;
 
-        //todo: change to settlement circle when getting a real settlement model
-        // (since the current model has a road circle script attached to it)
         settlementObject.GetComponent<RoadCircle>().isOccupied = true;
         Destroy(pressedCircle);
 
@@ -1279,6 +1278,8 @@ public class Player : NetworkBehaviour
         var developmentGO = GameObject.Instantiate(DevelopmentToPrefab(development));
 
         developmentGO.transform.SetParent(deck.transform);
+
+        GetMyPlayer().boughtDevelopmentsThisRound.Add(development);
 
         //resize the deck
         var deckRectTransform = deck.transform as RectTransform;
