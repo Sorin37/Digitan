@@ -440,8 +440,6 @@ public class Player : NetworkBehaviour
         //change the color of the settlement
         settlementObject.transform.Find("default").GetComponent<Renderer>().material.color = color;
 
-        //todo: change to settlement circle when getting a real settlement model
-        // (since the current model has a road circle script attached to it)
         settlementObject.GetComponent<RoadCircle>().isOccupied = true;
         Destroy(pressedCircle);
 

@@ -44,17 +44,6 @@ public class SettlementCircle : MonoBehaviour
 
         var settlementGrid = transform.parent.gameObject.GetComponent<SettlementGrid>();
 
-        //if (settlementGrid.is1stSettlementNext || settlementGrid.is2ndSettlementNext)
-        //{
-
-        //    //turns the settlement circle invisible after the 2nd settlement
-        //    if (settlementGrid.is2ndSettlementNext)
-        //    {
-        //        TurnSettlementsInvisible();
-        //    }
-
-        //}
-
         if (!isOccupied)
         {
             GiveTradePort();
@@ -112,7 +101,7 @@ public class SettlementCircle : MonoBehaviour
     {
         var colliders = Physics.OverlapSphere(
             transform.position,
-            2.5f,
+            3.5f,
             (int)Mathf.Pow(2, LayerMask.NameToLayer("Number"))
         );
 
