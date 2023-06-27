@@ -586,7 +586,7 @@ public class Player : NetworkBehaviour
         {
             Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { 0 } }
         });
-        HideLoadingScreenClientRpc();
+        HideLoadingScreenServerRpc();
     }
 
     private void TurnCloseRoadsAvailable()
@@ -2021,6 +2021,13 @@ public class Player : NetworkBehaviour
     public void UsedDevelopmentServerRpc(ServerRpcParams srp)
     {
         GetPlayerWithId(srp.Receive.SenderClientId).numberOfDevelopments.Value--;
+    }
+
+    [ServerRpc]
+    public void HideLoadingScreenServerRpc()
+    {
+        System.Threading.Thread.Sleep(10000);
+        GetHostPlayer().HideLoadingScreenClientRpc();
     }
 
     [ClientRpc]
