@@ -2026,7 +2026,6 @@ public class Player : NetworkBehaviour
     [ServerRpc]
     public void HideLoadingScreenServerRpc()
     {
-        System.Threading.Thread.Sleep(10000);
         GetHostPlayer().HideLoadingScreenClientRpc();
     }
 
