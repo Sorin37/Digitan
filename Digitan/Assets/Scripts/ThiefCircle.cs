@@ -34,16 +34,40 @@ public class ThiefCircle : MonoBehaviour
 
         var hostPlayer = GetHostPlayer().GetComponent<Player>();
 
-        //add previously blocked resource to the dict
+        string number = null;
+        string resource = null;
+
+        var thief = GameObject.Find("Thief");
+
+        if (thief != null)
+        {
+            var freeResource = Physics.OverlapSphere(
+                thief.transform.position,
+                1.5f,
+                (int)Mathf.Pow(2, LayerMask.NameToLayer("Number"))
+            );
+
+            if (freeResource.Length > 0)
+            {
+                number = freeResource[0].gameObject.name;
+                resource = freeResource[0].GetComponent<Number>().resource;
+            }
+        }
+
+        FreeResource(hostPlayer, number, resource);
+
+        number = null;
+        resource = null;
+
+        //move the thief
+        hostPlayer.MoveThiefServerRpc(transform.position);
+
+        //block the new resource
         var numberObject = Physics.OverlapSphere(
             transform.position,
             1.5f,
             (int)Mathf.Pow(2, LayerMask.NameToLayer("Number"))
         );
-
-
-        string number;
-        string resource;
 
         if (numberObject.Count() == 0)
         {
@@ -56,12 +80,6 @@ public class ThiefCircle : MonoBehaviour
             resource = numberObject[0].GetComponent<Number>().resource;
         }
 
-        FreeResource(hostPlayer, number, resource);
-
-        //move the thief
-        hostPlayer.MoveThiefServerRpc(transform.position);
-
-        //block the new resource
         BlockResource(hostPlayer, number, resource);
 
         var colliders = Physics.OverlapSphere(
@@ -152,7 +170,7 @@ public class ThiefCircle : MonoBehaviour
 
     private void FreeResource(Player hostPlayer, string number, string resource)
     {
-        if(number == null) 
+        if (number == null)
             return;
 
         var thief = GameObject.Find("Thief");
