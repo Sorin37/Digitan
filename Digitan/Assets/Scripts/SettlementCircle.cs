@@ -78,6 +78,8 @@ public class SettlementCircle : MonoBehaviour
 
             addResourcesToDict();
             GetMyPlayer().GetComponent<Player>().UpdateHand();
+
+            GetMyPlayer().GetComponent<Player>().nrOfPlacedSettlement++;
         }
 
         if (settlementGrid.isStartPhase)

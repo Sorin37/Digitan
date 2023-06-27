@@ -40,6 +40,9 @@ public class CityPlace : MonoBehaviour
 
         Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("City Place"));
         Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("My Settlement"));
+
+        GetMyPlayer().GetComponent<Player>().nrOfPlacedCities++;
+        GetMyPlayer().GetComponent<Player>().nrOfPlacedSettlement--;
     }
 
     private void AddToResourcesDict()

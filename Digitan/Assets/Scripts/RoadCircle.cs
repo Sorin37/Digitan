@@ -80,6 +80,8 @@ public class RoadCircle : MonoBehaviour
                 getHostPlayer().GetComponent<Player>().currentPlayerTurn.Value = 0;
             }
         }
+
+        getMyPlayer().GetComponent<Player>().nrOfPlacedRoads++;
     }
 
     private (int x, int y) getIndexesOfElem(GameObject circle, GameObject[][] grid)

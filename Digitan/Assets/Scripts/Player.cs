@@ -341,7 +341,6 @@ public class Player : NetworkBehaviour
             Camera.main.cullingMask = Camera.main.cullingMask & ~(1 << LayerMask.NameToLayer("Road Circle"));
             var myPlayer = GetMyPlayer();
             myPlayer.hasToPlaceRoad = false;
-            myPlayer.nrOfPlacedRoads++;
         }
         else
         {
@@ -448,7 +447,6 @@ public class Player : NetworkBehaviour
 
         var myPlayer = GetMyPlayer();
         myPlayer.hasToPlaceSettlement = false;
-        myPlayer.nrOfPlacedSettlement++;
 
         CalculateLongestRoad();
     }
@@ -905,9 +903,8 @@ public class Player : NetworkBehaviour
         city.transform.Find("default").GetComponent<Renderer>().material.color = color;
 
         var myPlayer = GetMyPlayer();
+
         myPlayer.hasToPlaceCity = false;
-        myPlayer.nrOfPlacedCities++;
-        myPlayer.nrOfPlacedSettlement--;
     }
 
     private void DestroyNearbySetllements(Vector3 position)

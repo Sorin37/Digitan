@@ -175,6 +175,13 @@ public class ButtonManager : MonoBehaviour
                 return;
             }
 
+            if (myPlayer.nrOfPlacedSettlement > 5)
+            {
+                var message = Instantiate(noMorePiecesPrefab, settlementButton.transform);
+                message.GetComponent<RedMessage>().SetStartPosition(settlementButton.transform);
+                return;
+            }
+
             if (!HasSettlementResources())
             {
                 var message = Instantiate(notEnoughResourcesPrefab, settlementButton.transform);
@@ -182,12 +189,7 @@ public class ButtonManager : MonoBehaviour
                 return;
             }
 
-            if (myPlayer.nrOfPlacedSettlement > 5)
-            {
-                var message = Instantiate(noMorePiecesPrefab, settlementButton.transform);
-                message.GetComponent<RedMessage>().SetStartPosition(settlementButton.transform);
-                return;
-            }
+
 
             Camera.main.cullingMask = Camera.main.cullingMask | (1 << LayerMask.NameToLayer("Settlement Circle"));
             myPlayer.hasToPlaceSettlement = true;
