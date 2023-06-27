@@ -568,15 +568,12 @@ public class Player : NetworkBehaviour
     [ServerRpc]
     public void UpdateLodingScreenBarServerRpc(int currentPlayer, int nrOfMaxPlayers)
     {
-        print("i be updating");
         GetHostPlayer().UpdateLodingScreenBarClientRpc(currentPlayer, nrOfMaxPlayers);
     }
 
     [ClientRpc]
     public void UpdateLodingScreenBarClientRpc(int currentPlayer, int nrOfMaxPlayers)
     {
-        print(currentPlayer.ToString() + nrOfMaxPlayers.ToString());
-
         Resources.FindObjectsOfTypeAll<LoadingScreenManager>()[0]
             .GetComponent<LoadingScreenManager>()
             .SetProgress(currentPlayer, nrOfMaxPlayers);
@@ -2029,7 +2026,6 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void HideLoadingScreenClientRpc()
     {
-        System.Threading.Thread.Sleep(2000);
         Resources.FindObjectsOfTypeAll<LoadingScreenManager>()[0].gameObject.SetActive(false);
     }
 
