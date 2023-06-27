@@ -56,6 +56,19 @@ public class ThiefCircle : MonoBehaviour
             resource = numberObject[0].GetComponent<Number>().resource;
         }
 
+        var thief = GameObject.Find("Thief");
+
+        if (thief != null)
+        {
+            var freeResource = Physics.OverlapSphere(
+                thief.transform.position,
+                1.5f,
+                (int)Mathf.Pow(2, LayerMask.NameToLayer("Number"))
+            );
+
+            number = freeResource[0].gameObject.name;
+        }
+
         FreeResource(hostPlayer, number, resource);
 
         //move the thief
