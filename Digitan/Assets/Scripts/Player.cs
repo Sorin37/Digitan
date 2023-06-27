@@ -1159,6 +1159,8 @@ public class Player : NetworkBehaviour
     {
         var resourceDict = GetMyPlayer().resourcesDict;
 
+        print(action + " " + number + " " + resource);
+
         if (action == "Block")
         {
             resourceDict[number].Remove(resource);
