@@ -568,6 +568,8 @@ public class Player : NetworkBehaviour
     [ClientRpc]
     public void UpdateLodingScreenBarClientRpc(int currentPlayer, int nrOfMaxPlayers)
     {
+        print(currentPlayer.ToString() + nrOfMaxPlayers.ToString());
+
         Resources.FindObjectsOfTypeAll<LoadingScreenManager>()[0]
             .GetComponent<LoadingScreenManager>()
             .SetProgress(currentPlayer, nrOfMaxPlayers);

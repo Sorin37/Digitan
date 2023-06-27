@@ -78,7 +78,6 @@ public class MonopolyDevelopment : MonoBehaviour
 
         if (deck == null)
         {
-            print("Didn't find the " + deckName + " after touching the card");
             return;
         }
 
