@@ -554,7 +554,7 @@ public class Player : NetworkBehaviour
     {
         currentNrOfPlayers.Value++;
 
-        UpdateLodingScreenBarClientRpc(currentNrOfPlayers.Value, nrOfMaxPlayers);
+        UpdateLodingScreenBarServerRpc(currentNrOfPlayers.Value, nrOfMaxPlayers);
 
         OnPlayersJoined -= PlayersJoinedEvent;
         OnPlayersJoined += PlayersJoinedEvent;
@@ -563,6 +563,13 @@ public class Player : NetworkBehaviour
         {
             OnPlayersJoined?.Invoke(this, EventArgs.Empty);
         }
+    }
+
+    [ServerRpc]
+    public void UpdateLodingScreenBarServerRpc(int currentPlayer, int nrOfMaxPlayers)
+    {
+        print("i be updating");
+        GetHostPlayer().UpdateLodingScreenBarClientRpc(currentPlayer, nrOfMaxPlayers);
     }
 
     [ClientRpc]
