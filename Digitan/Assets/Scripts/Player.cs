@@ -461,7 +461,7 @@ public class Player : NetworkBehaviour
                 return Color.red;
             case 2ul:
                 return new Color(1.0f, 0.64f, 0.0f);
-            case 4ul:
+            case 3ul:
                 return Color.white;
             default:
                 return Color.magenta;

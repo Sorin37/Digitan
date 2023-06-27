@@ -30,19 +30,19 @@ public class FirstPersonCamera : MonoBehaviour
         Vector3 inputDir = new Vector3(0, 0, 0);
         if (Input.GetKey(KeyCode.LeftShift) && Input.GetKey(KeyCode.W))
         {
-            cameraVerticalRotation -= 0.1f;
+            cameraVerticalRotation -= 0.5f;
         }
         else if (Input.GetKey(KeyCode.LeftShift) && Input.GetKey(KeyCode.S))
         {
-            cameraVerticalRotation += 0.1f;
+            cameraVerticalRotation += 0.5f;
         }
         else if (Input.GetKey(KeyCode.LeftShift) && Input.GetKey(KeyCode.A))
         {
-            cameraHorizontalRotation -= 0.1f;
+            cameraHorizontalRotation -= 0.5f;
         }
         else if (Input.GetKey(KeyCode.LeftShift) && Input.GetKey(KeyCode.D))
         {
-            cameraHorizontalRotation += 0.1f;
+            cameraHorizontalRotation += 0.5f;
         }
         else if (Input.GetKey(KeyCode.W)) { inputDir.z = +1f; }
         else if (Input.GetKey(KeyCode.S)) { inputDir.z = -1f; }

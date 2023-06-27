@@ -2269,10 +2269,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Catan GmbH\n -Resource cards\n -Resource tiles\n -Longest road card\n-Largest
-    army card\n -Development cards\n -Robber model\n\nC\xE2rmaciu Tinel\n-Logo\n
-    -Loading screen animation\n\nCiociu Samuel\n -City silhouette model\n\nLup\u0219an
-    Cristian\n -Road model\n -Settlement model\n -City model"
+  m_text: "Catan GmbH\n -Resource cards\n -Resource tiles\n -Longest road card\n
+    -Largest army card\n -Development cards\n -Robber model\n\nC\xE2rmaciu Tinel\n-Logo\n-Loading
+    screen animation\n\nCiociu Samuel\n -City silhouette model\n\nLup\u0219an Cristian\n
+    -Road model\n -Settlement model\n -City model"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: bb56d70db6ce6c34397ffb00b54e0712, type: 2}

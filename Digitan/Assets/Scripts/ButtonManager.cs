@@ -175,12 +175,12 @@ public class ButtonManager : MonoBehaviour
                 return;
             }
 
-            if (myPlayer.nrOfPlacedSettlement > 5)
-            {
-                var message = Instantiate(noMorePiecesPrefab, settlementButton.transform);
-                message.GetComponent<RedMessage>().SetStartPosition(settlementButton.transform);
-                return;
-            }
+            //if (myPlayer.nrOfPlacedSettlement > 5)
+            //{
+            //    var message = Instantiate(noMorePiecesPrefab, settlementButton.transform);
+            //    message.GetComponent<RedMessage>().SetStartPosition(settlementButton.transform);
+            //    return;
+            //}
 
             if (!HasSettlementResources())
             {
@@ -236,12 +236,12 @@ public class ButtonManager : MonoBehaviour
                 return;
             }
 
-            if (myPlayer.nrOfPlacedRoads == 15)
-            {
-                var message = Instantiate(noMorePiecesPrefab, roadButton.transform);
-                message.GetComponent<RedMessage>().SetStartPosition(roadButton.transform);
-                return;
-            }
+            //if (myPlayer.nrOfPlacedRoads == 15)
+            //{
+            //    var message = Instantiate(noMorePiecesPrefab, roadButton.transform);
+            //    message.GetComponent<RedMessage>().SetStartPosition(roadButton.transform);
+            //    return;
+            //}
 
             myPlayer.hasToPlaceRoad = true;
 
