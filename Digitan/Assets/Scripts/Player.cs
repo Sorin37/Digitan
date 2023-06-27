@@ -1166,7 +1166,7 @@ public class Player : NetworkBehaviour
 
         if (action == "Free")
         {
-            resourceDict[resource].Add(resource);
+            resourceDict[number].Add(resource);
         }
     }
 
